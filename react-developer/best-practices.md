@@ -55,6 +55,28 @@ const UserPage = async ({ params }: { params: { id: string } }) => {
 export default UserPage;
 ```
 
+## Params over fixed config
+
+Service functions and hooks take options as params, never hardcode fixed config (query-string `include`, `filter`, `sort`, `limit`, etc.) inside. Each caller decides what it needs; the service only forwards it. Defaults are fine only when every caller truly wants them.
+
+```tsx
+// Bad: every caller is stuck with the same include/filter
+const getUser = (id: string) =>
+  api.get(`/users/${id}`, { params: { include: 'posts', status: 'active' } });
+
+// Good: caller passes what it needs
+export const useUser = (id: string, params?: GetUserParams) =>
+  useSuspenseQuery({
+    queryKey: ['user', id, params],
+    queryFn: () => getUser(id, params),
+  });
+
+const getUser = (id: string, params?: GetUserParams) =>
+  api.get(`/users/${id}`, { params });
+```
+
+Include `params` in the `queryKey` so different params cache separately.
+
 ## Components
 
 Small, single-purpose, function components. Extract when JSX gets nested or a piece is reused. Keep screens as composition.
