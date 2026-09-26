@@ -77,6 +77,20 @@ const getUser = (id: string, params?: GetUserParams) =>
 
 Include `params` in the `queryKey` so different params cache separately.
 
+Never pass params as a delimited string (`"exercises,sessions"`); that leaks the query-string format into callers. Take an array or object and let the service serialize it.
+
+```tsx
+// Bad
+useUser(id, 'exercises,sessions');
+
+// Good
+useUser(id, { include: ['exercises', 'sessions'] });
+
+// service serializes
+const getUser = (id: string, { include, ...rest }: GetUserParams = {}) =>
+  api.get(`/users/${id}`, { params: { ...rest, include: include?.join(',') } });
+```
+
 ## Components
 
 Small, single-purpose, function components. Extract when JSX gets nested or a piece is reused. Keep screens as composition.
