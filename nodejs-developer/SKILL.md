@@ -13,6 +13,8 @@ Hexagonal layout, library-agnostic. The architecture is the convention; the fram
 
 ## Layout (`src/`)
 
+Applies unless the project's CLAUDE.md/AGENTS.md says `project-structure: off` (or equivalent: the user says to skip the skill's structure). When off, do NOT read project-structure.md, ignore the dependency-direction paragraph and the endpoint checklist below, and follow the project's existing layout; other conventions still apply. Otherwise:
+
 Read [project-structure.md](project-structure.md) before writing or reviewing code. It has the folder tree, naming table, per-layer rules (entities, ports, use cases, adapters, controllers, DTOs, wiring), and how to add a new area.
 
 Dependency direction: `main` -> `app`/`infra` -> `domain`. `domain` imports nothing outward. `app` never imports the framework, ORM, or validation library. Cross-layer imports use the project's absolute alias; relative paths only within the same folder. No barrel files.

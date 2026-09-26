@@ -13,7 +13,7 @@ Write React code that follows best practice first. Where the codebase already ha
 
 ## Structure
 
-For a new project or a folder-layout question, see [project-structure.md](project-structure.md).
+Applies unless the project's CLAUDE.md/AGENTS.md says `project-structure: off` (or equivalent: the user says to skip the skill's structure). When off, do NOT read project-structure.md; follow the project's existing layout. Otherwise, for a new project or a folder-layout question, see [project-structure.md](project-structure.md).
 
 ## Rules of thumb
 
