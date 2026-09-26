@@ -57,14 +57,20 @@ function toHttp(error: DomainError) {
 
 ## DTOs / request validation
 
+- DTOs belong to use cases only. The controller does not define DTOs; it validates the request input and maps it to the use-case DTO.
+- Input source: GET reads query params; every other method (POST, PUT, PATCH, DELETE) reads the body.
 - Validate at the boundary with the project's validator (decorators, schemas, whatever exists). Strip unknown fields, coerce query numbers.
-- Make the DTO conform to the use-case DTO type so drift fails compile.
+- Make the request schema conform to the use-case DTO type so drift fails compile.
 - Validate once at the edge; do not re-validate in controllers.
 
 ```ts
+// POST -> body
 const startSessionBody = schema({ programId: string().nonEmpty() });
 type StartSessionBody = Infer<typeof startSessionBody>;
 const _check: StartSessionDto = {} as StartSessionBody; // drift fails compile
+
+// GET -> query
+const listSessionsQuery = schema({ page: number().int().min(1) });
 ```
 
 ## Wiring / composition
