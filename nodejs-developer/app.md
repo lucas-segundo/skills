@@ -51,7 +51,6 @@ Every port that finds or fetches data is a query port (list, detail, report). It
 import { Program } from 'src/domain/entities/program';
 import { ProgramExercise } from 'src/domain/entities/program-exercise';
 
-// `exercises` is loaded only when requested through `include`, so it is optional
 export interface FindProgramByIdPort {
   execute(
     id: string,
