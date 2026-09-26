@@ -117,6 +117,36 @@ Never code the backend. If the frontend needs something the backend lacks (endpo
 const getOrders = () => api.get('/orders');
 ```
 
+## Backend errors
+
+Never show a backend error as-is. The service handles every error the backend can return, mapping each error code to a plain-language message a non-technical user understands (what went wrong and, when possible, what to do next), and throws an `Error` carrying that friendly message. The frontend just displays `error.message`. Unknown codes fall back to a generic friendly message, never the raw backend text.
+
+```tsx
+// service: maps codes and throws with the friendly message
+const userErrorMessages: Record<string, string> = {
+  EMAIL_TAKEN: 'This email is already registered. Try logging in instead.',
+  USER_NOT_FOUND: "We couldn't find this account.",
+  SESSION_EXPIRED: 'Your session ended. Please log in again.',
+};
+
+const updateUser = async (id: string, values: UserValues) => {
+  try {
+    return await api.put(`/users/${id}`, values);
+  } catch (e) {
+    const code = (e as ApiError).response?.data?.code;
+    throw new Error(userErrorMessages[code] ?? 'Something went wrong. Please try again.');
+  }
+};
+
+// Bad: service rethrows the raw backend error
+throw e;
+
+// Good: front displays the already-friendly message
+<FormError message={error.message} />;
+```
+
+If the backend does not return a code for an error, warn the user and leave a `TODO(backend)`.
+
 ## Components
 
 Small, single-purpose, function components. Extract when JSX gets nested or a piece is reused. Keep screens as composition.
