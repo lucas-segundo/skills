@@ -92,6 +92,34 @@ export const OrderScreen = ({ id }: { id: string }) => (
 );
 ```
 
+## Mapped items
+
+Never inline a big JSX body (handlers, hooks calls, derived values) inside `.map`. Extract a component that receives the item as a prop and derives the rest itself. The parent keeps only the sort/filter and the map.
+
+```tsx
+// Bad: logic and layout buried in the map callback
+{items.map((item) => {
+  const full = countFor(item.id) >= item.target;
+  return (
+    <View key={item.id}>
+      {/* ...lots of JSX, handlers, styles... */}
+    </View>
+  );
+})}
+
+// Good: the map only composes
+{items.map((item) => (
+  <ItemRow key={item.id} item={item} logged={countFor(item.id)} />
+))}
+
+const ItemRow = ({ item, logged }: ItemRowProps) => {
+  const full = logged >= item.target;
+  return <View>{/* ... */}</View>;
+};
+```
+
+Per-row hooks (e.g. a mutation) inside the row component scope state like `isPending` to that row. Pass the hook result from the parent only if rows must share it.
+
 ## Effects
 
 Avoid them when possible. Use one only for synchronizing with external systems. If an action can be done in a callback (event handler), do it there; if it can be a computed value, derive it during render. Neither is an effect. Always clean up subscriptions/timers.
