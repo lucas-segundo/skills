@@ -11,29 +11,33 @@ Use the project's data-fetching library, never ad-hoc `useEffect` + `useState` f
 const [user, setUser] = useState<User>();
 const [loading, setLoading] = useState(true);
 useEffect(() => {
-  getUser(id).then(setUser).finally(() => setLoading(false));
+  const load = async () => {
+    try {
+      setUser(await getUser(id));
+    } finally {
+      setLoading(false);
+    }
+  };
+  load();
 }, [id]);
 if (loading) return <Spinner />;
 
-// Good
-export function useUser(id: string) {
-  return useSuspenseQuery({ queryKey: ['user', id], queryFn: () => getUser(id) });
-}
+// Good: screen first, then the component it renders, then the hook it uses
+export const UserScreen = ({ id }: { id: string }) => (
+  <ErrorBoundary fallback={<ErrorState />}>
+    <Suspense fallback={<Spinner />}>
+      <UserCard id={id} />
+    </Suspense>
+  </ErrorBoundary>
+);
 
-function UserCard({ id }: { id: string }) {
+const UserCard = ({ id }: { id: string }) => {
   const { data: user } = useUser(id);
   return <h2>{user.name}</h2>;
-}
+};
 
-export function UserScreen({ id }: { id: string }) {
-  return (
-    <ErrorBoundary fallback={<ErrorState />}>
-      <Suspense fallback={<Spinner />}>
-        <UserCard id={id} />
-      </Suspense>
-    </ErrorBoundary>
-  );
-}
+export const useUser = (id: string) =>
+  useSuspenseQuery({ queryKey: ['user', id], queryFn: () => getUser(id) });
 ```
 
 ## Data fetching (server side, SSR)
@@ -42,10 +46,13 @@ Call the API function directly on the server (server components, loaders), with 
 
 ```tsx
 // Use framework's loading.tsx / error.tsx handle the states
-export default async function UserPage({ params }: { params: { id: string } }) {
+const UserPage = async ({ params }: { params: { id: string } }) => {
   const user = await getUser(params.id);
   return <h2>{user.name}</h2>;
-}
+};
+
+// default export only because the framework requires it for pages
+export default UserPage;
 ```
 
 ## Components
@@ -54,15 +61,13 @@ Small, single-purpose, function components. Extract when JSX gets nested or a pi
 
 ```tsx
 // Good: the screen reads like an outline
-export function OrderScreen({ id }: { id: string }) {
-  return (
-    <>
-      <OrderHeader id={id} />
-      <OrderItems id={id} />
-      <OrderActions id={id} />
-    </>
-  );
-}
+export const OrderScreen = ({ id }: { id: string }) => (
+  <>
+    <OrderHeader id={id} />
+    <OrderItems id={id} />
+    <OrderActions id={id} />
+  </>
+);
 ```
 
 ## Effects
@@ -76,10 +81,10 @@ useEffect(() => {
 }, [submitted]);
 
 // Good: do it in the handler that caused it
-function handleSubmit() {
+const handleSubmit = () => {
   save();
   showToast('Saved');
-}
+};
 
 // Good: a real external sync, with cleanup
 useEffect(() => {

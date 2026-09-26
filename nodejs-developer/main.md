@@ -35,10 +35,10 @@ main/
 ```ts
 const SESSION_INCLUDES = new Set(['sets', 'program']);
 
-async function findById(id: string, query: { include?: string[] }) {
+const findById = async (id: string, query: { include?: string[] }) => {
   const paths = sanitizeIncludes(query.include ?? [], SESSION_INCLUDES);
   return findSessionById.execute({ id, include: { sets: paths.includes('sets') } });
-}
+};
 ```
 
 ## Error handling
@@ -49,10 +49,10 @@ Domain errors are translated to HTTP in one shared place (filter, middleware, or
 - Body: `{ code, message, meta }`.
 
 ```ts
-function toHttp(error: DomainError) {
+const toHttp = (error: DomainError) => {
   const status = error instanceof NotFoundError ? 404 : error instanceof ConflictError ? 409 : 400;
   return { status, body: { code: error.code, message: error.message, meta: error.meta } };
-}
+};
 ```
 
 ## DTOs / request validation
