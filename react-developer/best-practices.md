@@ -92,6 +92,29 @@ export const OrderScreen = ({ id }: { id: string }) => (
 );
 ```
 
+## Order code top-down
+
+Order code top-down, like a pyramid: the component that renders the others goes at the top, then the components it renders, then the hooks and helpers they use. Readers should see the usage first and scroll down for details.
+
+```tsx
+// Good: screen, then its pieces, then the hook
+export const OrderScreen = ({ id }: { id: string }) => (
+  <>
+    <OrderHeader id={id} />
+    <OrderItems id={id} />
+  </>
+);
+
+const OrderHeader = ({ id }: { id: string }) => {
+  const { data: order } = useOrder(id);
+  return <h2>{order.name}</h2>;
+};
+
+const OrderItems = ({ id }: { id: string }) => {/* ... */};
+
+export const useOrder = (id: string) => useSuspenseQuery(/* ... */);
+```
+
 ## Mapped items
 
 Never inline a big JSX body (handlers, hooks calls, derived values) inside `.map`. Extract a component that receives the item as a prop and derives the rest itself. The parent keeps only the sort/filter and the map.
