@@ -108,6 +108,15 @@ export const useUsers = (params: { page: number; limit: number }) =>
 const getUsers = () => api.get('/users');
 ```
 
+## Backend gaps
+
+Never code the backend. If the frontend needs something the backend lacks (endpoint, field, behavior), warn the user and leave a `TODO(backend)` next to the call. If the backend is in the workspace context, put its name in the TODO.
+
+```tsx
+// TODO(backend: orders-api): GET /orders has no `status` filter, filtering client side for now.
+const getOrders = () => api.get('/orders');
+```
+
 ## Components
 
 Small, single-purpose, function components. Extract when JSX gets nested or a piece is reused. Keep screens as composition.
