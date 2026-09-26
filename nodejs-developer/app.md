@@ -17,25 +17,46 @@ app/
             └── test.ts          # mocks ports, no I/O
 ```
 
-## Ports
+## Command ports
 
-- One interface per operation, single method `execute`. Name `<Verb><Noun>Port` (`FindSessionByIdPort`).
-- Ports return domain entities, never ORM rows.
-- `execute` takes a single params object (`execute({ session })`), so arguments are named and adding one is not a breaking change. Exception: find-by-id ports take the id first, then optional params: `execute(id, params?)`.
-- Lists return `{ data }` and take `PaginationParams` in the params object. No `total` by default: it costs a second `count` query. Add it only when the user asks.
-- Optional relations use an `include` param, typed so the return narrows. Add only when a caller needs it.
+A command port mutates data (create/update/delete). It is always used inside a use case, never called from a controller.
+
+- One interface per operation, single method `execute`. Name `<Verb><Noun>Port` (`UpdateSessionPort`).
+- Take domain entities, never ORM rows. Reading data is a query port, see Query ports.
+- `execute` takes a single params object (`execute({ session })`), so arguments are named and adding one is not a breaking change.
 
 ```ts
-export interface FindSessionByIdPort {
-  execute(id: string, params?: { include?: { sets?: boolean } }): Promise<WorkoutSession | null>;
-}
-
-export interface FindSessionsPort {
-  execute(params: PaginationParams): Promise<{ data: WorkoutSession[] }>;
-}
-
 export interface UpdateSessionPort {
   execute(params: { session: WorkoutSession }): Promise<void>;
+}
+```
+
+## Query ports
+
+Every port that finds or fetches data is a query port (list, detail, report). It has no use case of its own: the controller calls it directly.
+
+- Read-only, no side effects. Mutations belong to command ports.
+- No separate read-model types: the port returns the entity. Extra data is requested through `include` and the adapter attaches it to the returned object (`Object.assign`).
+  - The port's return type declares each included relation as optional: `Entity & { relation?: Relation }` (or `Partial<{ ... }>`). No `Omit`, no generics.
+  - If the entity already declares the relation, leave the return type as the entity.
+- Find-by-id returns `null` when missing. The controller maps `null` to the framework's not-found response (no use case to throw `NotFoundError`).
+- One interface per operation, single method `execute`. Name `<Verb><Noun>Port` (`FindSessionByIdPort`).
+- Find-by-id takes the id first, then optional params: `execute(id, params?)`. Other queries take a single params object.
+- Lists return `{ data }` and take `PaginationParams` in the params object. No `total` by default: it costs a second `count` query. Add it only when the user asks.
+- Optional relations use an `include` param (`params?: { include?: { exercises?: boolean } }`). Add only when a caller needs it.
+- A command use case may still inject a query port to load what it needs (see `FinishSession`). The guard stays in that use case.
+- Guards, state checks and decisions never live in a query port or its controller call: they belong to a command use case.
+
+```ts
+import { Program } from 'src/domain/entities/program';
+import { ProgramExercise } from 'src/domain/entities/program-exercise';
+
+// `exercises` is loaded only when requested through `include`, so it is optional
+export interface FindProgramByIdPort {
+  execute(
+    id: string,
+    params?: { include?: { exercises?: boolean } },
+  ): Promise<(Program & { exercises?: ProgramExercise[] }) | null>;
 }
 ```
 
@@ -45,7 +66,7 @@ export interface UpdateSessionPort {
 - Export the input as a plain `<Name>Dto` interface from the same file. No framework or validation decorators.
 - Flow: load, guard (throw domain error), call entity factory/method, persist via port, return entity.
 - Business rules live here or in the entity, never in the controller or adapter.
-- Reads that only look something up still get a small use case, so a missing resource throws `NotFoundError` here.
+- Only commands get use cases. Reads are query ports with no use case, see Query ports.
 - Test in `test.ts` beside `index.ts`: mock ports, no I/O.
 
 ```ts

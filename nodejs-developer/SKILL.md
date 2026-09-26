@@ -21,7 +21,7 @@ Dependency direction: `main` -> `app`/`infra` -> `domain`. `domain` imports noth
 
 1. Entity change/factory + unit test if the domain needs it.
 2. Port in `app/ports/<area>/`.
-3. Use case + test.
+3. Use case + test. Skip for pure read (query) ports: the controller calls the port directly.
 4. Adapter (and schema/migration if storage changes).
 5. Register in the composition root / DI container.
 6. DTO, controller/route handler, wiring.

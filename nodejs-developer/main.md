@@ -27,6 +27,7 @@ main/
 - Thin: parse input, call a use case, shape the response.
 - Validate only what comes from the request: shape, types, required fields, formats, allowed `include` paths, pagination bounds.
 - Business validation (existence, state, uniqueness, invariants) belongs to entities or use cases. Controllers never throw domain errors and never inspect port results to decide business outcomes.
+- Query ports (read-only, see `app.md`) are called directly by the controller, no use case. `null` from a find-by-id becomes the framework's not-found response.
 - Path params are merged with the body into the use-case DTO explicitly.
 - List envelope: `{ data, page, limit }` using `resolvePagination(query)`. Add `total` only when the user asks.
 - `?include=a,b`: allow-list per route, sanitize (depth and breadth capped), map to the port's `include` shape.
