@@ -13,7 +13,7 @@ src/
 │       └── <entity>.spec.ts             # unit test beside it
 │
 ├── app/                                 # application layer, framework/ORM free
-│   ├── pagination.ts                    # PaginationParams, resolvePagination (Paginated<T> only if totals are requested)
+│   ├── pagination.ts                    # Pagination, resolvePagination (Paginated<T> only if totals are requested)
 │   ├── ports/
 │   │   └── <area>/
 │   │       └── <verb>-<noun>.ts         # interface <Verb><Noun>Port { execute(...) }

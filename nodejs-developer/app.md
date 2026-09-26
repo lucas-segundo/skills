@@ -6,7 +6,7 @@
 
 ```
 app/
-├── pagination.ts                # PaginationParams, resolvePagination
+├── pagination.ts                # Pagination, resolvePagination
 ├── ports/
 │   └── <area>/
 │       └── <verb>-<noun>.ts     # interface <Verb><Noun>Port { execute(...) }
@@ -42,7 +42,7 @@ Every port that finds or fetches data is a query port (list, detail, report). It
 - Find-by-id returns `null` when missing. The controller maps `null` to the framework's not-found response (no use case to throw `NotFoundError`).
 - One interface per operation, single method `execute`. Name `<Verb><Noun>Port` (`FindSessionByIdPort`).
 - Find-by-id takes the id first, then optional params: `execute(id, params?)`. Other queries take a single params object.
-- Lists return `{ data }` and take `PaginationParams` in the params object. No `total` by default: it costs a second `count` query. Add it only when the user asks.
+- Lists return `{ data }` and take `Pagination` as a `pagination` prop in the params object (`{ pagination }`). No `total` by default: it costs a second `count` query. Add it only when the user asks.
 - Optional relations use an `include` param (`params?: { include?: { exercises?: boolean } }`). Add only when a caller needs it.
 - A command use case may still inject a query port to load what it needs (see `FinishSession`). The guard stays in that use case.
 - Guards, state checks and decisions never live in a query port or its controller call: they belong to a command use case.

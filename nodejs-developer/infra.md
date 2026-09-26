@@ -28,7 +28,7 @@ infra/
 export class PostgresFindSessionsAdapter implements FindSessionsPort {
   constructor(private readonly db: DbClient) {}
 
-  async execute({ page, limit }: PaginationParams) {
+  async execute({ pagination: { page, limit } }: { pagination: Pagination }) {
     const rows = await this.db.sessions.findMany({
       offset: (page - 1) * limit,
       limit,
