@@ -91,6 +91,23 @@ const getUser = (id: string, { include, ...rest }: GetUserParams = {}) =>
   api.get(`/users/${id}`, { params: { ...rest, include: include?.join(',') } });
 ```
 
+## Avoid fetching large data
+
+Never fetch a large collection in one go. Prefer pagination (or infinite scroll) when the API supports it, and pass page/limit/cursor as params. If the API has no pagination, tell the user and leave a `TODO` in the code next to the call.
+
+```tsx
+// Good: API paginates, caller controls the page
+export const useUsers = (params: { page: number; limit: number }) =>
+  useSuspenseQuery({
+    queryKey: ['users', params],
+    queryFn: () => getUsers(params),
+  });
+
+// API has no pagination: fetch all, flag it, and tell the user
+// TODO: no pagination in GET /users, fetches everything. Paginate when the API supports it.
+const getUsers = () => api.get('/users');
+```
+
 ## Components
 
 Small, single-purpose, function components. Extract when JSX gets nested or a piece is reused. Keep screens as composition.
