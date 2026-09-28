@@ -162,6 +162,34 @@ export const OrderScreen = ({ id }: { id: string }) => (
 );
 ```
 
+## No ternary chains for conditional rendering
+
+Don't stack ternaries to pick between render branches (loading/error/empty/data, etc.). Extract the branches into their own component and use if/else or early returns. Reads top to bottom instead of nested `? :` puzzles.
+
+```tsx
+// Bad: chained ternaries
+{isError ? (
+  <ErrorMsg />
+) : isLoading ? (
+  <Skeleton />
+) : isEmpty ? (
+  <EmptyMsg />
+) : (
+  <List items={items} />
+)}
+
+// Good: if/else in its own component
+const UnitsList = ({ isError, isLoading, isEmpty, items }: UnitsListProps) => {
+  if (isError) return <ErrorMsg />;
+
+  if (isLoading) return <Skeleton />;
+
+  if (isEmpty) return <EmptyMsg />;
+  
+  return <List items={items} />;
+};
+```
+
 ## Order code top-down
 
 Order code top-down, like a pyramid: the component that renders the others goes at the top, then the components it renders, then the hooks and helpers they use. Readers should see the usage first and scroll down for details.
