@@ -23,6 +23,10 @@ Applies unless the project's CLAUDE.md/AGENTS.md says `project-structure: off` (
 
 Read [best-practices.md](best-practices.md) before writing or reviewing React code. It covers data fetching with Suspense, components, state, effects, memoization, lists, loading/error, forms.
 
+## AI
+
+- In plan mode, do NOT describe classNames or styling details in the plan. The reviewer checks the screen to verify styling.
+
 ## Quality
 
 Read [quality.md](quality.md) for linting, formatting, and testing conventions.
