@@ -58,6 +58,9 @@ main ──> infra ──> app (ports) ──> domain
 - `app` never imports framework, ORM, or validation library.
 - `infra` implements `app/ports`; it is the only place that knows the ORM.
 - `main` is the only place that knows the web framework and how dependencies are composed (manual wiring or a DI container).
+- Cross-layer imports use the project's absolute alias; relative paths only within the same folder. No barrel files.
+
+Lint enforcement: see [lint.md](lint.md).
 
 ## Naming
 
@@ -87,3 +90,14 @@ Each layer has its own file with role, rules and examples:
 3. `infra/<persistence>/adapters/<area>/` adapter per port.
 4. `main/routes/<area>/` module, controller, spec, dto.
 5. Register the area in `main/app` (and in the container, if the project uses one).
+
+## Adding an endpoint (checklist)
+
+1. Entity change/factory + unit test if the domain needs it.
+2. Port in `app/ports/<area>/`.
+3. Use case + test. Skip for pure read (query) ports: the controller calls the port directly.
+4. Adapter (and schema/migration if storage changes).
+5. Register in the composition root / DI container.
+6. DTO, controller/route handler, wiring.
+7. Controller tests. Update API docs (OpenAPI etc.) if the route is documented.
+8. Run the project's test and lint scripts.

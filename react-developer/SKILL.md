@@ -11,9 +11,7 @@ disable-model-invocation: true
 
 Write React code that follows best practice first. Where the codebase already has a pattern that doesn't conflict with best practice, stay consistent with it; where it does conflict, follow best practice and flag the deviation rather than copying the flaw.
 
-## Structure
-
-Applies unless the project's CLAUDE.md/AGENTS.md says `project-structure: off` (or equivalent: the user says to skip the skill's structure). When off, do NOT read project-structure.md; follow the project's existing layout. Otherwise, for a new project or a folder-layout question, see [project-structure.md](project-structure.md).
+Project structure is owned by the `react-architect` skill.
 
 ## Rules of thumb
 

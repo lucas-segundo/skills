@@ -29,5 +29,8 @@ src/
 - **API functions live in `shared/api`**, one per call, so any feature can reuse them. Payload types are exported from the same file.
 - **API folders are named after the first path segment of the route**, singular. `/exercises`, `/exercises/:id` and `/exercises/:id/finish` all go in `shared/api/exercise/` (e.g. `getExercises.ts`, `getExercise.ts`, `finishExercise.ts`).
 - **Promote to `shared` on second use.** Keep code inside its feature until another feature needs it.
+- **Features never import each other.** Shared code goes to `shared`.
 - **No barrel files.** Import from the specific file.
 - **Import with the project's alias**, not deep relative paths.
+
+Lint enforcement: see [lint.md](lint.md).
