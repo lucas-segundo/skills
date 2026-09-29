@@ -277,6 +277,29 @@ const handleSelect = useCallback((id: string) => setSelected(id), []);
 <MemoizedRow onSelect={handleSelect} />;
 ```
 
+## No single-use constants
+
+Don't hoist a value (title, description, className, style object) to a top-of-file constant when only one spot uses it. Inline it there. Hoist only when reused across multiple places or callers.
+
+```tsx
+// Bad: constants used once, at the top just for organization
+const TITLE = 'Order summary';
+const CONTAINER_CLASS = 'flex flex-col gap-2 p-4';
+
+export const OrderSummary = () => (
+  <div className={CONTAINER_CLASS}>
+    <h2>{TITLE}</h2>
+  </div>
+);
+
+// Good: inline where used
+export const OrderSummary = () => (
+  <div className="flex flex-col gap-2 p-4">
+    <h2>Order summary</h2>
+  </div>
+);
+```
+
 ## Forms/mutations
 
 Disable submit while pending and show a loading state (ask the user how it should look, e.g. spinner on the button or inline indicator, unless the project already has a pattern), surface errors, refresh the affected data on success.
