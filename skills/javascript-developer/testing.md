@@ -1,4 +1,4 @@
-# Quality
+# Testing
 
 - Don't re-test behavior that another unit already covers in its own test. Test each rule once, in the unit that owns it. Callers only test their own logic.
 

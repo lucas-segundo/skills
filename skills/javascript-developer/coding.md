@@ -1,4 +1,4 @@
-# JavaScript best practices
+# Coding
 
 - Use `Map`/`Set` for keyed lookups and dedupe, not objects/arrays scanned repeatedly.
 

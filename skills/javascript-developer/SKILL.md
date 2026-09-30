@@ -18,7 +18,7 @@ Read [coding.md](coding.md) before writing or reviewing JavaScript code.
 
 ## Testing
 
-Read [testing.md](testing.md) for naming, comments, secrets, linting, and testing conventions.
+Read [testing.md](testing.md) before writing or reviewing tests.
 
 ## Verification (final step)
 
