@@ -1,4 +1,4 @@
-# React Best Practices
+# Coding
 
 Examples use TanStack Query and `react-error-boundary`; adapt them to the project's own libraries.
 

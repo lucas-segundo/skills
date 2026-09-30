@@ -1,4 +1,4 @@
-# Quality
+# Testing
 
 - **Test behavior, not markup.** In component tests, assert what the user experiences: loading, empty, or error states showing up, an element appearing or disappearing, a success toast after an action, data being fetched after a click. Do not assert that a component renders a given prop, text literal, class, or style.
 - **Keep mocks out of the test file.** If a test needs to mock components, define the mocks in a `mock.tsx` next to it and import them into `test.tsx`, so the test file stays focused on behavior.

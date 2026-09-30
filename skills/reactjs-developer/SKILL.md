@@ -10,14 +10,14 @@ description: React frontend conventions and best practices. Use whenever writing
 
 Write React code that follows best practice first. Where the codebase already has a pattern that doesn't conflict with best practice, stay consistent with it; where it does conflict, follow best practice and flag the deviation rather than copying the flaw.
 
-## React best practices
+## Coding
 
-Read [best-practices.md](best-practices.md) before writing or reviewing React code. It covers data fetching with Suspense, components, state, effects, memoization, lists, loading/error, forms.
+Read [coding.md](coding.md) before writing or reviewing React code.
 
 ## AI
 
 - In plan mode, do NOT describe classNames or styling details in the plan. The reviewer checks the screen to verify styling.
 
-## Quality
+## Testing
 
-Read [quality.md](quality.md) for linting, formatting, and testing conventions.
+Read [testing.md](testing.md) before writing or reviewing component tests.
