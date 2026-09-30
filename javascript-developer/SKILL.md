@@ -1,7 +1,6 @@
 ---
 name: javascript-developer
-description: JavaScript conventions. Manual use only.
-disable-model-invocation: true
+description: JavaScript and TypeScript conventions and best practices. Use whenever writing, editing, reviewing, or debugging JS/TS code — .js, .ts, .mjs, Node scripts, async/await, modules, functions, error handling, or tests.
 ---
 
 # JavaScript Developer
