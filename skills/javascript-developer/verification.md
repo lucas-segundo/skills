@@ -8,4 +8,4 @@ Run this as the last step after editing JS/TS files.
 4. **Result:**
    - **Pass:** state that lint/tests passed, and which files they covered.
    - **Fail:** fix the cause and rerun. Do not finish, disable rules, or skip tests to make it pass.
-   - **Nothing to run:** say no linter or test runner was found. Do not claim it passed.
+   - **Nothing to run:** no linter or test runner in the project. Skip this step and finish; don't claim it passed.

@@ -22,4 +22,4 @@ Read [testing.md](testing.md) before writing or reviewing tests.
 
 ## Verification (final step)
 
-Before finishing any task where you edited files, read [verification.md](verification.md) and run it. The task is done only when it passes.
+Before finishing any task where you edited files, read [verification.md](verification.md) and run it. It only applies if the project has a linter or test runner; if a tool runs, the task is done only when it passes.
