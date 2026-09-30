@@ -105,6 +105,26 @@ const updateUser = async (id: string, values: UserValues) => {
 Small, single-purpose function components. Extract when JSX nests or a piece is reused. Screens are composition only.
 
 
+## Lazy-mount hidden components
+
+For any component that starts hidden (modal, drawer, popover, tab), to keep it out of the initial bundle. Load it with the framework's lazy strategy if it has one (e.g. `next/dynamic` in Next.js), else `React.lazy`. Mount it only once first needed (`&&` inside `<Suspense>`), then keep it mounted and toggle an `open` prop so exit animations play. One state: `undefined` = never shown, then `true`/`false`.
+
+```tsx
+const EditDialog = lazy(() => import('./EditDialog'));
+
+const [open, setOpen] = useState<boolean>();
+
+<button onClick={() => setOpen(true)}>Edit</button>
+{open !== undefined && (
+  <Suspense fallback={null}>
+    <EditDialog open={open} onClose={() => setOpen(false)} />
+  </Suspense>
+)}
+```
+
+Example uses `React.lazy`; with `next/dynamic` use `dynamic(() => import('./EditDialog'))` and its `loading` option instead of `<Suspense>`. Named export: `lazy(() => import('./EditDialog').then((m) => ({ default: m.EditDialog })))`.
+
+
 ## No ternary chains for conditional rendering
 
 Don't chain ternaries to pick render branches (error/loading/empty/data). Extract a component with early returns.
