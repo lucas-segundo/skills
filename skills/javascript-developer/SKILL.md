@@ -19,3 +19,7 @@ Read [best-practices.md](best-practices.md) before writing or reviewing JavaScri
 ## Quality
 
 Read [quality.md](quality.md) for naming, comments, secrets, linting, and testing conventions.
+
+## Verification (final step)
+
+Before finishing any task where you edited files, read [verification.md](verification.md) and run it. The task is done only when it passes.

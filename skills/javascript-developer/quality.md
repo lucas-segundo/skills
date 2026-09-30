@@ -1,6 +1,5 @@
 # Quality
 
-- Use the project's linter/formatter (ESLint, Prettier, Biome). Run tests and lint after changes if scripts exist.
 - Don't re-test behavior that another unit already covers in its own test. Test each rule once, in the unit that owns it. Callers only test their own logic.
 
   ```js
