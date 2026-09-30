@@ -1,0 +1,25 @@
+name: Validate skills marketplace
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Fails if you added/removed a skill folder but forgot to regenerate marketplace.json
+      - name: Check marketplace.json is up to date
+        run: python3 .github/scripts/gen_marketplace.py --check
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate with Claude Code
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude plugin validate .

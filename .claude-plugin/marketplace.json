@@ -1,0 +1,20 @@
+{
+  "name": "my-skills",
+  "description": "Personal skills, synced from this repo",
+  "owner": {
+    "name": "Lucas Segundo"
+  },
+  "plugins": [
+    {
+      "name": "my-personal-skills",
+      "source": "./",
+      "description": "My personal skills",
+      "skills": [
+        "./javascript-developer",
+        "./nodejs-architect",
+        "./react-architect",
+        "./react-developer"
+      ]
+    }
+  ]
+}
