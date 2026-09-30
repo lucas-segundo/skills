@@ -1,8 +1,18 @@
 # lucas-skills
 
-Private Claude Code plugin with my personal skills. Each top-level folder containing a `SKILL.md` is a skill.
+Private Claude plugin with my personal skills.
 
-## Install (Claude Code)
+```
+.claude-plugin/plugin.json        plugin manifest
+.claude-plugin/marketplace.json   marketplace (this repo = one plugin)
+skills/<skill-name>/SKILL.md      the skills
+```
+
+## Install
+
+**Claude app / Cowork:** claude.ai admin settings → Skills → Add → Sync from GitHub → pick this repo.
+
+**Claude Code:**
 
 ```
 /plugin marketplace add git@github.com-lucas:lucas-segundo/skills.git
@@ -13,8 +23,8 @@ Skills are invoked as `/lucas-skills:<skill-name>`.
 
 ## Add or remove a skill
 
-1. Create or delete the `<skill-name>/SKILL.md` folder.
-2. Regenerate the manifest: `python3 .github/scripts/gen_marketplace.py`
+1. Create or delete `skills/<skill-name>/SKILL.md` (the folder name must match `name:` in the frontmatter).
+2. Check it: `python3 .github/scripts/gen_marketplace.py --check`
 3. Commit and push. Then in Claude Code, run `/plugin marketplace update lucas-plugins` (or enable auto-update).
 
 ## Cowork (.plugin file)

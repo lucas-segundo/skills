@@ -1,0 +1,9 @@
+{
+  "name": "lucas-skills",
+  "displayName": "Lucas Skills",
+  "description": "Lucas's personal Claude skills",
+  "author": {
+    "name": "Lucas Segundo"
+  },
+  "repository": "https://github.com/lucas-segundo/skills"
+}

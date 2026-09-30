@@ -1,113 +1,101 @@
 #!/usr/bin/env python3
-"""Generate .claude-plugin/marketplace.json for a repo whose top-level folders are skills.
+"""Keep .claude-plugin/marketplace.json in sync and check the skills in skills/.
 
-A skill is any top-level folder (not starting with ".") that contains a SKILL.md.
+Layout (standard Claude plugin layout, repo root = plugin root = marketplace):
+  .claude-plugin/plugin.json        plugin manifest (name, description, author)
+  .claude-plugin/marketplace.json   marketplace listing this repo as one plugin
+  skills/<skill-name>/SKILL.md      skills, discovered automatically
 
 Usage (run from the repo root):
-  python3 .github/scripts/gen_marketplace.py            # write/update marketplace.json
-  python3 .github/scripts/gen_marketplace.py --check    # exit 1 if it is out of date (for CI)
+  python3 .github/scripts/gen_marketplace.py            # write marketplace.json
+  python3 .github/scripts/gen_marketplace.py --check    # CI: fail if out of date or a skill is broken
 
-Existing name/owner/description/plugin name in marketplace.json are preserved.
-No `version` is written on purpose: without it, users track your commits, so
-every push reaches them without a manual version bump.
+No `version` is written on purpose: without it, Claude Code tracks commits,
+so every push reaches you without a manual version bump.
 """
 import argparse
 import json
 import re
-import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path.cwd()
+PLUGIN = ROOT / ".claude-plugin" / "plugin.json"
 MANIFEST = ROOT / ".claude-plugin" / "marketplace.json"
-RESERVED = {
-    "claude-code-marketplace", "claude-code-plugins", "claude-plugins-official",
-    "claude-plugins-community", "claude-community", "anthropic-marketplace",
-    "anthropic-plugins", "agent-skills", "anthropic-agent-skills",
-    "knowledge-work-plugins", "life-sciences", "claude-for-legal",
-    "claude-for-financial-services", "financial-services-plugins",
-    "first-party-plugins", "healthcare",
-}
+SKILLS = ROOT / "skills"
 
 
-def git_user_name() -> str:
-    try:
-        out = subprocess.check_output(["git", "config", "user.name"], text=True).strip()
-        return out or "Your Name"
-    except Exception:
-        return "Your Name"
+def check_skills() -> list[str]:
+    """Return a list of problems with the skills in skills/."""
+    problems = []
+    dirs = sorted(p for p in SKILLS.iterdir() if p.is_dir()) if SKILLS.is_dir() else []
+    if not dirs:
+        problems.append("no skills found in skills/")
+    for d in dirs:
+        f = d / "SKILL.md"
+        if not f.is_file():
+            problems.append(f"skills/{d.name}: missing SKILL.md")
+            continue
+        m = re.match(r"---\s*\n(.*?)\n---", f.read_text(encoding="utf-8", errors="replace"), re.S)
+        if not m:
+            problems.append(f"skills/{d.name}/SKILL.md: missing frontmatter")
+            continue
+        name = re.search(r"^name:\s*(\S+)", m.group(1), re.M)
+        if not name:
+            problems.append(f"skills/{d.name}/SKILL.md: no name in frontmatter")
+        elif name.group(1).strip("\"'") != d.name:
+            problems.append(f"skills/{d.name}: folder name != frontmatter name '{name.group(1)}'")
+        if not re.search(r"^description:\s*\S", m.group(1), re.M):
+            problems.append(f"skills/{d.name}/SKILL.md: no description in frontmatter")
+    return problems
 
 
-def find_skills() -> list[str]:
-    return sorted(
-        p.name for p in ROOT.iterdir()
-        if p.is_dir() and not p.name.startswith(".") and (p / "SKILL.md").is_file()
-    )
-
-
-def frontmatter_name(skill_dir: str) -> str | None:
-    text = (ROOT / skill_dir / "SKILL.md").read_text(encoding="utf-8", errors="replace")
-    m = re.match(r"---\s*\n(.*?)\n---", text, re.S)
-    if not m:
-        return None
-    n = re.search(r"^name:\s*(\S+)", m.group(1), re.M)
-    return n.group(1).strip("\"'") if n else None
-
-
-def build(args) -> dict:
+def build() -> dict:
+    plugin = json.loads(PLUGIN.read_text())
     existing = json.loads(MANIFEST.read_text()) if MANIFEST.is_file() else {}
-    old_plugin = (existing.get("plugins") or [{}])[0]
-
-    name = args.name or existing.get("name") or "my-skills"
-    if name in RESERVED:
-        sys.exit(f"error: '{name}' is a reserved marketplace name; pick another with --name")
-
-    skills = find_skills()
-    if not skills:
-        sys.exit("error: no skill folders (folders containing SKILL.md) found in this directory")
-
-    for s in skills:
-        fm = frontmatter_name(s)
-        if fm is None:
-            print(f"warning: {s}/SKILL.md has no name in its frontmatter", file=sys.stderr)
-        elif fm != s:
-            print(f"warning: folder '{s}' != frontmatter name '{fm}'", file=sys.stderr)
-
-    plugin = {
-        "name": args.plugin or old_plugin.get("name") or "my-personal-skills",
-        "source": "./",
-        "description": old_plugin.get("description") or "My personal skills",
-        "skills": [f"./{s}" for s in skills],
-    }
     return {
-        "name": name,
+        "name": existing.get("name") or "lucas-plugins",
         "description": existing.get("description") or "Personal skills, synced from this repo",
-        "owner": existing.get("owner") or {"name": args.owner or git_user_name()},
-        "plugins": [plugin],
+        "owner": existing.get("owner") or plugin.get("author") or {"name": "Lucas Segundo"},
+        "plugins": [
+            {
+                "name": plugin["name"],
+                "source": "./",
+                "description": plugin.get("description", ""),
+            }
+        ],
     }
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--check", action="store_true", help="fail if marketplace.json is out of date")
-    ap.add_argument("--name", help="marketplace name (default: my-skills)")
-    ap.add_argument("--plugin", help="plugin name (default: my-personal-skills)")
-    ap.add_argument("--owner", help="owner name (default: git config user.name)")
+    ap.add_argument("--check", action="store_true", help="fail if marketplace.json is out of date or a skill is broken")
     args = ap.parse_args()
 
-    rendered = json.dumps(build(args), indent=2) + "\n"
+    if not PLUGIN.is_file():
+        sys.exit("error: .claude-plugin/plugin.json not found (run from the repo root)")
+
+    problems = check_skills()
+    for p in problems:
+        print(f"error: {p}", file=sys.stderr)
+
+    rendered = json.dumps(build(), indent=2) + "\n"
+    n = len([p for p in SKILLS.iterdir() if p.is_dir()]) if SKILLS.is_dir() else 0
 
     if args.check:
         current = MANIFEST.read_text() if MANIFEST.is_file() else ""
         if current != rendered:
             print("marketplace.json is out of date. Run: python3 .github/scripts/gen_marketplace.py")
             sys.exit(1)
-        print("marketplace.json is up to date.")
+        if problems:
+            sys.exit(1)
+        print(f"marketplace.json is up to date; {n} skills OK.")
         return
 
-    MANIFEST.parent.mkdir(exist_ok=True)
     MANIFEST.write_text(rendered)
-    print(f"Wrote {MANIFEST.relative_to(ROOT)} with {len(json.loads(rendered)['plugins'][0]['skills'])} skills")
+    print(f"Wrote {MANIFEST.relative_to(ROOT)} ({n} skills in skills/)")
+    if problems:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

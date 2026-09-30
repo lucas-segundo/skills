@@ -8,13 +8,7 @@
     {
       "name": "lucas-skills",
       "source": "./",
-      "description": "Lucas's personal Claude skills",
-      "skills": [
-        "./javascript-developer",
-        "./nodejs-architect",
-        "./reactjs-architect",
-        "./reactjs-developer"
-      ]
+      "description": "Lucas's personal Claude skills"
     }
   ]
 }
