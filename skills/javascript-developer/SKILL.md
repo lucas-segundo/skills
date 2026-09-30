@@ -12,13 +12,13 @@ Write modern, boring, readable JavaScript. Where the codebase already has a patt
 - **No barrel files.** Import from the specific file, not an `index.js` that only re-exports.
 - **Small, single-purpose functions.** Named exports over default exports.
 
-## JavaScript best practices
+## Coding
 
-Read [best-practices.md](best-practices.md) before writing or reviewing JavaScript code.
+Read [coding.md](coding.md) before writing or reviewing JavaScript code.
 
-## Quality
+## Testing
 
-Read [quality.md](quality.md) for naming, comments, secrets, linting, and testing conventions.
+Read [testing.md](testing.md) for naming, comments, secrets, linting, and testing conventions.
 
 ## Verification (final step)
 

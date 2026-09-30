@@ -1,6 +1,6 @@
 # Verification
 
-Run this as the last step after editing JS/TS files. Skip it if you made no edits (plan mode, questions).
+Run this as the last step after editing JS/TS files.
 
 1. **Scope:** only the files you changed or created in this task. Never the whole project.
 2. **Lint:** if the project has a linter, run it on those files (`eslint <files>`, `biome check <files>`). Use the project's own script or binary; skip a tool that isn't installed.
