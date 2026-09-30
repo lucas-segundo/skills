@@ -1,5 +1,5 @@
 ---
-name: react-developer
+name: reactjs-developer
 description: React frontend conventions. Manual use only.
 disable-model-invocation: true
 ---
@@ -11,7 +11,7 @@ disable-model-invocation: true
 
 Write React code that follows best practice first. Where the codebase already has a pattern that doesn't conflict with best practice, stay consistent with it; where it does conflict, follow best practice and flag the deviation rather than copying the flaw.
 
-Project structure is owned by the `react-architect` skill.
+Project structure is owned by the `reactjs-architect` skill.
 
 ## Rules of thumb
 

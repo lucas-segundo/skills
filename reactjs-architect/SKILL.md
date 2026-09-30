@@ -1,12 +1,12 @@
 ---
-name: react-architect
+name: reactjs-architect
 description: Configures a React frontend's project structure, the lint rules that enforce it, and AGENTS.md so AI agents follow it. Manual use only.
 disable-model-invocation: true
 ---
 
 # React Architect
 
-Owns React project structure. `react-developer` covers code conventions only.
+Owns React project structure. `reactjs-developer` covers code conventions only.
 
 ## Steps
 

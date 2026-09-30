@@ -1,0 +1,51 @@
+name: Build Cowork plugin
+
+# Builds dist/lucas-skills.plugin on every push to main and publishes it to the
+# "latest" GitHub Release, so there is always one place to download it from.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-plugin
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history: the plugin version uses the commit count
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Claude Code (for validation)
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Build and validate .plugin
+        run: python3 .github/scripts/build_plugin.py --validate
+
+      - name: Upload as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin
+          path: dist/*.plugin
+
+      - name: Publish to "latest" release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          FILE=$(ls dist/*.plugin)
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest "$FILE" \
+            --target "$GITHUB_SHA" \
+            --title "Latest plugin build" \
+            --notes "Built from ${GITHUB_SHA::7}. Download the .plugin file and upload it in Cowork's plugin settings." \
+            --latest
