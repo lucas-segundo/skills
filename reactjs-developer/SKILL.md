@@ -1,7 +1,6 @@
 ---
 name: reactjs-developer
-description: React frontend conventions. Manual use only.
-disable-model-invocation: true
+description: React frontend conventions and best practices. Use whenever writing, editing, reviewing, or debugging React code — components, JSX/TSX, hooks (useState, useEffect, useMemo, useCallback, custom hooks), Suspense, data fetching, forms, or React tests.
 ---
 
 # Extending the JavaScript Developer skill
