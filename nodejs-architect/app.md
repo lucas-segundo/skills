@@ -2,21 +2,6 @@
 
 `src/app/` is the application layer. It orchestrates business operations: it defines what the system needs from the outside (ports) and the use cases that combine ports with domain entities. It is framework and ORM free. It may import `domain` only.
 
-## Contents
-
-```
-app/
-├── pagination.ts                # Pagination, resolvePagination
-├── ports/
-│   └── <area>/
-│       └── <verb>-<noun>.ts     # interface <Verb><Noun>Port { execute(...) }
-└── use-cases/
-    └── <area>/
-        └── <verb>-<noun>/
-            ├── index.ts         # handler class + exported <Name>Dto interface
-            └── test.ts          # mocks ports, no I/O
-```
-
 ## Command ports
 
 A command port mutates data (create/update/delete). It is always used inside a use case, never called from a controller.
@@ -89,9 +74,3 @@ export class FinishSession {
   }
 }
 ```
-
-## Rules
-
-- Imports only `domain`. Never a framework, ORM, or validation library.
-- Depends on ports (interfaces), never on adapters.
-- Naming: kebab-case files, one operation per file.

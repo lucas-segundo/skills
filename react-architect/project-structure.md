@@ -33,4 +33,3 @@ src/
 - **No barrel files.** Import from the specific file.
 - **Import with the project's alias**, not deep relative paths.
 
-Lint enforcement: see [lint.md](lint.md).

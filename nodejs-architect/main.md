@@ -2,26 +2,6 @@
 
 `src/main/` is the delivery layer: HTTP plus wiring. It is the only place that knows the web framework and how dependencies are composed (manual wiring or a DI container).
 
-## Contents
-
-```
-main/
-├── app                          # root wiring, registers each area
-├── index.ts                     # bootstrap (global pipes, filters, listen)
-├── routes/
-│   └── <area>/
-│       ├── module               # composition: builds adapters, injects into use cases
-│       ├── controller.ts        # thin: parse, call use case, shape response
-│       ├── controller.spec.ts   # controller built directly with mocks
-│       └── dto/
-│           └── <verb>-<noun>.ts # request validation, conforms to use-case DTO
-└── shared/                      # cross-area helpers
-    ├── domain-exception filter  # domain errors -> HTTP status
-    ├── pagination DTO
-    ├── include helpers          # ?include= allow-list + builder
-    └── db client wiring
-```
-
 ## Controllers
 
 - Thin: parse input, call a use case, shape the response.
@@ -86,8 +66,3 @@ const updateSessionPort = new PostgresUpdateSessionAdapter(db);
 const findSessionById = new FindSessionById(findSessionByIdPort);
 const finishSession = new FinishSession(findSessionByIdPort, updateSessionPort);
 ```
-
-## Rules
-
-- May import every other layer. Nothing imports `main`.
-- Holds no business rules.

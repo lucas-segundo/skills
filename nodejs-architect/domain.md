@@ -2,16 +2,6 @@
 
 `src/domain/` is the business core. It holds the entities and the errors that describe what the business allows. It imports nothing outward: no `app`, `infra`, `main`, framework, ORM, or validation library.
 
-## Contents
-
-```
-domain/
-├── errors.ts                # DomainError base + NotFoundError, ConflictError, ValidationError
-└── entities/
-    ├── <entity>.ts          # class + static factory + immutable transitions
-    └── <entity>.spec.ts     # unit test beside it
-```
-
 ## Entities
 
 - Class with `readonly` constructor params (immutable). Name is the domain noun, PascalCase (`WorkoutSession`).
@@ -75,9 +65,3 @@ export class NotFoundError extends DomainError {}
 export class ConflictError extends DomainError {}
 export class ValidationError extends DomainError {}
 ```
-
-## Rules
-
-- Depends on nothing outside `domain`.
-- No I/O, no framework decorators, no ORM types.
-- Business rules that belong to a single entity live here, not in use cases or controllers.

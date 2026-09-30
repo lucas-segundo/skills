@@ -4,14 +4,10 @@
 - **Keep mocks out of the test file.** If a test needs to mock components, define the mocks in a `mock.tsx` next to it and import them into `test.tsx`, so the test file stays focused on behavior.
 
 ```tsx
-// Bad: only checks that a prop or style is rendered
+// Bad: asserts a prop or class is rendered
 it('renders the title', () => {
   render(<UserCard title="Ana" />);
   expect(screen.getByText('Ana')).toBeInTheDocument();
-});
-it('has the active class', () => {
-  render(<Tab active />);
-  expect(screen.getByRole('tab')).toHaveClass('active');
 });
 
 // Good: loading state, then data
@@ -22,26 +18,11 @@ it('shows a spinner while loading, then the users', async () => {
   expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
 });
 
-// Good: empty state
-it('shows the empty state when there are no users', async () => {
-  server.use(http.get('/users', () => HttpResponse.json([])));
-  render(<UserList />);
-  expect(await screen.findByText(/no users/i)).toBeInTheDocument();
-});
-
 // Good: action triggers a request and a success toast
 it('saves the form and shows a success toast', async () => {
   const user = userEvent.setup();
   render(<ProfileForm />);
   await user.click(screen.getByRole('button', { name: /save/i }));
   expect(await screen.findByText(/saved successfully/i)).toBeInTheDocument();
-});
-
-// Good: click loads more data
-it('loads more users after clicking "Load more"', async () => {
-  const user = userEvent.setup();
-  render(<UserList />);
-  await user.click(await screen.findByRole('button', { name: /load more/i }));
-  expect(await screen.findByText('Bruno')).toBeInTheDocument();
 });
 ```

@@ -2,17 +2,6 @@
 
 `src/infra/` implements the ports declared in `app/ports`. It is the only layer that knows the ORM, query builder, or driver. Swapping persistence means swapping this folder.
 
-## Contents
-
-```
-infra/
-└── <persistence>/                   # e.g. prisma/, typeorm/, in-memory/
-    ├── schema | migrations          # storage definition
-    └── adapters/
-        └── <area>/
-            └── <verb>-<noun>.ts     # <Tech><Verb><Noun>Adapter implements port
-```
-
 ## Adapters
 
 - Name `<Tech><Verb><Noun>Adapter` (`PrismaCreateSessionAdapter`), one per port, `implements` that port.
@@ -40,9 +29,3 @@ export class PostgresFindSessionsAdapter implements FindSessionsPort {
   }
 }
 ```
-
-## Rules
-
-- Imports `app/ports` and `domain` (to build entities). Never `main`.
-- Schema and migrations live beside the adapters that use them.
-- Only `main` wires adapters into use cases; use cases never import from here.

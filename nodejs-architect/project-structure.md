@@ -60,8 +60,6 @@ main ──> infra ──> app (ports) ──> domain
 - `main` is the only place that knows the web framework and how dependencies are composed (manual wiring or a DI container).
 - Cross-layer imports use the project's absolute alias; relative paths only within the same folder. No barrel files.
 
-Lint enforcement: see [lint.md](lint.md).
-
 ## Naming
 
 | Thing | Pattern | Example |
@@ -82,14 +80,6 @@ Each layer has its own file with role, rules and examples:
 - [app.md](app.md): ports and use cases.
 - [infra.md](infra.md): adapters.
 - [main.md](main.md): controllers, DTOs, error mapping and wiring.
-
-## Adding a new area
-
-1. `app/ports/<area>/` port per operation.
-2. `app/use-cases/<area>/<action>/` handler + test.
-3. `infra/<persistence>/adapters/<area>/` adapter per port.
-4. `main/routes/<area>/` module, controller, spec, dto.
-5. Register the area in `main/app` (and in the container, if the project uses one).
 
 ## Adding an endpoint (checklist)
 

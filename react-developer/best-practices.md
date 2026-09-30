@@ -42,75 +42,37 @@ export const useUser = (id: string) =>
 
 ## Data fetching (server side, SSR)
 
-Call the API function directly on the server (server components, loaders), with no hook. Handle loading and errors with the framework's mechanisms (streaming `<Suspense>` boundaries, error boundaries).
+Call the API function directly in server components/loaders, no hook. Use the framework's loading/error mechanisms (streaming `<Suspense>`, `loading.tsx`, `error.tsx`). Default export only where the framework requires it.
 
-```tsx
-// Use framework's loading.tsx / error.tsx handle the states
-const UserPage = async ({ params }: { params: { id: string } }) => {
-  const user = await getUser(params.id);
-  return <h2>{user.name}</h2>;
-};
-
-// default export only because the framework requires it for pages
-export default UserPage;
-```
 
 ## Params over fixed config
 
-Service functions and hooks take options as params, never hardcode fixed config (query-string `include`, `filter`, `sort`, `limit`, etc.) inside. Each caller decides what it needs; the service only forwards it. Defaults are fine only when every caller truly wants them.
+Service functions and hooks take options as params (`include`, `filter`, `sort`, `limit`); never hardcode them inside. Include `params` in the `queryKey`. Never pass delimited strings (`"a,b"`); take an array/object and let the service serialize.
 
 ```tsx
-// Bad: every caller is stuck with the same include/filter
-const getUser = (id: string) =>
-  api.get(`/users/${id}`, { params: { include: 'posts', status: 'active' } });
-
-// Good: caller passes what it needs
 export const useUser = (id: string, params?: GetUserParams) =>
-  useSuspenseQuery({
-    queryKey: ['user', id, params],
-    queryFn: () => getUser(id, params),
-  });
+  useSuspenseQuery({ queryKey: ['user', id, params], queryFn: () => getUser(id, params) });
 
-const getUser = (id: string, params?: GetUserParams) =>
-  api.get(`/users/${id}`, { params });
-```
+useUser(id, { include: ['exercises', 'sessions'] }); // not 'exercises,sessions'
 
-Include `params` in the `queryKey` so different params cache separately.
-
-Never pass params as a delimited string (`"exercises,sessions"`); that leaks the query-string format into callers. Take an array or object and let the service serialize it.
-
-```tsx
-// Bad
-useUser(id, 'exercises,sessions');
-
-// Good
-useUser(id, { include: ['exercises', 'sessions'] });
-
-// service serializes
 const getUser = (id: string, { include, ...rest }: GetUserParams = {}) =>
   api.get(`/users/${id}`, { params: { ...rest, include: include?.join(',') } });
 ```
 
+
 ## Avoid fetching large data
 
-Never fetch a large collection in one go. Prefer pagination (or infinite scroll) when the API supports it, and pass page/limit/cursor as params. If the API has no pagination, tell the user and leave a `TODO` in the code next to the call.
+Never fetch a large collection in one go. Paginate (or infinite scroll) when the API supports it, passing page/limit/cursor as params. If it doesn't, tell the user and leave a `TODO` next to the call.
 
 ```tsx
-// Good: API paginates, caller controls the page
-export const useUsers = (params: { page: number; limit: number }) =>
-  useSuspenseQuery({
-    queryKey: ['users', params],
-    queryFn: () => getUsers(params),
-  });
-
-// API has no pagination: fetch all, flag it, and tell the user
 // TODO: no pagination in GET /users, fetches everything. Paginate when the API supports it.
 const getUsers = () => api.get('/users');
 ```
 
+
 ## Backend gaps
 
-Never code the backend. If the frontend needs something the backend lacks (endpoint, field, behavior), warn the user and leave a `TODO(backend)` next to the call. If the backend is in the workspace context, put its name in the TODO.
+Never code the backend. If the frontend needs something it lacks (endpoint, field, behavior), warn the user and leave a `TODO(backend)` next to the call, naming the backend if it is in the workspace.
 
 ```tsx
 // TODO(backend: orders-api): GET /orders has no `status` filter, filtering client side for now.
@@ -119,13 +81,11 @@ const getOrders = () => api.get('/orders');
 
 ## Backend errors
 
-Never show a backend error as-is. The service handles every error the backend can return, mapping each error code to a plain-language message a non-technical user understands (what went wrong and, when possible, what to do next), and throws an `Error` carrying that friendly message. The frontend just displays `error.message`. Unknown codes fall back to a generic friendly message, never the raw backend text.
+Never show a backend error as-is. The service maps every error code to a plain-language message (what went wrong, what to do next) and throws an `Error` with it; the UI displays `error.message`. Unknown codes get a generic friendly message, never the raw backend text. If the backend returns no code, warn the user and leave a `TODO(backend)`.
 
 ```tsx
-// service: maps codes and throws with the friendly message
 const userErrorMessages: Record<string, string> = {
   EMAIL_TAKEN: 'This email is already registered. Try logging in instead.',
-  USER_NOT_FOUND: "We couldn't find this account.",
   SESSION_EXPIRED: 'Your session ended. Please log in again.',
 };
 
@@ -137,109 +97,36 @@ const updateUser = async (id: string, values: UserValues) => {
     throw new Error(userErrorMessages[code] ?? 'Something went wrong. Please try again.');
   }
 };
-
-// Bad: service rethrows the raw backend error
-throw e;
-
-// Good: front displays the already-friendly message
-<FormError message={error.message} />;
 ```
 
-If the backend does not return a code for an error, warn the user and leave a `TODO(backend)`.
 
 ## Components
 
-Small, single-purpose, function components. Extract when JSX gets nested or a piece is reused. Keep screens as composition.
+Small, single-purpose function components. Extract when JSX nests or a piece is reused. Screens are composition only.
 
-```tsx
-// Good: the screen reads like an outline
-export const OrderScreen = ({ id }: { id: string }) => (
-  <>
-    <OrderHeader id={id} />
-    <OrderItems id={id} />
-    <OrderActions id={id} />
-  </>
-);
-```
 
 ## No ternary chains for conditional rendering
 
-Don't stack ternaries to pick between render branches (loading/error/empty/data, etc.). Extract the branches into their own component and use if/else or early returns. Reads top to bottom instead of nested `? :` puzzles.
+Don't chain ternaries to pick render branches (error/loading/empty/data). Extract a component with early returns.
 
 ```tsx
-// Bad: chained ternaries
-{isError ? (
-  <ErrorMsg />
-) : isLoading ? (
-  <Skeleton />
-) : isEmpty ? (
-  <EmptyMsg />
-) : (
-  <List items={items} />
-)}
-
-// Good: if/else in its own component
 const UnitsList = ({ isError, isLoading, isEmpty, items }: UnitsListProps) => {
   if (isError) return <ErrorMsg />;
-
   if (isLoading) return <Skeleton />;
-
   if (isEmpty) return <EmptyMsg />;
-  
   return <List items={items} />;
 };
 ```
 
-## Order code top-down
-
-Order code top-down, like a pyramid: the component that renders the others goes at the top, then the components it renders, then the hooks and helpers they use. Readers should see the usage first and scroll down for details.
-
-```tsx
-// Good: screen, then its pieces, then the hook
-export const OrderScreen = ({ id }: { id: string }) => (
-  <>
-    <OrderHeader id={id} />
-    <OrderItems id={id} />
-  </>
-);
-
-const OrderHeader = ({ id }: { id: string }) => {
-  const { data: order } = useOrder(id);
-  return <h2>{order.name}</h2>;
-};
-
-const OrderItems = ({ id }: { id: string }) => {/* ... */};
-
-export const useOrder = (id: string) => useSuspenseQuery(/* ... */);
-```
 
 ## Mapped items
 
-Never inline a big JSX body (handlers, hooks calls, derived values) inside `.map`. Extract a component that receives the item as a prop and derives the rest itself. The parent keeps only the sort/filter and the map.
+Never inline a big JSX body (handlers, hooks, derived values) in `.map`. Extract a row component that takes the item and derives the rest; the parent keeps only sort/filter and the map. Per-row hooks (e.g. a mutation) scope state like `isPending` to that row.
 
 ```tsx
-// Bad: logic and layout buried in the map callback
-{items.map((item) => {
-  const full = countFor(item.id) >= item.target;
-  return (
-    <View key={item.id}>
-      {/* ...lots of JSX, handlers, styles... */}
-    </View>
-  );
-})}
-
-// Good: the map only composes
-{items.map((item) => (
-  <ItemRow key={item.id} item={item} logged={countFor(item.id)} />
-))}
-
-const ItemRow = ({ item, logged }: ItemRowProps) => {
-  const full = logged >= item.target;
-  return <View>{/* ... */}</View>;
-};
+{items.map((item) => <ItemRow key={item.id} item={item} logged={countFor(item.id)} />)}
 ```
 
-Per-row hooks (e.g. a mutation) inside the row component scope state like `isPending` to that row. Pass the hook result from the parent only if rows must share it.
 
 ## Effects
 
@@ -266,39 +153,13 @@ useEffect(() => {
 
 ## Memoization
 
-Don't add `useMemo`/`useCallback`/`memo` by default. Add them where a measured re-render or a stable-reference requirement (e.g. list item renderers, dependency arrays) justifies it.
+No `useMemo`/`useCallback`/`memo` by default. Add only for a measured re-render or a required stable reference (memoized list rows, dependency arrays).
 
-```tsx
-// Bad: memoizing cheap work
-const label = useMemo(() => `Hi ${name}`, [name]);
-
-// Good: stable callback passed to a memoized list item
-const handleSelect = useCallback((id: string) => setSelected(id), []);
-<MemoizedRow onSelect={handleSelect} />;
-```
 
 ## No single-use constants
 
-Don't hoist a value (title, description, className, style object) to a top-of-file constant when only one spot uses it. Inline it there. Hoist only when reused across multiple places or callers.
+Don't hoist a title, className or style object to a top-of-file constant used once; inline it. Hoist only when reused.
 
-```tsx
-// Bad: constants used once, at the top just for organization
-const TITLE = 'Order summary';
-const CONTAINER_CLASS = 'flex flex-col gap-2 p-4';
-
-export const OrderSummary = () => (
-  <div className={CONTAINER_CLASS}>
-    <h2>{TITLE}</h2>
-  </div>
-);
-
-// Good: inline where used
-export const OrderSummary = () => (
-  <div className="flex flex-col gap-2 p-4">
-    <h2>Order summary</h2>
-  </div>
-);
-```
 
 ## Forms/mutations
 

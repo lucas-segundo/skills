@@ -58,6 +58,4 @@ export default [
 
 Notes:
 - Trim the banned package lists to what the project actually uses and add the ones it uses that are missing.
-- `use-cases` must import ports, never adapters. `infra` is already blocked from `main`, and `app` cannot reach `infra` under the element rules above.
-- Optional stricter check: `dependency-cruiser` with the same four layers, run in CI, if the user wants cycle detection.
 - No barrel files: add the project's barrel rule (`eslint-plugin-barrel-files` `avoid-barrel-files`, or Biome `noBarrelFile`).
