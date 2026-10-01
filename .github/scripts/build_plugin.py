@@ -2,7 +2,7 @@
 """Build a Cowork-installable .plugin file from this repo.
 
 The repo already uses the standard plugin layout, so this just stages
-.claude-plugin/plugin.json (with a version added), skills/ and README.md
+.claude-plugin/plugin.json (with a version added), skills/, hooks/ and README.md
 into dist/<plugin-name>/ and zips it to dist/<plugin-name>.plugin.
 
 Usage (run from the repo root):
@@ -55,6 +55,8 @@ def main() -> None:
     (stage / ".claude-plugin").mkdir(parents=True)
     (stage / ".claude-plugin" / "plugin.json").write_text(json.dumps(plugin, indent=2) + "\n")
     shutil.copytree(SKILLS, stage / "skills", ignore=IGNORE)
+    if (ROOT / "hooks").is_dir():
+        shutil.copytree(ROOT / "hooks", stage / "hooks", ignore=IGNORE)
     if (ROOT / "README.md").is_file():
         shutil.copy(ROOT / "README.md", stage / "README.md")
 
