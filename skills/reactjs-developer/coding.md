@@ -105,6 +105,35 @@ const updateUser = async (id: string, values: UserValues) => {
 Small, single-purpose function components. Extract when JSX nests or a piece is reused. Screens are composition only.
 
 
+## Avoid large prop lists
+
+Don't build components with many props (rule of thumb: more than ~5), especially value/`onChange` pairs per field. Group related data into one object prop plus a single change handler, or use another strategy: context, composition (`children`/slots), or a form library.
+
+```tsx
+// Bad: one value prop and one handler per field
+<AllowanceFields
+  hasInstallmentAllowance={draft.hasInstallmentAllowance}
+  installmentAllowanceAmount={draft.installmentAllowanceAmount}
+  annualDiscountAmount={draft.annualDiscountAmount}
+  financeObservation={draft.financeObservation}
+  onHasInstallmentAllowanceChange={(hasInstallmentAllowance) => updateDraft({ hasInstallmentAllowance })}
+  onInstallmentAllowanceAmountChange={(installmentAllowanceAmount) => updateDraft({ installmentAllowanceAmount })}
+  onAnnualDiscountAmountChange={(annualDiscountAmount) => updateDraft({ annualDiscountAmount })}
+  onFinanceObservationChange={(financeObservation) => updateDraft({ financeObservation })}
+/>
+
+// Good: one object, one patch handler
+<AllowanceFields value={draft} onChange={updateDraft} />
+
+const AllowanceFields = ({ value, onChange }: { value: Draft; onChange: (patch: Partial<Draft>) => void }) => (
+  <input
+    value={value.financeObservation}
+    onChange={(e) => onChange({ financeObservation: e.target.value })}
+  />
+);
+```
+
+
 ## Lazy-mount hidden components
 
 For any component that starts hidden (modal, drawer, popover, tab), to keep it out of the initial bundle. Load it with the framework's lazy strategy if it has one (e.g. `next/dynamic` in Next.js), else `React.lazy`. Mount it only once first needed (`&&` inside `<Suspense>`), then keep it mounted and toggle an `open` prop so exit animations play. One state: `undefined` = never shown, then `true`/`false`.
