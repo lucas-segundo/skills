@@ -7,7 +7,6 @@ Private Claude plugin with my personal skills.
 .claude-plugin/marketplace.json   marketplace (this repo = one plugin)
 skills/<skill-name>/SKILL.md      the skills
 hooks/hooks.json                  plugin hooks
-hooks/hooks.json                  plugin hooks
 ```
 
 ## Install

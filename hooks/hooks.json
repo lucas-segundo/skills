@@ -1,5 +1,15 @@
 {
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Caveman mode active (lite). Follow the caveman skill for this reply. Switch level with /caveman <level>; stop with \"stop caveman\" or \"normal mode\".'"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash",
