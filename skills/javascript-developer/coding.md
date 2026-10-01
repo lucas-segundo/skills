@@ -74,3 +74,20 @@
   const parse = (raw) => {};
   const validate = (data) => {};
   ```
+
+- Avoid re-exports. Don't import a symbol just to export it again, and don't use `export ... from`. Each symbol has one source of export; consumers import it from where it's defined.
+
+  ```js
+  // bad: two places export DEFAULT_DRAFT
+  import {
+    DEFAULT_DRAFT,
+    getScopeDetails,
+    type DraftOption,
+  } from './draft';
+
+  export { DEFAULT_DRAFT };
+
+  // good: import only what this file uses
+  import { getScopeDetails, type DraftOption } from './draft';
+  // consumers of DEFAULT_DRAFT import it from './draft'
+  ```
