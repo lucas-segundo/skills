@@ -1,11 +1,12 @@
 {
   "hooks": {
-    "UserPromptSubmit": [
+    "PreToolUse": [
       {
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'Caveman mode active (lite). Follow the caveman skill for this reply. Switch level with /caveman <level>; stop with \"stop caveman\" or \"normal mode\".'"
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/rtk-rewrite.sh\""
           }
         ]
       }
