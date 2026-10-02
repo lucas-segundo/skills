@@ -91,3 +91,11 @@
   import { getScopeDetails, type DraftOption } from './draft';
   // consumers of DEFAULT_DRAFT import it from './draft'
   ```
+
+- Never create a type or interface identical to another. Use the original directly instead of aliasing it.
+
+  ```ts
+  // bad: alias adds a second name for the same shape
+  export type RetentionCaseSolutionResponse = RetentionCaseSolutionBase;
+  // good: use RetentionCaseSolutionBase directly
+  ```
