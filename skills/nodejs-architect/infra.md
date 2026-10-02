@@ -6,7 +6,7 @@
 
 - Name `<Tech><Verb><Noun>Adapter` (`PrismaCreateSessionAdapter`), one per port, `implements` that port.
 - Receives the DB client through the constructor. Single `execute` method.
-- Maps rows explicitly. Never leaks ORM or driver types out. Command and entity-returning ports build domain entities; query ports may return the plain `<Name>Query` shape, or an entity plus computed fields via `Object.assign(new Entity(...), { extra })`.
+- Maps rows explicitly. Never leaks ORM or driver types out. Always build domain entities. Query ports attach included relations or computed fields to the entity via `Object.assign(new Entity(...), { extra })`; no separate read-model types.
 - Query aggregates (counts, sums) are computed from included rows or in the query. Keep it simple, no business rules.
 - Pagination: offset = `(page - 1) * limit`, limit = `limit`, one page query with explicit ordering. No `count` query unless the user asks for totals (then run it concurrently with the page query).
 - Stateless. Adapters are shared singletons: never store per-call results on adapter fields, it is a race.

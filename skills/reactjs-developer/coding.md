@@ -2,6 +2,24 @@
 
 Examples use TanStack Query and `react-error-boundary`; adapt them to the project's own libraries.
 
+## Contents
+
+- Data fetching (client side)
+- Data fetching (server side, SSR)
+- Params over fixed config
+- Avoid fetching large data
+- Backend gaps
+- Backend errors
+- Components
+- Avoid large prop lists
+- Lazy-mount hidden components
+- No ternary chains for conditional rendering
+- Mapped items
+- Effects
+- Memoization
+- No single-use constants
+- Forms/mutations
+
 ## Data fetching (client side)
 
 Use the project's data-fetching library, never ad-hoc `useEffect` + `useState` fetching. Data hooks must adopt React Suspense (the suspense variant of the library's read hook, no manual `isLoading` branching); the screen wraps the data component in `<Suspense>` with a fallback and an error boundary.

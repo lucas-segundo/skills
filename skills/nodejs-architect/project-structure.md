@@ -20,7 +20,7 @@ src/
 │   └── use-cases/
 │       └── <area>/
 │           └── <verb>-<noun>/
-│               ├── index.ts             # handler class + exported <Name>Dto interface
+│               ├── index.ts             # use-case class + exported <Name>Dto interface
 │               └── test.ts              # mocks ports, no I/O
 │
 ├── infra/                               # implementations of ports
@@ -36,7 +36,7 @@ src/
     ├── routes/
     │   └── <area>/
     │       ├── module                   # composition for this area: builds adapters, injects into use cases
-    │       ├── controller.ts            # thin: parse, call handler/port, shape response
+    │       ├── controller.ts            # thin: parse, call use case/query port, shape response
     │       ├── controller.spec.ts       # controller built directly with mocks
     │       └── dto/
     │           └── <verb>-<noun>.ts     # request validation, conforms to use-case DTO

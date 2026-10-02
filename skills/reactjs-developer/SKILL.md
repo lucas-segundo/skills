@@ -1,23 +1,27 @@
 ---
 name: reactjs-developer
-description: React frontend conventions and best practices. Use whenever writing, editing, reviewing, or debugging React code — components, JSX/TSX, hooks (useState, useEffect, useMemo, useCallback, custom hooks), Suspense, data fetching, forms, or React tests.
+description: Applies React frontend coding and testing conventions on top of the JavaScript ones. Use when writing, editing, reviewing, or debugging React code, including components, JSX/TSX, hooks (useState, useEffect, useMemo, useCallback, custom hooks), Suspense, data fetching, forms, or React tests.
 ---
-
-# Extending the JavaScript Developer skill
-- This skill extends the [JavaScript Developer](../javascript-developer/SKILL.md) skill. Read it first, then read this one.
 
 # React Developer
 
 Write React code that follows best practice first. Where the codebase already has a pattern that doesn't conflict with best practice, stay consistent with it; where it does conflict, follow best practice and flag the deviation rather than copying the flaw.
 
-## Coding
+React code is also JavaScript, so the `javascript-developer` conventions apply too. Read its files directly:
 
-Read [coding.md](coding.md) before writing or reviewing React code.
+- [../javascript-developer/coding.md](../javascript-developer/coding.md): general JS/TS coding rules.
+- [../javascript-developer/testing.md](../javascript-developer/testing.md): general testing rules.
+- [../javascript-developer/verification.md](../javascript-developer/verification.md): lint and test the changed files before finishing.
 
-## AI
+## Reference files
 
-- In plan mode, do NOT describe classNames or styling details in the plan. The reviewer checks the screen to verify styling.
+- **Coding**: read [coding.md](coding.md) before writing or reviewing React code.
+- **Testing**: read [testing.md](testing.md) before writing or reviewing component tests.
 
-## Testing
+## Planning
 
-Read [testing.md](testing.md) before writing or reviewing component tests.
+In plan mode, do not describe classNames or styling details in the plan. The reviewer checks the screen to verify styling.
+
+## Verification (final step)
+
+Run [../javascript-developer/verification.md](../javascript-developer/verification.md) before finishing.

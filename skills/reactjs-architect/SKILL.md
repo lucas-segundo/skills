@@ -1,6 +1,6 @@
 ---
 name: reactjs-architect
-description: Configures a React frontend's project structure, the lint rules that enforce it, and AGENTS.md so AI agents follow it. Manual use only.
+description: Configures a React frontend's project structure, the lint rules that enforce it, and AGENTS.md so AI agents follow it. Use when the user asks to set up, scaffold, or enforce the structure of a React frontend. Manual use only.
 disable-model-invocation: true
 ---
 
@@ -10,11 +10,22 @@ Owns React project structure. `reactjs-developer` covers code conventions only.
 
 ## Steps
 
+Copy this checklist and check off each step:
+
+```
+Architect progress:
+- [ ] 1. Detect
+- [ ] 2. Respect an existing layout
+- [ ] 3. Configure lint
+- [ ] 4. Write AGENTS.md
+- [ ] 5. Verify
+```
+
 1. **Detect.** Read `package.json` and the existing `src/`. Note the import alias and the linter (ESLint flat config, `.eslintrc`, Biome).
 2. **Respect an existing layout.** If it is sound, adapt the lint rules to it and skip scaffolding. Scaffold folders only for a new project or when asked. Layout: [project-structure.md](project-structure.md).
 3. **Configure lint** from [lint.md](lint.md) so structure violations fail `lint`. Extend the existing config, never replace the user's rules. Install only the plugin it names, with the project's package manager.
 4. **Write `AGENTS.md`** at the project root using the block below. If one exists, keep the user's content and only add or update `## Project structure`. If the project uses `CLAUDE.md`, make it import `@AGENTS.md`.
-5. **Verify.** Run lint. Add one illegal import, confirm lint fails, remove it. Report what was configured.
+5. **Verify.** Run lint. Add one illegal import, confirm lint fails, remove it. If lint passes on the illegal import, fix the config (patterns, alias resolver) and repeat. Report what was configured.
 
 If AGENTS.md/CLAUDE.md says `project-structure: off`, or the user says to skip structure, do nothing.
 
