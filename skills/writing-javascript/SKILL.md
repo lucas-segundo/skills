@@ -1,5 +1,5 @@
 ---
-name: javascript-developer
+name: writing-javascript
 description: Applies JavaScript and TypeScript coding, testing and verification conventions. Use when writing, editing, reviewing, or debugging JS/TS code (.js, .ts, .mjs, Node scripts), including async/await, modules, functions, error handling, or tests.
 ---
 

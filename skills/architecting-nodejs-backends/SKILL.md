@@ -1,12 +1,12 @@
 ---
-name: nodejs-architect
+name: architecting-nodejs-backends
 description: Configures a Node.js hexagonal backend's project structure, the lint rules that enforce it, and AGENTS.md so AI agents follow it. Use when the user asks to set up, scaffold, or enforce the structure of a Node.js backend. Manual use only.
 disable-model-invocation: true
 ---
 
 # Node.js Architect
 
-Owns Node backend structure. `javascript-developer` covers code conventions only.
+Owns Node backend structure. `writing-javascript` covers code conventions only.
 
 ## Steps
 
