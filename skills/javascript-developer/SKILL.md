@@ -16,7 +16,6 @@ Write modern, boring, readable JavaScript. Where the codebase already has a patt
 
 - **Coding**: read [coding.md](coding.md) before writing or reviewing JS/TS code.
 - **Testing**: read [testing.md](testing.md) before writing or reviewing tests.
-- **Verification**: read [verification.md](verification.md) as the last step of any task that edited files.
 
 ## Verification (final step)
 

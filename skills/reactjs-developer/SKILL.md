@@ -11,7 +11,6 @@ React code is also JavaScript, so the `javascript-developer` conventions apply t
 
 - [../javascript-developer/coding.md](../javascript-developer/coding.md): general JS/TS coding rules.
 - [../javascript-developer/testing.md](../javascript-developer/testing.md): general testing rules.
-- [../javascript-developer/verification.md](../javascript-developer/verification.md): lint and test the changed files before finishing.
 
 ## Reference files
 
