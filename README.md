@@ -25,4 +25,6 @@ claude.ai admin settings → Skills → Add → Sync from GitHub → pick this r
 
 ## Cloud env setup
 
-Paste `scripts/cloud-env-setup.sh` into the cloud environment's setup script. It clones [lucas-segundo/ai](https://github.com/lucas-segundo/ai) and runs `scripts/setup.sh lucas-skills-plugin`, which installs this plugin. Set `SETUP_GITHUB_TOKEN` (fine-grained, read-only contents for this repo) in the environment variables. Log: `/tmp/setup.log`.
+Plugin-free: paste `scripts/cloud-env-skills.sh` to copy the skills into `~/.claude/skills`.
+
+Plugin install: paste `scripts/cloud-env-setup.sh` into the cloud environment's setup script. It clones [lucas-segundo/ai](https://github.com/lucas-segundo/ai) and runs `scripts/setup.sh lucas-skills-plugin`, which installs this plugin. Set `SETUP_GITHUB_TOKEN` (fine-grained, read-only contents for this repo) in the environment variables. Log: `/tmp/setup.log`.
