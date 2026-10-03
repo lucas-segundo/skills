@@ -22,3 +22,7 @@ claude.ai admin settings → Skills → Add → Sync from GitHub → pick this r
 ## Caveman
 
 `skills/caveman` is the terse-reply skill. `hooks/hooks.json` runs a `UserPromptSubmit` hook that reminds Claude to use caveman (lite) on every prompt. Edit the `echo` text there to change the level or remove the hook to turn it off.
+
+## Cloud env setup
+
+Paste `scripts/cloud-env-setup.sh` into the cloud environment's setup script. It clones [lucas-segundo/ai](https://github.com/lucas-segundo/ai) and runs `scripts/setup.sh lucas-skills-plugin`, which installs this plugin. Set `SETUP_GITHUB_TOKEN` (fine-grained, read-only contents for this repo) in the environment variables. Log: `/tmp/setup.log`.
