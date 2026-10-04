@@ -7,7 +7,7 @@ description: >
   /caveman-review. Auto-triggers when reviewing pull requests.
 ---
 
-Write code review comments terse and actionable. One line per finding. Location, problem, fix. No throat-clearing. Mark findings in the code itself (see "Mark in code"), not in a big comment block.
+Write code review comments terse and actionable. One line per finding. Location, problem, fix. No throat-clearing. Post findings as inline PR line comments (see "Comment on the PR line"), not in a big comment block.
 
 ## Rules
 
@@ -46,36 +46,36 @@ Write code review comments terse and actionable. One line per finding. Location,
 
 ✅ `L23: 🟡 risk: no retry on 429. Wrap in withBackoff(3).`
 
-## Mark in code
+## Comment on the PR line
 
-Do not dump findings in one big comment box. Put each finding as a one-line marker comment directly above the offending code, in the file's own comment syntax:
+Do not dump findings in one big comment box, and never edit the source files. Post each finding as an inline review comment on the exact line(s) in the GitHub PR, in a **pending** review (not submitted), so the author resolves each thread.
 
-```ts
-// REVIEW(🔴 bug): user can be null after .find(). Add guard before .email.
-const email = user.email;
-```
+- Body = `<severity> <problem>. <fix>.` One line, same terse rules as above. Line number is implied by the anchor, drop `L<line>:`.
+- Anchor to the line(s) of the offending code: `path`, `line` (and `start_line` for ranges), `side: RIGHT`. Only lines in the PR diff can be commented.
+- Leave the review pending. Never submit, approve or request changes; the user submits.
+- Chat reply: short summary only — count per severity and the `<file>:L<line>` list. No repeating comment text.
+- No PR (local diff, pasted code, no `gh`): fall back to `L<line>: ...` lines in chat.
 
-- Marker = `REVIEW(<severity>): <problem>. <fix>.` Same terse rules as above, still one line.
-- Marker is the only edit. Never change the code itself.
-- Chat reply: short summary only — count per severity and the list of `<file>:L<line>` marked. No repeating comment text.
-- Not editable (PR on remote, diff pasted, no checkout): fall back to `L<line>: ...` lines in chat.
+### Posting
+
+1. Get PR number and head: `gh pr view --json number,headRefOid`.
+2. Fetch existing threads first (see below).
+3. Pending review already exists for the user → add threads to it with GraphQL `addPullRequestReviewThread` (`pullRequestReviewId`, `path`, `line`, `side`, `body`). Otherwise create one via `gh api repos/{owner}/{repo}/pulls/{n}/reviews` with `comments[]` and **no `event`**, which leaves it pending.
 
 ### No duplicates on re-review
 
-Before marking, `grep -rn "REVIEW(" <changed files>` to find existing markers.
+Before posting, list existing review threads (GraphQL `pullRequest.reviewThreads`: `isResolved`, `isOutdated`, `path`, `line`, `comments.nodes.body`) plus pending review comments.
 
-- Same problem already marked on that code → skip. Do not add a second marker.
-- Marker exists but wording stale or severity changed → edit it in place.
-- Marked code now fixed (problem gone) → delete the marker.
-- Marker whose code moved → keep one marker at the new location, remove the old.
-- Never stack two `REVIEW(` lines for the same issue. Match by code + problem, not exact wording.
-
-Tell user markers are greppable: `grep -rn "REVIEW("`. Remove all when resolved.
+- Same problem already on that code (match by path + code + problem, not exact wording or line number) → skip. Do not post a second comment.
+- Thread exists and is resolved, code unchanged → skip. Author decided.
+- Thread outdated because the code moved and problem persists → skip, mention in summary.
+- Existing comment wording or severity stale → edit that comment (`updatePullRequestReviewComment`) instead of adding one.
+- Problem now fixed, thread still open → do not post; list it in the summary as "looks fixed" for the author to resolve.
 
 ## Auto-Clarity
 
-Drop terse mode for: security findings (CVE-class bugs need full explanation + reference), architectural disagreements (need rationale, not just a one-liner), and onboarding contexts where the author is new and needs the "why". In those cases write a normal paragraph, then resume terse for the rest. Marker for these stays one line and points to the chat explanation.
+Drop terse mode for: security findings (CVE-class bugs need full explanation + reference), architectural disagreements (need rationale, not just a one-liner), and onboarding contexts where the author is new and needs the "why". In those cases write a normal paragraph, then resume terse for the rest. The inline comment stays one line and points to the chat explanation.
 
 ## Boundaries
 
-Reviews only — does not write the code fix, does not approve/request-changes, does not run linters. Only edits are `REVIEW(` markers. "stop caveman-review" or "normal mode": revert to verbose review style.
+Reviews only — does not write the code fix, does not approve/request-changes, does not run linters. Never edits source files; only posts pending inline PR comments. "stop caveman-review" or "normal mode": revert to verbose review style.
