@@ -48,32 +48,33 @@ Write code review comments terse and actionable. One line per finding. Location,
 
 ## Comment on the PR line
 
-Do not dump findings in one big comment box, and never edit the source files. Post each finding as an inline review comment on the exact line(s) in the GitHub PR, in a pending review that is submitted at the end, so the author resolves each thread.
+Never edit source files. Post each finding as an inline thread in one pending review, then submit it. No big comment block.
 
-- Body = `<severity> <problem>. <fix>.` One line, same terse rules as above. Line number is implied by the anchor, drop `L<line>:`.
-- Anchor to the line(s) of the offending code: `path`, `line` (and `start_line` for ranges), `side: RIGHT`. Only lines in the PR diff can be commented.
-- Submit the review once all comments are added, as a `REQUEST_CHANGES` review. Never approve.
-- Chat reply: short summary only — count per severity and the `<file>:L<line>` list. No repeating comment text.
-- No PR (local diff, pasted code, no `gh`): fall back to `L<line>: ...` lines in chat.
+- Body = `<severity> <problem>. <fix>.` One line, no `L<line>:`.
+- Anchor: `path`, `line` (`startLine` for ranges), `side: RIGHT`. Only lines in the PR diff.
+- Chat reply: count per severity and the `<file>:L<line>` list only. No comment text, no preamble.
+- No PR (local diff, pasted code, no `gh`): `L<line>: ...` lines in chat.
 
 ### Posting
 
-1. Get PR number and head: `gh pr view --json number,headRefOid`.
-2. Fetch existing threads first (see below).
-3. Pending review already exists for the user → add threads to it with GraphQL `addPullRequestReviewThread` (`pullRequestReviewId`, `path`, `line`, `side`, `body`). Otherwise create one via `gh api repos/{owner}/{repo}/pulls/{n}/reviews` with `comments[]` and **no `event`**, which leaves it pending until step 4.
+Use `gh api graphql` only, not REST `reviews` with `comments[]` (422).
 
-4. Submit after the last comment: `gh api repos/{owner}/{repo}/pulls/{n}/reviews/{review_id}/events -f event=REQUEST_CHANGES` (or GraphQL `submitPullRequestReview` with `event: REQUEST_CHANGES`). Review body empty, or one line (e.g. "2 🔴, 1 🟡").
-5. Nothing new to post (all duplicates or none found) → do not create or submit an empty review. Delete a pending review you created that ended up with no comments.
+1. `gh pr view --json number,headRefOid`.
+2. Fetch existing threads (see below).
+3. Reuse the user's pending review, else `addPullRequestReview` (`pullRequestId`, no `event`).
+4. Per finding: `addPullRequestReviewThread` (`pullRequestReviewId`, `path`, `line`, `side`, `body`).
+5. `submitPullRequestReview` with `event: REQUEST_CHANGES`, body empty or one line ("2 🔴, 1 🟡"). Never approve.
+6. Nothing new to post → no empty review. Delete a pending review you created with no comments.
 
 ### No duplicates on re-review
 
-Before posting, list existing review threads (GraphQL `pullRequest.reviewThreads`: `isResolved`, `isOutdated`, `path`, `line`, `comments.nodes.body`) plus pending review comments.
+List `pullRequest.reviewThreads` (`isResolved`, `isOutdated`, `path`, `line`, `comments.nodes.body`) plus pending comments.
 
-- Same problem already on that code (match by path + code + problem, not exact wording or line number) → skip. Do not post a second comment.
-- Thread exists and is resolved, code unchanged → skip. Author decided.
-- Thread outdated because the code moved and problem persists → skip, mention in summary.
-- Existing comment wording or severity stale → edit that comment (`updatePullRequestReviewComment`) instead of adding one.
-- Problem now fixed, thread still open → do not post; list it in the summary as "looks fixed" for the author to resolve.
+- Same problem on same code (match path + code + problem, not wording or line) → skip.
+- Resolved, code unchanged → skip.
+- Outdated, problem persists → skip, mention in summary.
+- Stale wording or severity → `updatePullRequestReviewComment`.
+- Fixed, thread still open → don't post; list as "looks fixed" in summary.
 
 ## Auto-Clarity
 
