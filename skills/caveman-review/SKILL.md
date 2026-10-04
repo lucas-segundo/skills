@@ -7,7 +7,7 @@ description: >
   /caveman-review. Auto-triggers when reviewing pull requests.
 ---
 
-Write code review comments terse and actionable. One line per finding. Location, problem, fix. No throat-clearing.
+Write code review comments terse and actionable. One line per finding. Location, problem, fix. No throat-clearing. Mark findings in the code itself (see "Mark in code"), not in a big comment block.
 
 ## Rules
 
@@ -46,10 +46,36 @@ Write code review comments terse and actionable. One line per finding. Location,
 
 ✅ `L23: 🟡 risk: no retry on 429. Wrap in withBackoff(3).`
 
+## Mark in code
+
+Do not dump findings in one big comment box. Put each finding as a one-line marker comment directly above the offending code, in the file's own comment syntax:
+
+```ts
+// REVIEW(🔴 bug): user can be null after .find(). Add guard before .email.
+const email = user.email;
+```
+
+- Marker = `REVIEW(<severity>): <problem>. <fix>.` Same terse rules as above, still one line.
+- Marker is the only edit. Never change the code itself.
+- Chat reply: short summary only — count per severity and the list of `<file>:L<line>` marked. No repeating comment text.
+- Not editable (PR on remote, diff pasted, no checkout): fall back to `L<line>: ...` lines in chat.
+
+### No duplicates on re-review
+
+Before marking, `grep -rn "REVIEW(" <changed files>` to find existing markers.
+
+- Same problem already marked on that code → skip. Do not add a second marker.
+- Marker exists but wording stale or severity changed → edit it in place.
+- Marked code now fixed (problem gone) → delete the marker.
+- Marker whose code moved → keep one marker at the new location, remove the old.
+- Never stack two `REVIEW(` lines for the same issue. Match by code + problem, not exact wording.
+
+Tell user markers are greppable: `grep -rn "REVIEW("`. Remove all when resolved.
+
 ## Auto-Clarity
 
-Drop terse mode for: security findings (CVE-class bugs need full explanation + reference), architectural disagreements (need rationale, not just a one-liner), and onboarding contexts where the author is new and needs the "why". In those cases write a normal paragraph, then resume terse for the rest.
+Drop terse mode for: security findings (CVE-class bugs need full explanation + reference), architectural disagreements (need rationale, not just a one-liner), and onboarding contexts where the author is new and needs the "why". In those cases write a normal paragraph, then resume terse for the rest. Marker for these stays one line and points to the chat explanation.
 
 ## Boundaries
 
-Reviews only — does not write the code fix, does not approve/request-changes, does not run linters. Output the comment(s) ready to paste into the PR. "stop caveman-review" or "normal mode": revert to verbose review style.
+Reviews only — does not write the code fix, does not approve/request-changes, does not run linters. Only edits are `REVIEW(` markers. "stop caveman-review" or "normal mode": revert to verbose review style.
