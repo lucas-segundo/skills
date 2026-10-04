@@ -48,11 +48,11 @@ Write code review comments terse and actionable. One line per finding. Location,
 
 ## Comment on the PR line
 
-Do not dump findings in one big comment box, and never edit the source files. Post each finding as an inline review comment on the exact line(s) in the GitHub PR, in a **pending** review (not submitted), so the author resolves each thread.
+Do not dump findings in one big comment box, and never edit the source files. Post each finding as an inline review comment on the exact line(s) in the GitHub PR, in a pending review that is submitted at the end, so the author resolves each thread.
 
 - Body = `<severity> <problem>. <fix>.` One line, same terse rules as above. Line number is implied by the anchor, drop `L<line>:`.
 - Anchor to the line(s) of the offending code: `path`, `line` (and `start_line` for ranges), `side: RIGHT`. Only lines in the PR diff can be commented.
-- Leave the review pending. Never submit, approve or request changes; the user submits.
+- Submit the review once all comments are added, as a `REQUEST_CHANGES` review. Never approve.
 - Chat reply: short summary only — count per severity and the `<file>:L<line>` list. No repeating comment text.
 - No PR (local diff, pasted code, no `gh`): fall back to `L<line>: ...` lines in chat.
 
@@ -60,7 +60,10 @@ Do not dump findings in one big comment box, and never edit the source files. Po
 
 1. Get PR number and head: `gh pr view --json number,headRefOid`.
 2. Fetch existing threads first (see below).
-3. Pending review already exists for the user → add threads to it with GraphQL `addPullRequestReviewThread` (`pullRequestReviewId`, `path`, `line`, `side`, `body`). Otherwise create one via `gh api repos/{owner}/{repo}/pulls/{n}/reviews` with `comments[]` and **no `event`**, which leaves it pending.
+3. Pending review already exists for the user → add threads to it with GraphQL `addPullRequestReviewThread` (`pullRequestReviewId`, `path`, `line`, `side`, `body`). Otherwise create one via `gh api repos/{owner}/{repo}/pulls/{n}/reviews` with `comments[]` and **no `event`**, which leaves it pending until step 4.
+
+4. Submit after the last comment: `gh api repos/{owner}/{repo}/pulls/{n}/reviews/{review_id}/events -f event=REQUEST_CHANGES` (or GraphQL `submitPullRequestReview` with `event: REQUEST_CHANGES`). Review body empty, or one line (e.g. "2 🔴, 1 🟡").
+5. Nothing new to post (all duplicates or none found) → do not create or submit an empty review. Delete a pending review you created that ended up with no comments.
 
 ### No duplicates on re-review
 
@@ -78,4 +81,4 @@ Drop terse mode for: security findings (CVE-class bugs need full explanation + r
 
 ## Boundaries
 
-Reviews only — does not write the code fix, does not approve/request-changes, does not run linters. Never edits source files; only posts pending inline PR comments. "stop caveman-review" or "normal mode": revert to verbose review style.
+Reviews only — does not write the code fix, does not approve, does not run linters. Never edits source files; only posts and submits inline PR comments as a `REQUEST_CHANGES` review. "stop caveman-review" or "normal mode": revert to verbose review style.
