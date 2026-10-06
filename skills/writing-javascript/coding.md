@@ -21,6 +21,22 @@
   const fetchUser = (id) => {};
   ```
 
+- Don't create a top-of-file constant (title, label, className, style object, options array, config) that is used once and not exported. Inline it where it is used. Hoist only when it is reused or exported.
+
+  ```js
+  // bad: used once, not exported, just adds indirection
+  const TIMEOUT_MS = 5000;
+  const defaultHeaders = { Accept: 'application/json' };
+  export const fetchUser = (id) =>
+    fetch(`/users/${id}`, { headers: defaultHeaders, signal: AbortSignal.timeout(TIMEOUT_MS) });
+  // good
+  export const fetchUser = (id) =>
+    fetch(`/users/${id}`, {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(5000),
+    });
+  ```
+
 - Prefer arrow functions over `function` declarations and expressions.
 
   ```js

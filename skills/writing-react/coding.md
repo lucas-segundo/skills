@@ -17,7 +17,6 @@ Examples use TanStack Query and `react-error-boundary`; adapt them to the projec
 - Mapped items
 - Effects
 - Memoization
-- No single-use constants
 - Forms/mutations
 
 ## Data fetching (client side)
@@ -221,11 +220,6 @@ useEffect(() => {
 ## Memoization
 
 No `useMemo`/`useCallback`/`memo` by default. Add only for a measured re-render or a required stable reference (memoized list rows, dependency arrays).
-
-
-## No single-use constants
-
-Don't hoist a title, className or style object to a top-of-file constant used once; inline it. Hoist only when reused.
 
 
 ## Forms/mutations
