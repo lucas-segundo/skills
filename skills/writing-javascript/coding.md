@@ -77,6 +77,23 @@
   }
   ```
 
+- A `catch` must act on the failure (undo partial work, show the user an error, retry, rethrow), never only log. If logging is the only option, tell the user.
+
+  ```js
+  // bad: failure is logged and lost
+  try {
+    await SplashScreen.hideAsync();
+  } catch (error) {
+    console.warn('hide splash failed', error);
+  }
+  // good
+  try {
+    await saveUser(values);
+  } catch (error) {
+    toast.error(error.message);
+  }
+  ```
+
 - Order code top-down, like a pyramid: the function/class that calls the others goes at the top, then the things it calls, and so on. Readers should see the usage first and scroll down for details. In classes, put public methods before the private methods they use.
 
   ```js
