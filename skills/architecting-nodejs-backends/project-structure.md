@@ -49,16 +49,7 @@ src/
 
 ## Dependency direction
 
-```
-main ──> app ──> domain
-main ──> infra ──> app (ports) ──> domain
-```
-
-- `domain` imports nothing outward.
-- `app` never imports framework, ORM, or validation library.
-- `infra` implements `app/ports`; it is the only place that knows the ORM.
-- `main` is the only place that knows the web framework and how dependencies are composed (manual wiring or a DI container).
-- Cross-layer imports use the project's absolute alias; relative paths only within the same folder. No barrel files.
+`main` -> `app`/`infra` -> `domain`; `infra` -> `app/ports`. Rules per layer are in the layer files below; cross-layer imports use the project alias, relative paths only within a folder.
 
 ## Naming
 

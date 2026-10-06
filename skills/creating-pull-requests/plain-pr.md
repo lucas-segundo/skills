@@ -1,6 +1,6 @@
 # Creating a PR without a stack
 
-Use when the branch is not part of a gh stack. The "Writing rules" section of [SKILL.md](SKILL.md) applies.
+Use when the branch is not stacked. Apply the Writing rules in [SKILL.md](SKILL.md).
 
 ## 1. Find the base
 

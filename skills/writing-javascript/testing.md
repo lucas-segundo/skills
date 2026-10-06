@@ -1,19 +1,13 @@
 # Testing
 
-- Don't re-test behavior that another unit already covers in its own test. Test each rule once, in the unit that owns it. Callers only test their own logic.
+- Test each rule once, in the unit that owns it. Callers test only their own logic.
 
   ```js
-  // User's constructor throws when name is empty, and User's own unit test covers it.
-  test('User throws when name is null', () => {
-    expect(() => new User({ name: null })).toThrow();
-  });
-
-  // bad: CreateUser only builds a User, so this re-tests User's name validation
+  // bad: CreateUser only builds a User; User's own test covers name validation
   test('CreateUser throws when name is null', async () => {
     await expect(createUser.execute({ name: null })).rejects.toThrow();
   });
-
-  // good: tests what CreateUser itself does
+  // good
   test('CreateUser saves the user', async () => {
     await createUser.execute({ name: 'Ana' });
     expect(userRepository.save).toHaveBeenCalledTimes(1);

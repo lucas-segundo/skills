@@ -2,44 +2,12 @@
 
 Examples use TanStack Query and `react-error-boundary`; adapt them to the project's own libraries.
 
-## Contents
-
-- Data fetching (client side)
-- Data fetching (server side, SSR)
-- Params over fixed config
-- Avoid fetching large data
-- Backend gaps
-- Backend errors
-- Components
-- Avoid large prop lists
-- Lazy-mount hidden components
-- No ternary chains for conditional rendering
-- Mapped items
-- Effects
-- Memoization
-- Forms/mutations
-
 ## Data fetching (client side)
 
 Use the project's data-fetching library, never ad-hoc `useEffect` + `useState` fetching. Data hooks must adopt React Suspense (the suspense variant of the library's read hook, no manual `isLoading` branching); the screen wraps the data component in `<Suspense>` with a fallback and an error boundary.
 
 ```tsx
-// Bad
-const [user, setUser] = useState<User>();
-const [loading, setLoading] = useState(true);
-useEffect(() => {
-  const load = async () => {
-    try {
-      setUser(await getUser(id));
-    } finally {
-      setLoading(false);
-    }
-  };
-  load();
-}, [id]);
-if (loading) return <Spinner />;
-
-// Good: screen first, then the component it renders, then the hook it uses
+// Screen first, then the component it renders, then the hook it uses
 export const UserScreen = ({ id }: { id: string }) => (
   <ErrorBoundary fallback={<ErrorState />}>
     <Suspense fallback={<Spinner />}>
@@ -61,7 +29,6 @@ export const useUser = (id: string) =>
 
 Call the API function directly in server components/loaders, no hook. Use the framework's loading/error mechanisms (streaming `<Suspense>`, `loading.tsx`, `error.tsx`). Default export only where the framework requires it.
 
-
 ## Params over fixed config
 
 Service functions and hooks take options as params (`include`, `filter`, `sort`, `limit`); never hardcode them inside. Include `params` in the `queryKey`. Never pass delimited strings (`"a,b"`); take an array/object and let the service serialize.
@@ -76,7 +43,6 @@ const getUser = (id: string, { include, ...rest }: GetUserParams = {}) =>
   api.get(`/users/${id}`, { params: { ...rest, include: include?.join(',') } });
 ```
 
-
 ## Avoid fetching large data
 
 Never fetch a large collection in one go. Paginate (or infinite scroll) when the API supports it, passing page/limit/cursor as params. If it doesn't, tell the user and leave a `TODO` next to the call.
@@ -85,7 +51,6 @@ Never fetch a large collection in one go. Paginate (or infinite scroll) when the
 // TODO: no pagination in GET /users, fetches everything. Paginate when the API supports it.
 const getUsers = () => api.get('/users');
 ```
-
 
 ## Backend gaps
 
@@ -116,11 +81,9 @@ const updateUser = async (id: string, values: UserValues) => {
 };
 ```
 
-
 ## Components
 
 Small, single-purpose function components. Extract when JSX nests or a piece is reused. Screens are composition only.
-
 
 ## Avoid large prop lists
 
@@ -150,10 +113,9 @@ const AllowanceFields = ({ value, onChange }: { value: Draft; onChange: (patch: 
 );
 ```
 
-
 ## Lazy-mount hidden components
 
-For any component that starts hidden (modal, drawer, popover, tab), to keep it out of the initial bundle. Load it with the framework's lazy strategy if it has one (e.g. `next/dynamic` in Next.js), else `React.lazy`. Mount it only once first needed (`&&` inside `<Suspense>`), then keep it mounted and toggle an `open` prop so exit animations play. One state: `undefined` = never shown, then `true`/`false`.
+Components that start hidden (modal, drawer, popover, tab) stay out of the initial bundle. Load them with the framework's lazy strategy if it has one (e.g. `next/dynamic` in Next.js), else `React.lazy`. Mount it only once first needed (`&&` inside `<Suspense>`), then keep it mounted and toggle an `open` prop so exit animations play. One state: `undefined` = never shown, then `true`/`false`.
 
 ```tsx
 const EditDialog = lazy(() => import('./EditDialog'));
@@ -168,8 +130,7 @@ const [open, setOpen] = useState<boolean>();
 )}
 ```
 
-Example uses `React.lazy`; with `next/dynamic` use `dynamic(() => import('./EditDialog'))` and its `loading` option instead of `<Suspense>`. Named export: `lazy(() => import('./EditDialog').then((m) => ({ default: m.EditDialog })))`.
-
+With `next/dynamic`, use `dynamic(() => import('./EditDialog'))` and its `loading` option instead of `<Suspense>`. Named export: `lazy(() => import('./EditDialog').then((m) => ({ default: m.EditDialog })))`.
 
 ## No ternary chains for conditional rendering
 
@@ -184,7 +145,6 @@ const UnitsList = ({ isError, isLoading, isEmpty, items }: UnitsListProps) => {
 };
 ```
 
-
 ## Mapped items
 
 Never inline a big JSX body (handlers, hooks, derived values) in `.map`. Extract a row component that takes the item and derives the rest; the parent keeps only sort/filter and the map. Per-row hooks (e.g. a mutation) scope state like `isPending` to that row.
@@ -192,7 +152,6 @@ Never inline a big JSX body (handlers, hooks, derived values) in `.map`. Extract
 ```tsx
 {items.map((item) => <ItemRow key={item.id} item={item} logged={countFor(item.id)} />)}
 ```
-
 
 ## Effects
 
@@ -220,7 +179,6 @@ useEffect(() => {
 ## Memoization
 
 No `useMemo`/`useCallback`/`memo` by default. Add only for a measured re-render or a required stable reference (memoized list rows, dependency arrays).
-
 
 ## Forms/mutations
 
