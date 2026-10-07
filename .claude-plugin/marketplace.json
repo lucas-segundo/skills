@@ -9,14 +9,6 @@
       "name": "lucas-skills",
       "source": "./",
       "description": "Lucas's personal Claude skills"
-    },
-    {
-      "name": "mattpocock-skills",
-      "source": {
-        "source": "github",
-        "repo": "mattpocock/skills"
-      },
-      "description": "Matt Pocock's skills, tracked from upstream"
     }
   ]
 }
