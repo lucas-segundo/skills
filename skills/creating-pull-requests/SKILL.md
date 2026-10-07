@@ -13,6 +13,10 @@ Copy this checklist and tick it off:
 - [ ] 3. Follow the matching guide (summarize, fill template, create PR)
 ```
 
+## Tooling
+
+Use only `gh` for all GitHub operations. If `gh` is not available (`command -v gh` fails), use the GitHub connector or another available tool instead.
+
 ## 1. Find the template
 
 Look for the template in these locations, in order:
