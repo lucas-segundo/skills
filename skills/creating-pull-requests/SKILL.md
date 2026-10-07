@@ -1,6 +1,6 @@
 ---
 name: creating-pull-requests
-description: Creates GitHub pull requests with the gh CLI, filling the repo's PR template with a plain-language summary of the changes. Handles both plain branches and gh stack stacked PRs. Use when the user asks to open, create, or raise a pull request or PR.
+description: Creates GitHub pull requests, filling the repo's PR template with a plain-language summary of the changes. Use when the user asks to open, create, or raise a pull request or PR.
 ---
 
 # Creating pull requests
@@ -9,13 +9,12 @@ Copy this checklist and tick it off:
 
 ```
 - [ ] 1. Find the PR template (stop if missing)
-- [ ] 2. Check if the branch is in a stack
-- [ ] 3. Follow the matching guide (summarize, fill template, create PR)
+- [ ] 2. Follow the guide (summarize, fill template, create PR)
 ```
 
 ## Tooling
 
-Use only `gh` for all GitHub operations. If `gh` is not available (`command -v gh` fails), use the GitHub connector or another available tool instead.
+Use whatever tool is available to run GitHub operations: a GitHub connector, `git`, the `gh` CLI, or anything else that can do the task. The guide describes what to do, not which command to run.
 
 ## 1. Find the template
 
@@ -28,28 +27,9 @@ Look for the template in these locations, in order:
 
 **If no template exists, stop.** Do not create the PR and do not invent a template. Tell the user to add a PR template first, then ask them to re-run the request.
 
-## 2. Check if the branch is in a stack
+## 2. Follow the guide
 
-```bash
-gh stack view --short
-```
-
-- Prints the stack: the branch is stacked.
-- Errors with "not part of a stack": the branch is not stacked.
-- `gh stack` is not installed: treat the branch as not stacked, unless the user says it is.
-
-## 3. Follow the matching guide
-
-Follow it to the end. Each guide covers the diff, the summary, the template and the PR creation.
-
-- Not in a stack: [plain-pr.md](plain-pr.md)
-- In a stack: [stacked-pr.md](stacked-pr.md)
-
-If the user named a base branch, use it in either guide.
-
-## Writing rules
-
-Both guides use these rules.
+Follow [plain-pr.md](plain-pr.md) to the end. It covers the diff, the summary, the template and the PR creation. If the user named a base branch, use it.
 
 ### Title
 
