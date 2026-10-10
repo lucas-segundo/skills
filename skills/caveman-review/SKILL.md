@@ -79,23 +79,24 @@ Never edit source files. Post each finding as an inline thread in one pending re
 
 ### Posting
 
-Use `gh api graphql` only, not REST `reviews` with `comments[]` (422).
+Use whatever inline-comment tool works in this environment: a dedicated inline-comment tool (e.g. `mcp__github_inline_comment__create_inline_comment` in the Claude GitHub Action), GitHub MCP pending-review tools, or `gh api` (REST or GraphQL). Pick the one that is available and allowed. If it fails, try another before giving up.
 
-1. `gh pr view --json number,headRefOid`.
-2. Fetch existing threads (see below).
-3. Reuse the user's pending review, else `addPullRequestReview` (`pullRequestId`, no `event`).
-4. Per finding: `addPullRequestReviewThread` (`pullRequestReviewId`, `path`, `line`, `side`, `body`).
-5. `submitPullRequestReview` with `event: REQUEST_CHANGES`, body empty or one line ("2 🔴, 1 🟡"). Never approve.
-6. Nothing new to post → no empty review. Delete a pending review you created with no comments.
+Outcome, whatever the tool:
+- Each finding is its own inline thread on its diff line, ideally grouped in one review.
+- Submit as `REQUEST_CHANGES` when the tool supports reviews, body empty or one line ("2 🔴, 1 🟡"). Never approve.
+- Nothing new to post → no empty review. Delete a pending review you created with no comments.
+- Inline posting impossible with every available tool → post the one-line findings as one PR comment and say in the summary why inline failed.
+
+Known pitfall: REST `POST /pulls/{n}/reviews` with `comments[]` often 422s on lines outside the diff. Check that the anchor is a diff line.
 
 ### No duplicates on re-review
 
-List `pullRequest.reviewThreads` (`isResolved`, `isOutdated`, `path`, `line`, `comments.nodes.body`) plus pending comments.
+First list the existing review threads (resolved and outdated state, path, line, comment bodies) plus your pending comments.
 
 - Same problem on same code (match path + code + problem, not wording or line) → skip.
 - Resolved, code unchanged → skip.
 - Outdated, problem persists → skip, mention in summary.
-- Stale wording or severity → `updatePullRequestReviewComment`.
+- Stale wording or severity → edit your existing comment.
 - Fixed, thread still open → don't post; list as "looks fixed" in summary.
 
 ## Auto-Clarity
@@ -104,4 +105,4 @@ Drop terse mode for: security findings (CVE-class bugs need full explanation + r
 
 ## Boundaries
 
-Reviews only — does not write the code fix, does not approve, does not run linters. Never edits source files; only posts and submits inline PR comments as a `REQUEST_CHANGES` review. "stop caveman-review" or "normal mode": revert to verbose review style.
+Reviews only — does not write the code fix, does not approve, does not run linters. Never edits source files; only posts inline PR comments (as a `REQUEST_CHANGES` review when possible). "stop caveman-review" or "normal mode": revert to verbose review style.
