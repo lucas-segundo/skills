@@ -7,7 +7,7 @@ description: >
   /caveman-review. Auto-triggers when reviewing pull requests.
 ---
 
-Write code review comments terse and actionable. One line per finding. Location, problem, fix. No throat-clearing. Post findings as inline PR line comments (see "Comment on the PR line"), not in a big comment block.
+Write code review comments terse and actionable. One line per finding. Location, problem, fix. No throat-clearing. Terse is the format, not the bar: every finding is verified against the code before it is posted (see "Before posting: verify"). Post findings as inline PR line comments (see "Comment on the PR line"), not in a big comment block.
 
 ## Rules
 
@@ -17,20 +17,38 @@ Write code review comments terse and actionable. One line per finding. Location,
 - `🔴 bug:` — broken behavior, will cause incident
 - `🟡 risk:` — works but fragile (race, missing null check, swallowed error)
 - `🔵 nit:` — style, naming, micro-optim. Author can ignore
-- `❓ q:` — genuine question, not a suggestion
+- `❓ q:` — intent the repo can't answer (a product or design decision), never "does this code do X?"
 
 **Drop:**
 - "I noticed that...", "It seems like...", "You might want to consider..."
 - "This is just a suggestion but..." — use `nit:` instead
 - "Great work!", "Looks good overall but..." — say it once at the top, not per comment
 - Restating what the line does — the reviewer can read the diff
-- Hedging ("perhaps", "maybe", "I think") — if unsure use `q:`
+- Hedging ("perhaps", "maybe", "I think") — if unsure, verify; still unsure → drop it
 
 **Keep:**
 - Exact line numbers
 - Exact symbol/function/variable names in backticks
 - Concrete fix, not "consider refactoring this"
 - The *why* if the fix isn't obvious from the problem statement
+- The evidence when the cause is outside the diff: `(see useFoo.ts:18)`
+
+## Context first
+
+Before reading the diff, read the PR body, any plan or spec it links or adds (e.g. `sdlc/**/plan.md`, `docs/changes/**`), and `AGENTS.md` / `CLAUDE.md`. Don't flag:
+- decisions the PR or plan states as deliberate
+- items the PR already lists as known limitations or pending manual checks
+- missing tests when the repo has no test runner (one line in the summary at most)
+
+## Before posting: verify
+
+The diff is where you start, not all you read. For every candidate finding:
+1. Open the code it depends on: callers, callees, hooks, query keys, types. Grep the symbol.
+2. Write the failure path: concrete input or state → steps → wrong result. Can't write one → drop it. Don't downgrade it to `q:`.
+3. Bar per severity: `🔴 bug` needs a path reachable from real use today. `🟡 risk` needs a realistic trigger, not "if the cache were stale" or "if someone typed this URL".
+4. Weigh the fix: when it costs more code than the failure it prevents, drop it.
+
+Budget: at most 3 `🔵 nit` per review. Pick the ones a teammate would actually fix.
 
 ## Examples
 
@@ -45,6 +63,10 @@ Write code review comments terse and actionable. One line per finding. Location,
 ❌ "Have you considered what happens if the API returns a 429? I think we should probably handle that case."
 
 ✅ `L23: 🟡 risk: no retry on 429. Wrap in withBackoff(3).`
+
+❌ `L63: ❓ q: does useFinishSession invalidate the useSession cache? If not, button hangs.` (answerable by reading `useFinishSession` — read it, then post a finding or nothing)
+
+✅ `L63: 🔴 bug: useFinishSession invalidates ["session", id] but useSession keys ["sessions", id] (see useSession.ts:9). Button hangs on "Finishing…". Match the key.`
 
 ## Comment on the PR line
 
