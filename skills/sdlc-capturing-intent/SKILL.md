@@ -1,12 +1,14 @@
 ---
 name: sdlc-capturing-intent
-description: Turns an idea, ticket or incident into intent.md, the first artifact of the AI-native SDLC. Interviews the user like an analyst, writes the intent from a template, and commits it. Use when the user asks to capture, write, or draft an intent or intent.md. Manual use only.
+description: Turns an idea, ticket or incident into intent.md, the first artifact of the AI-native SDLC, written for product owners, product managers and other business people. Interviews the user like a business analyst, writes the intent from a template, and commits it. Use when the user asks to capture, write, or draft an intent or intent.md. Manual use only.
 disable-model-invocation: true
 ---
 
 # Capturing intent
 
 Stage 1 (Plan) of the AI-native SDLC. Next stage: `sdlc-writing-specs`.
+
+The user is a product owner, product manager or other business person. Keep the conversation and the intent in business language: no code, file names, APIs, databases, architecture or technology choices. Technical detail belongs to the spec.
 
 Copy this checklist and tick it off:
 
@@ -25,21 +27,21 @@ Let the user describe the problem in their own words: what they cannot do today,
 
 ## 2. Interview
 
-Ask the questions an analyst would ask, a few at a time, until each template section has an answer or an explicit unknown:
+Ask the questions a business analyst would ask, a few at a time, until each template section has an answer or an explicit unknown:
 
 - **Problem:** who hits it, how often, what it costs today (time, money, calls, errors).
 - **Outcome:** what is true when this is done? How would we measure it?
-- **Users and systems:** who uses it, which systems and teams are touched.
-- **Constraints:** security, privacy, compliance, budget, deadlines, tech that must or must not be used.
+- **Users and teams:** who uses it, which teams, customers, partners and business processes are touched.
+- **Constraints:** privacy, compliance, budget, deadlines, policies, contracts.
 - **Scope:** what is explicitly out.
 
-Read the repo only to name affected systems correctly. Never design the solution here: that is the spec's job.
+Do not read the code or ask technical questions. If the user brings up a technical detail, ask what business need is behind it and record that need; leave the detail for the spec. Never design the solution here: that is the spec's job.
 
 ## 3. Write intent.md
 
 Use [intent-template.md](intent-template.md).
 
-- Write in the originator's terms, not engineering terms.
+- Write in the originator's terms, not engineering terms. A reader with no technical background must understand every sentence.
 - Anything unknown or disputed goes to **Open questions**. Never fill gaps by guessing.
 - Location: `docs/changes/<YYYY-MM-DD>-<slug>/intent.md`. Date is today, slug is 2-5 kebab-case words from the title. If the folder exists, ask whether to update it or pick a new slug.
 - Author: the git `user.name` (ask if unset). Status: `draft`.

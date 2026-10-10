@@ -1,6 +1,6 @@
 # Intent template
 
-Keep every heading. Write "None" rather than deleting a section.
+Keep every heading. Write "None" rather than deleting a section. Business language only: no code, file names, APIs or technology.
 
 ```md
 # Intent: <title>
@@ -13,11 +13,11 @@ Author: <name>. Date: <YYYY-MM-DD>. Status: draft.
 ## Proposed outcome
 <What is true when this is done, in the user's terms. How success is measured.>
 
-## Affected users and systems
-<People, teams, systems, APIs.>
+## Affected users and teams
+<People, teams, customers, partners, business processes.>
 
 ## Constraints
-<Security, privacy, compliance, deadlines, budget, required or forbidden tech.>
+<Privacy, compliance, deadlines, budget, policies, contracts.>
 
 ## Out of scope
 <What this change will not do.>
@@ -41,11 +41,12 @@ Handlers spend roughly a third of call time on status-only queries.
 Customers see claim status, next step and expected date in the portal.
 Success: status-only calls drop by half within a quarter.
 
-## Affected users and systems
-Customers, claims handlers, portal team, claims-core API.
+## Affected users and teams
+Customers, claims handlers, contact center, portal team.
 
 ## Constraints
-No new PII in the portal session. Existing authentication only.
+Customers see no personal data beyond what the portal already shows.
+Customers use their current portal login; no new sign-up.
 
 ## Out of scope
 Editing or appealing a claim from the portal.
