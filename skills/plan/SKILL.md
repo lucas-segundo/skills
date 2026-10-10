@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Planning implementation
 
-Stage 3 (Build) of the AI-native SDLC. Previous: `sdlc-writing-specs`.
+Stage 3 (Build) of the AI-native SDLC. Previous: `spec`.
 
 **No code changes in this skill.** Read the repo, write only `plan.md`. Implementation starts after the plan is accepted.
 
@@ -27,7 +27,7 @@ Copy this checklist and tick it off:
 
 Use the change folder the user names. Otherwise list `docs/changes/*/spec.md` and ask which one. Read both `intent.md` and `spec.md`.
 
-**If the spec's status is not `accepted`, stop.** Tell the user to accept it first (`/sdlc-writing-specs`).
+**If the spec's status is not `accepted`, stop.** Tell the user to accept it first (`/spec`).
 
 ## 2. Read the codebase
 

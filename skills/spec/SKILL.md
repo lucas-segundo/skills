@@ -1,5 +1,5 @@
 ---
-name: sdlc-writing-specs
+name: spec
 description: Turns an accepted intent.md into spec.md, the requirements and design spec of the AI-native SDLC, applying the policy skills the user names and flagging concerns. Commits the spec. Use when the user asks to write, draft, or produce a spec or spec.md from an intent. Manual use only.
 disable-model-invocation: true
 ---

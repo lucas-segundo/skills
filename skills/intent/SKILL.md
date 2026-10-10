@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Capturing intent
 
-Stage 1 (Plan) of the AI-native SDLC. Next stage: `sdlc-writing-specs`.
+Stage 1 (Plan) of the AI-native SDLC. Next stage: `spec`.
 
 The user is a product owner, product manager or other business person. Keep the conversation and the intent in business language: no code, file names, APIs, databases, architecture or technology choices. Technical detail belongs to the spec.
 
@@ -56,4 +56,4 @@ Commit only `intent.md` with message `docs(sdlc): capture intent for <slug>`. Do
 
 ## 6. Accept
 
-The intent is accepted only when the user (product owner) says so. Then set `Status: accepted` and commit with `docs(sdlc): accept intent for <slug>`. Tell the user the next step is `/sdlc-writing-specs`. Do not start it yourself.
+The intent is accepted only when the user (product owner) says so. Then set `Status: accepted` and commit with `docs(sdlc): accept intent for <slug>`. Tell the user the next step is `/spec`. Do not start it yourself.
