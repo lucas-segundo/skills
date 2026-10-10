@@ -17,7 +17,6 @@ Write code review comments terse and actionable. One line per finding. Location,
 - `🔴 bug:` — broken behavior, will cause incident
 - `🟡 risk:` — works but fragile (race, missing null check, swallowed error)
 - `🔵 nit:` — style, naming, micro-optim. Author can ignore
-- `❓ q:` — intent the repo can't answer (a product or design decision), never "does this code do X?"
 
 **Drop:**
 - "I noticed that...", "It seems like...", "You might want to consider..."
@@ -25,6 +24,7 @@ Write code review comments terse and actionable. One line per finding. Location,
 - "Great work!", "Looks good overall but..." — say it once at the top, not per comment
 - Restating what the line does — the reviewer can read the diff
 - Hedging ("perhaps", "maybe", "I think") — if unsure, verify; still unsure → drop it
+- Questions — every comment is a finding with a fix. Read the code to answer it yourself
 
 **Keep:**
 - Exact line numbers
@@ -44,7 +44,7 @@ Before reading the diff, read the PR body, any plan or spec it links or adds (e.
 
 The diff is where you start, not all you read. For every candidate finding:
 1. Open the code it depends on: callers, callees, hooks, query keys, types. Grep the symbol.
-2. Write the failure path: concrete input or state → steps → wrong result. Can't write one → drop it. Don't downgrade it to `q:`.
+2. Write the failure path: concrete input or state → steps → wrong result. Can't write one → drop it. Don't post it as a question.
 3. Bar per severity: `🔴 bug` needs a path reachable from real use today. `🟡 risk` needs a realistic trigger, not "if the cache were stale" or "if someone typed this URL".
 4. Weigh the fix: when it costs more code than the failure it prevents, drop it.
 
@@ -64,7 +64,7 @@ Budget: at most 3 `🔵 nit` per review. Pick the ones a teammate would actually
 
 ✅ `L23: 🟡 risk: no retry on 429. Wrap in withBackoff(3).`
 
-❌ `L63: ❓ q: does useFinishSession invalidate the useSession cache? If not, button hangs.` (answerable by reading `useFinishSession` — read it, then post a finding or nothing)
+❌ `L63: does useFinishSession invalidate the useSession cache? If not, button hangs.` (no questions: read `useFinishSession`, then post a finding or nothing)
 
 ✅ `L63: 🔴 bug: useFinishSession invalidates ["session", id] but useSession keys ["sessions", id] (see useSession.ts:9). Button hangs on "Finishing…". Match the key.`
 
