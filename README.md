@@ -21,7 +21,7 @@ claude.ai admin settings → Skills → Add → Sync from GitHub → pick this r
 
 ## Caveman
 
-`skills/caveman` is the terse-reply skill. `hooks/hooks.json` runs a `UserPromptSubmit` hook that reminds Claude to use caveman (lite) on every prompt. Edit the `echo` text there to change the level or remove the hook to turn it off.
+`skills/caveman` is the terse-reply skill, synced from [juliusbrussee/caveman](https://github.com/juliusbrussee/caveman). `hooks/hooks.json` runs a `UserPromptSubmit` hook that reminds Claude to use caveman on every prompt. Edit the `echo` text there to change the mode or remove the hook to turn it off.
 
 ## SDLC
 
@@ -33,7 +33,7 @@ Three manual skills, one per artifact of the AI-native SDLC. Each reads the prev
 
 ## Upstream skills
 
-Some skills are copied from other repos instead of written here. `.github/upstream.json` lists them (paths under the upstream `skills/` folder); each lands at `skills/<name>/` with the upstream `LICENSE`. Don't edit them here: changes are overwritten on the next sync.
+Some skills are copied from other repos instead of written here. `.github/upstream.json` lists them per repo (paths under the upstream `skills/` folder); each lands at `skills/<name>/` with the upstream license files. Don't edit them here: changes are overwritten on the next sync.
 
 - Add or drop one: edit the list, run `python3 .github/scripts/sync_upstream.py`, commit.
-- Updates: the `Sync upstream skills` workflow runs weekly (or on demand) and opens a PR when a picked skill changed upstream. `.github/upstream.lock.json` records the upstream commit.
+- Updates: the `Sync upstream skills` workflow runs weekly (or on demand) and opens a PR when a picked skill changed upstream. `.github/upstream.lock.json` records each upstream commit.

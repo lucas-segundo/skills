@@ -1,10 +1,22 @@
 {
-  "repo": "mattpocock/skills",
-  "ref": "main",
-  "license": "LICENSE",
-  "skills": [
-    "productivity/grill-me",
-    "productivity/grilling",
-    "engineering/pr"
+  "upstreams": [
+    {
+      "repo": "mattpocock/skills",
+      "ref": "main",
+      "license": ["LICENSE"],
+      "skills": [
+        "productivity/grill-me",
+        "productivity/grilling",
+        "engineering/pr"
+      ]
+    },
+    {
+      "repo": "juliusbrussee/caveman",
+      "ref": "main",
+      "license": ["LICENSE", "NOTICE"],
+      "skills": [
+        "caveman"
+      ]
+    }
   ]
 }

@@ -1,9 +1,20 @@
 {
-  "repo": "mattpocock/skills",
-  "commit": "49dd158d1076134a641b33efb035946536778336",
-  "skills": [
-    "grill-me",
-    "grilling",
-    "pr"
+  "upstreams": [
+    {
+      "repo": "mattpocock/skills",
+      "commit": "49dd158d1076134a641b33efb035946536778336",
+      "skills": [
+        "grill-me",
+        "grilling",
+        "pr"
+      ]
+    },
+    {
+      "repo": "juliusbrussee/caveman",
+      "commit": "2e08b9177c07bb7249a8a2d1a6758e5db281d002",
+      "skills": [
+        "caveman"
+      ]
+    }
   ]
 }

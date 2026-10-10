@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Copy picked skills from an upstream repo into skills/.
+"""Copy picked skills from upstream repos into skills/.
 
-Config: .github/upstream.json
+Config: .github/upstream.json, a list of "upstreams", each with:
   repo     GitHub repo to copy from, e.g. "mattpocock/skills"
   ref      branch or tag to track
-  license  upstream license file, copied into each synced skill
+  license  upstream license files (LICENSE, NOTICE, ...), copied into each synced skill
   skills   paths under the upstream skills/ folder; each lands at skills/<basename>/
 
-Lock: .github/upstream.lock.json records the upstream commit and the skills it
+Lock: .github/upstream.lock.json records each upstream commit and the skills it
 copied, so a skill dropped from the config is deleted from skills/ on the next run.
 
 Usage (run from the repo root):
@@ -33,41 +33,50 @@ def git(*args: str, cwd: Path) -> str:
 def main() -> None:
     if not CONFIG.is_file():
         sys.exit("error: .github/upstream.json not found (run from the repo root)")
-    config = json.loads(CONFIG.read_text())
-    lock = json.loads(LOCK.read_text()) if LOCK.is_file() else {"skills": []}
+    upstreams = json.loads(CONFIG.read_text())["upstreams"]
+    locked = json.loads(LOCK.read_text()) if LOCK.is_file() else {}
+    synced_before = {name for u in locked.get("upstreams", []) for name in u["skills"]}
 
-    names = [Path(p).name for p in config["skills"]]
+    names = [Path(p).name for u in upstreams for p in u["skills"]]
     if len(set(names)) != len(names):
         sys.exit("error: two picked skills share a folder name")
 
+    # A picked skill must not overwrite one of ours.
+    clashes = [n for n in names if (SKILLS / n).exists() and n not in synced_before]
+    if clashes:
+        sys.exit(f"error: would overwrite your own skills: {', '.join(clashes)}")
+
     with tempfile.TemporaryDirectory() as tmp:
-        src = Path(tmp) / "upstream"
-        git("clone", "--quiet", "--depth", "1", "--branch", config["ref"],
-            f"https://github.com/{config['repo']}.git", str(src), cwd=ROOT)
-        sha = git("rev-parse", "HEAD", cwd=src)
+        # Fetch and check every upstream before touching skills/.
+        sources = []
+        for i, u in enumerate(upstreams):
+            src = Path(tmp) / str(i)
+            git("clone", "--quiet", "--depth", "1", "--branch", u["ref"],
+                f"https://github.com/{u['repo']}.git", str(src), cwd=ROOT)
+            missing = [p for p in u["skills"] if not (src / "skills" / p / "SKILL.md").is_file()]
+            missing += [f for f in u["license"] if not (src / f).is_file()]
+            if missing:
+                sys.exit(f"error: not found in {u['repo']} (renamed or removed?): {', '.join(missing)}")
+            sources.append(src)
 
-        missing = [p for p in config["skills"] if not (src / "skills" / p / "SKILL.md").is_file()]
-        if missing:
-            sys.exit(f"error: not found upstream (renamed or removed?): {', '.join(missing)}")
-
-        # A picked skill must not overwrite one of ours.
-        clashes = [n for n in names if (SKILLS / n).exists() and n not in lock["skills"]]
-        if clashes:
-            sys.exit(f"error: would overwrite your own skills: {', '.join(clashes)}")
-
-        for name in lock["skills"]:
-            if name not in names:
-                shutil.rmtree(SKILLS / name, ignore_errors=True)
-                print(f"removed skills/{name}")
-
-        for path, name in zip(config["skills"], names):
+        for name in sorted(synced_before - set(names)):
             shutil.rmtree(SKILLS / name, ignore_errors=True)
-            shutil.copytree(src / "skills" / path, SKILLS / name)
-            shutil.copy(src / config["license"], SKILLS / name / "LICENSE")
-            print(f"synced  skills/{name} <- {config['repo']}/skills/{path}")
+            print(f"removed skills/{name}")
 
-    LOCK.write_text(json.dumps({"repo": config["repo"], "commit": sha, "skills": names}, indent=2) + "\n")
-    print(f"upstream at {sha[:7]}")
+        lock = []
+        for u, src in zip(upstreams, sources):
+            for path in u["skills"]:
+                name = Path(path).name
+                shutil.rmtree(SKILLS / name, ignore_errors=True)
+                shutil.copytree(src / "skills" / path, SKILLS / name)
+                for f in u["license"]:
+                    shutil.copy(src / f, SKILLS / name / Path(f).name)
+                print(f"synced  skills/{name} <- {u['repo']}/skills/{path}")
+            sha = git("rev-parse", "HEAD", cwd=src)
+            lock.append({"repo": u["repo"], "commit": sha, "skills": [Path(p).name for p in u["skills"]]})
+            print(f"{u['repo']} at {sha[:7]}")
+
+    LOCK.write_text(json.dumps({"upstreams": lock}, indent=2) + "\n")
 
 
 if __name__ == "__main__":
