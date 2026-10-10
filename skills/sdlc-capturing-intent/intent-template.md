@@ -1,6 +1,6 @@
 # Intent template
 
-Keep every heading. Write "None" rather than deleting a section. Business language only: no code, file names, APIs or technology.
+Keep every heading except Open questions. Write "None" rather than deleting a section. Business language only: no code, file names, APIs or technology.
 
 ```md
 # Intent: <title>
@@ -23,7 +23,7 @@ Author: <name>. Date: <YYYY-MM-DD>. Status: draft.
 <What this change will not do.>
 
 ## Open questions
-<Unknowns to answer in the spec. One per bullet.>
+<Only if any remain: questions the AI asked that the user could not answer, or questions the user asked that the AI could not answer. One per bullet. Otherwise omit this section.>
 ```
 
 ## Example

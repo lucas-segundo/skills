@@ -42,13 +42,13 @@ Do not read the code or ask technical questions. If the user brings up a technic
 Use [intent-template.md](intent-template.md).
 
 - Write in the originator's terms, not engineering terms. A reader with no technical background must understand every sentence.
-- Anything unknown or disputed goes to **Open questions**. Never fill gaps by guessing.
+- Never fill gaps by guessing. Add an **Open questions** section only for questions still unanswered: ones you asked that the user could not answer, or ones the user raised that you could not answer. If there are none, leave the section out.
 - Location: `docs/changes/<YYYY-MM-DD>-<slug>/intent.md`. Date is today, slug is 2-5 kebab-case words from the title. If the folder exists, ask whether to update it or pick a new slug.
 - Author: the git `user.name` (ask if unset). Status: `draft`.
 
 ## 4. Correct
 
-Show the file. Ask the user what Claude misunderstood. Apply fixes and repeat until they have none.
+Show the file. Ask the user what you misunderstood. Apply fixes and repeat until they have none.
 
 ## 5. Commit
 
