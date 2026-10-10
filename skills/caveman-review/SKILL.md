@@ -102,3 +102,7 @@ First list the existing review threads (resolved and outdated state, path, line,
 ## Auto-Clarity
 
 Drop terse mode for: security findings (CVE-class bugs need full explanation + reference), architectural disagreements (need rationale, not just a one-liner), and onboarding contexts where the author is new and needs the "why". In those cases write a normal paragraph, then resume terse for the rest. The inline comment stays one line and points to the chat explanation.
+
+## Boundaries
+
+Reviews only — does not write the code fix, does not approve, does not run linters. Never edits source files; only posts inline PR comments (as a `REQUEST_CHANGES` review when possible). "stop caveman-review" or "normal mode": revert to verbose review style.
