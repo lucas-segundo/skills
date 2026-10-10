@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Writing specs
 
-Stage 2 (Design) of the AI-native SDLC. Previous: `intent`. Next: `sdlc-planning-implementation`.
+Stage 2 (Design) of the AI-native SDLC. Previous: `intent`. Next: `plan`.
 
 Copy this checklist and tick it off:
 
@@ -55,4 +55,4 @@ Commit only `spec.md` with message `docs(sdlc): write spec for <slug>`. Do not p
 
 ## 7. Accept
 
-The spec is accepted only when the user says so; unresolved flagged concerns must be resolved or explicitly accepted first. Then set `Status: accepted` and commit with `docs(sdlc): accept spec for <slug>`. Tell the user the next step is `/sdlc-planning-implementation`. Do not start it yourself.
+The spec is accepted only when the user says so; unresolved flagged concerns must be resolved or explicitly accepted first. Then set `Status: accepted` and commit with `docs(sdlc): accept spec for <slug>`. Tell the user the next step is `/plan`. Do not start it yourself.

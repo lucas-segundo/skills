@@ -29,4 +29,4 @@ Three manual skills, one per artifact of the AI-native SDLC. Each reads the prev
 
 1. `/intent` → `intent.md` (what is wanted and why)
 2. `/sdlc-writing-specs` → `spec.md` (requirements, design, flagged concerns; you name the policy skills)
-3. `/sdlc-planning-implementation` → `plan.md` (files, order of work, risks, proof)
+3. `/plan` → `plan.md` (files, order of work, risks, proof)

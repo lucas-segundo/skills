@@ -1,5 +1,5 @@
 ---
-name: sdlc-planning-implementation
+name: plan
 description: Turns an accepted spec.md into plan.md, the implementation plan of the AI-native SDLC, by reading the code without changing it, interviewing the engineer and stress-testing the plan. Commits the plan. Use when the user asks to plan the implementation or write plan.md from a spec. Manual use only.
 disable-model-invocation: true
 ---
