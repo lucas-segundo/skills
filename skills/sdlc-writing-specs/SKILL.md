@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Writing specs
 
-Stage 2 (Design) of the AI-native SDLC. Previous: `sdlc-capturing-intent`. Next: `sdlc-planning-implementation`.
+Stage 2 (Design) of the AI-native SDLC. Previous: `intent`. Next: `sdlc-planning-implementation`.
 
 Copy this checklist and tick it off:
 
@@ -24,7 +24,7 @@ Copy this checklist and tick it off:
 
 Use the `intent.md` the user names. Otherwise list `docs/changes/*/intent.md` and ask which one.
 
-**If its status is not `accepted`, stop.** Tell the user to accept it first (`/sdlc-capturing-intent`).
+**If its status is not `accepted`, stop.** Tell the user to accept it first (`/intent`).
 
 ## 2. Ask which policy skills apply
 
