@@ -30,3 +30,10 @@ Three manual skills, one per artifact of the AI-native SDLC. Each reads the prev
 1. `/intent` → `intent.md` (what is wanted and why)
 2. `/spec` → `spec.md` (requirements, design, flagged concerns; you name the policy skills)
 3. `/plan` → `plan.md` (files, order of work, risks, proof)
+
+## Upstream skills
+
+Some skills are copied from other repos instead of written here. `.github/upstream.json` lists them (paths under the upstream `skills/` folder); each lands at `skills/<name>/` with the upstream `LICENSE`. Don't edit them here: changes are overwritten on the next sync.
+
+- Add or drop one: edit the list, run `python3 .github/scripts/sync_upstream.py`, commit.
+- Updates: the `Sync upstream skills` workflow runs weekly (or on demand) and opens a PR when a picked skill changed upstream. `.github/upstream.lock.json` records the upstream commit.

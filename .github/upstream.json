@@ -1,0 +1,10 @@
+{
+  "repo": "mattpocock/skills",
+  "ref": "main",
+  "license": "LICENSE",
+  "skills": [
+    "productivity/grill-me",
+    "productivity/grilling",
+    "engineering/pr"
+  ]
+}
