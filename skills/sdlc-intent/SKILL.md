@@ -27,7 +27,7 @@ Let the user describe the problem in their own words: what they cannot do today,
 
 ## 2. Interview
 
-Ask the questions a business analyst would ask, a few at a time, until each template section has an answer or an explicit unknown:
+Ask the questions a business analyst would ask with the AskUserQuestion tool, a few at a time (offer business-language options where you can), until each template section has an answer or an explicit unknown:
 
 - **Problem:** who hits it, how often, what it costs today (time, money, calls, errors).
 - **Outcome:** what is true when this is done? How would we measure it?
@@ -48,7 +48,7 @@ Use [intent-template.md](intent-template.md).
 
 ## 4. Correct
 
-Show the file. Ask the user what you misunderstood. Apply fixes and repeat until they have none.
+Show the file. Ask the user (AskUserQuestion) what you misunderstood. Apply fixes and repeat until they have none.
 
 ## 5. Commit
 

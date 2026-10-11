@@ -22,13 +22,13 @@ Copy this checklist and tick it off:
 
 ## 1. Load the intent
 
-Use the `intent.md` the user names. Otherwise list `docs/changes/*/intent.md` and ask which one.
+Use the `intent.md` the user names. Otherwise list `docs/changes/*/intent.md` and ask which one with the AskUserQuestion tool.
 
 **If its status is not `accepted`, stop.** Tell the user to accept it first (`/sdlc-intent`).
 
 ## 2. Ask which policy skills apply
 
-Ask the user which skills or policy documents constrain this spec (for example brand, security, UX, architecture or coding skills). Load each one they name. Do not pick skills on your own. If they name none, confirm and continue without; record "None" in the spec header.
+Use the AskUserQuestion tool to ask which skills or policy documents constrain this spec (for example brand, security, UX, architecture or coding skills). Load each one they name. Do not pick skills on your own. If they name none, confirm and continue without; record "None" in the spec header.
 
 Treat every loaded skill as a hard constraint on the spec, not a suggestion.
 
@@ -47,7 +47,7 @@ Use [spec-template.md](spec-template.md). Save it next to the intent: `docs/chan
 
 ## 5. Review
 
-Show the spec. Go through **Flagged concerns** first, one at a time; the user resolves each (or names who must). Then ask: does the spec solve the stated problem? Are all open questions answered or carried? Apply fixes and repeat.
+Show the spec. Go through **Flagged concerns** first, one at a time; the user resolves each (or names who must), asked via AskUserQuestion. Then ask, also via AskUserQuestion: does the spec solve the stated problem? Are all open questions answered or carried? Apply fixes and repeat.
 
 ## 6. Commit
 

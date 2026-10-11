@@ -25,7 +25,7 @@ Copy this checklist and tick it off:
 
 ## 1. Load the inputs
 
-Use the change folder the user names. Otherwise list `docs/changes/*/spec.md` and ask which one. Read both `intent.md` and `spec.md`.
+Use the change folder the user names. Otherwise list `docs/changes/*/spec.md` and ask which one with the AskUserQuestion tool. Read both `intent.md` and `spec.md`.
 
 **If the spec's status is not `accepted`, stop.** Tell the user to accept it first (`/sdlc-spec`).
 
@@ -35,13 +35,13 @@ Find every file the change touches, the existing patterns to follow, the test se
 
 ## 3. Interview
 
-Ask the engineer what the code cannot tell you, a few questions at a time: preferred approach where several fit, rollout (flag, migration, backfill), test depth, anything off-limits. Skip questions the code already answers.
+Use the AskUserQuestion tool to ask the engineer what the code cannot tell you, a few questions at a time, with your recommended option first: preferred approach where several fit, rollout (flag, migration, backfill), test depth, anything off-limits. Skip questions the code already answers.
 
 ## 4. Write plan.md
 
 Use [plan-template.md](plan-template.md). Save it next to the spec: `docs/changes/<folder>/plan.md`. Status: `draft`.
 
-- Every requirement in the spec (`R1`...) maps to at least one step and one proof. List any that do not and ask.
+- Every requirement in the spec (`R1`...) maps to at least one step and one proof. List any that do not and ask with AskUserQuestion.
 - Steps are ordered so each one leaves the code working and testable.
 - Proof names concrete tests (file and what they assert) and the commands that run them.
 
