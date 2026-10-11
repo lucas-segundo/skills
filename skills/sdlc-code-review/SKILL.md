@@ -1,10 +1,10 @@
 ---
-name: reviewing-code
+name: sdlc-code-review
 description: >
   Ultra-compressed code review comments. Cuts noise from PR feedback while preserving
   the actionable signal. Each comment is one line: location, problem, fix. Use when user
   says "review this PR", "code review", "review the diff", "/review", or invokes
-  /reviewing-code. Auto-triggers when reviewing pull requests.
+  /sdlc-code-review. Auto-triggers when reviewing pull requests.
 ---
 
 Write code review comments terse and actionable. One line per finding. Location, problem, fix. No throat-clearing. Terse is the format, not the bar: every finding is verified against the code before it is posted (see "Before posting: verify"). Post findings as inline PR line comments (see "Comment on the PR line"), not in a big comment block.
@@ -40,6 +40,13 @@ Before reading the diff, read the PR body, any plan or spec it links or adds (e.
 - items the PR already lists as known limitations or pending manual checks
 - missing tests when the repo has no test runner (one line in the summary at most)
 
+## Check against spec.md
+
+Find the change's `spec.md` (`docs/changes/*/spec.md`, or the one the PR body links or adds). Match by PR title, branch name or slug. Do not guess between several candidates: pick the one the PR references, else treat as not found.
+
+- **Found:** compare the diff with its requirements (`R1`...). For each requirement the code does not meet, or only partly meets, post an inline finding on the closest diff line: `🔴 bug: R<n> "<requirement>" not met. <what is missing>.` Check that the feature as a whole reaches the spec's goal, not only that each line is correct. Requirements met need no comment. If the spec's status is not `accepted`, say so in the summary.
+- **Not found:** warn in the review body (and the chat summary): `⚠️ No spec.md found for this change. Could not verify the code reaches its goal.` Still review the code on its own merits.
+
 ## Before posting: verify
 
 The diff is where you start, not all you read. For every candidate finding:
@@ -74,6 +81,7 @@ Never edit source files. Post each finding as an inline thread in one pending re
 
 - Body = `<severity> <problem>. <fix>.` One line, no `L<line>:`.
 - Anchor: `path`, `line` (`startLine` for ranges), `side: RIGHT`. Only lines in the PR diff.
+- Spec warning (no `spec.md`) goes in the review body, never as an inline thread.
 - Chat reply: count per severity and the `<file>:L<line>` list only. No comment text, no preamble.
 - No PR (local diff, pasted code, no `gh`): `L<line>: ...` lines in chat.
 
@@ -83,7 +91,7 @@ Use whatever inline-comment tool works in this environment: a dedicated inline-c
 
 Outcome, whatever the tool:
 - Each finding is its own inline thread on its diff line, ideally grouped in one review.
-- Submit as `REQUEST_CHANGES` when the tool supports reviews, body empty or one line ("2 🔴, 1 🟡"). Never approve.
+- Submit as `REQUEST_CHANGES` when the tool supports reviews, body empty or one line ("2 🔴, 1 🟡"), plus the spec warning when it applies. Never approve.
 - Nothing new to post → no empty review. Delete a pending review you created with no comments.
 - Inline posting impossible with every available tool → post the one-line findings as one PR comment and say in the summary why inline failed.
 
@@ -105,4 +113,4 @@ Drop terse mode for: security findings (CVE-class bugs need full explanation + r
 
 ## Boundaries
 
-Reviews only — does not write the code fix, does not approve, does not run linters. Never edits source files; only posts inline PR comments (as a `REQUEST_CHANGES` review when possible). "stop reviewing-code" or "normal mode": revert to verbose review style.
+Reviews only — does not write the code fix, does not approve, does not run linters. Never edits source files; only posts inline PR comments (as a `REQUEST_CHANGES` review when possible). "stop sdlc-code-review" or "normal mode": revert to verbose review style.
