@@ -14,7 +14,7 @@ Copy this checklist and tick it off:
 
 ```
 - [ ] 1. Listen
-- [ ] 2. Interview until the idea is concrete
+- [ ] 2. Interview, then grill until the idea is concrete
 - [ ] 3. Write intent.md
 - [ ] 4. Let the user correct it
 - [ ] 5. Commit
@@ -34,6 +34,8 @@ Ask the questions a business analyst would ask, a few at a time, until each temp
 - **Users and teams:** who uses it, which teams, customers, partners and business processes are touched.
 - **Constraints:** privacy, compliance, budget, deadlines, policies, contracts.
 - **Scope:** what is explicitly out.
+
+Once every section has an answer or an explicit unknown, call the Skill tool with "grilling" to stress-test them. Grill the intent itself: vague outcomes, unmeasurable success, hidden assumptions, missing users or teams, unstated constraints, scope creep. Grilling's rules are overridden here: stay in business language, never dispatch sub-agents to read the code, and put every recommended answer in business terms. Carry the answers back into the template sections.
 
 Do not read the code or ask technical questions. If the user brings up a technical detail, ask what business need is behind it and record that need; leave the detail for the spec. Never design the solution here: that is the spec's job.
 
