@@ -1,9 +1,9 @@
 ---
-name: following-up-pull-requests
+name: following-up-prs
 description: Follows up a GitHub pull request's code review comments. Auto-fixes, replies to and resolves the user's own comments after checking they are valid; reports other reviewers' comments in the session for the user to decide. Use when the user asks to follow up, address, or handle review comments on a PR.
 ---
 
-# Following up pull requests
+# Following up PRs
 
 Copy this checklist and tick it off:
 
