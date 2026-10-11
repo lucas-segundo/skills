@@ -1,12 +1,12 @@
 ---
-name: intent
+name: sdlc-intent
 description: Turns an idea, ticket or incident into intent.md, the first artifact of the AI-native SDLC, written for product owners, product managers and other business people. Interviews the user like a business analyst, writes the intent from a template, and commits it. Use when the user asks to capture, write, or draft an intent or intent.md. Manual use only.
 disable-model-invocation: true
 ---
 
 # Capturing intent
 
-Stage 1 (Plan) of the AI-native SDLC. Next stage: `spec`.
+Stage 1 (Plan) of the AI-native SDLC. Next stage: `sdlc-spec`.
 
 The user is a product owner, product manager or other business person. Keep the conversation and the intent in business language: no code, file names, APIs, databases, architecture or technology choices. Technical detail belongs to the spec.
 
@@ -56,4 +56,4 @@ Commit only `intent.md` with message `docs(sdlc): capture intent for <slug>`. Do
 
 ## 6. Accept
 
-The intent is accepted only when the user (product owner) says so. Then set `Status: accepted` and commit with `docs(sdlc): accept intent for <slug>`. Tell the user the next step is `/spec`. Do not start it yourself.
+The intent is accepted only when the user (product owner) says so. Then set `Status: accepted` and commit with `docs(sdlc): accept intent for <slug>`. Tell the user the next step is `/sdlc-spec`. Do not start it yourself.

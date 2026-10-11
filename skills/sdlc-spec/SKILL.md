@@ -1,12 +1,12 @@
 ---
-name: spec
+name: sdlc-spec
 description: Turns an accepted intent.md into spec.md, the requirements and design spec of the AI-native SDLC, applying the policy skills the user names and flagging concerns. Commits the spec. Use when the user asks to write, draft, or produce a spec or spec.md from an intent. Manual use only.
 disable-model-invocation: true
 ---
 
 # Writing specs
 
-Stage 2 (Design) of the AI-native SDLC. Previous: `intent`. Next: `plan`.
+Stage 2 (Design) of the AI-native SDLC. Previous: `sdlc-intent`. Next: `sdlc-plan`.
 
 Copy this checklist and tick it off:
 
@@ -24,7 +24,7 @@ Copy this checklist and tick it off:
 
 Use the `intent.md` the user names. Otherwise list `docs/changes/*/intent.md` and ask which one.
 
-**If its status is not `accepted`, stop.** Tell the user to accept it first (`/intent`).
+**If its status is not `accepted`, stop.** Tell the user to accept it first (`/sdlc-intent`).
 
 ## 2. Ask which policy skills apply
 
@@ -55,4 +55,4 @@ Commit only `spec.md` with message `docs(sdlc): write spec for <slug>`. Do not p
 
 ## 7. Accept
 
-The spec is accepted only when the user says so; unresolved flagged concerns must be resolved or explicitly accepted first. Then set `Status: accepted` and commit with `docs(sdlc): accept spec for <slug>`. Tell the user the next step is `/plan`. Do not start it yourself.
+The spec is accepted only when the user says so; unresolved flagged concerns must be resolved or explicitly accepted first. Then set `Status: accepted` and commit with `docs(sdlc): accept spec for <slug>`. Tell the user the next step is `/sdlc-plan`. Do not start it yourself.

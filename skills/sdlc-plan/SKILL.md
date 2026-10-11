@@ -1,12 +1,12 @@
 ---
-name: plan
+name: sdlc-plan
 description: Turns an accepted spec.md into plan.md, the implementation plan of the AI-native SDLC, by reading the code without changing it, interviewing the engineer and stress-testing the plan. Commits the plan. Use when the user asks to plan the implementation or write plan.md from a spec. Manual use only.
 disable-model-invocation: true
 ---
 
 # Planning implementation
 
-Stage 3 (Build) of the AI-native SDLC. Previous: `spec`.
+Stage 3 (Build) of the AI-native SDLC. Previous: `sdlc-spec`.
 
 **No code changes in this skill.** Read the repo, write only `plan.md`. Implementation starts after the plan is accepted.
 
@@ -27,7 +27,7 @@ Copy this checklist and tick it off:
 
 Use the change folder the user names. Otherwise list `docs/changes/*/spec.md` and ask which one. Read both `intent.md` and `spec.md`.
 
-**If the spec's status is not `accepted`, stop.** Tell the user to accept it first (`/spec`).
+**If the spec's status is not `accepted`, stop.** Tell the user to accept it first (`/sdlc-spec`).
 
 ## 2. Read the codebase
 
