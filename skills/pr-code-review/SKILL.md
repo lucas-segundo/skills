@@ -1,10 +1,10 @@
 ---
-name: sdlc-code-review
+name: pr-code-review
 description: >
   Ultra-compressed code review comments. Cuts noise from PR feedback while preserving
   the actionable signal. Each comment is one line: location, problem, fix. Use when user
   says "review this PR", "code review", "review the diff", "/review", or invokes
-  /sdlc-code-review. Auto-triggers when reviewing pull requests.
+  /pr-code-review. Auto-triggers when reviewing pull requests.
 ---
 
 Write code review comments terse and actionable. One line per finding. Location, problem, fix. No throat-clearing. Terse is the format, not the bar: every finding is verified against the code before it is posted (see "Before posting: verify"). Post findings as inline PR line comments (see "Comment on the PR line"), not in a big comment block.
@@ -113,4 +113,4 @@ Drop terse mode for: security findings (CVE-class bugs need full explanation + r
 
 ## Boundaries
 
-Reviews only — does not write the code fix, does not approve, does not run linters. Never edits source files; only posts inline PR comments (as a `REQUEST_CHANGES` review when possible). "stop sdlc-code-review" or "normal mode": revert to verbose review style.
+Reviews only — does not write the code fix, does not approve, does not run linters. Never edits source files; only posts inline PR comments (as a `REQUEST_CHANGES` review when possible). "stop pr-code-review" or "normal mode": revert to verbose review style.
