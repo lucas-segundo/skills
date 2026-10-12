@@ -1,5 +1,5 @@
 ---
-name: pr-create
+name: pr
 description: "Use when writing a PR body."
 metadata:
   credits:
