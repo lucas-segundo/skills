@@ -47,6 +47,26 @@ const getUser = (id: string, { include, ...rest }: GetUserParams = {}) =>
 
 Never fetch a large collection in one go. Paginate (or infinite scroll) when the API supports it, passing page/limit/cursor as params. If it doesn't, warn the user and ask whether to fetch everything anyway; don't leave a `TODO`.
 
+## Filter on the backend
+
+Don't filter, search or sort fetched data on the client when the backend can do it; pass the criteria as params (`filter`, `status`, `programId`) and let the API return only what's needed. Client-side filtering of a partial page gives wrong results (matches beyond the page are missed). If the API can't filter that way, warn the user and ask whether to filter on the frontend anyway; don't do it silently.
+
+```tsx
+// Bad: fetches 10 sessions, then filters; misses matches beyond the first page
+export const useProgramInProgress = (programId: string) => {
+  const { data: sessions } = useSessions({ limit: 10 });
+  return sessions.data.some(
+    (session) => session.programId === programId && session.status === 'in_progress',
+  );
+};
+
+// Good: the backend filters
+export const useProgramInProgress = (programId: string) => {
+  const { data: sessions } = useSessions({ programId, status: 'in_progress', limit: 1 });
+  return sessions.data.length > 0;
+};
+```
+
 ## Backend gaps
 
 Never code the backend. If the frontend needs something it lacks (endpoint, field, behavior), warn the user, naming the backend if it is in the workspace, and ask whether to work around it on the frontend; don't leave a `TODO`.
