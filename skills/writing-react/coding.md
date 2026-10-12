@@ -45,25 +45,15 @@ const getUser = (id: string, { include, ...rest }: GetUserParams = {}) =>
 
 ## Avoid fetching large data
 
-Never fetch a large collection in one go. Paginate (or infinite scroll) when the API supports it, passing page/limit/cursor as params. If it doesn't, tell the user and leave a `TODO` next to the call.
-
-```tsx
-// TODO: no pagination in GET /users, fetches everything. Paginate when the API supports it.
-const getUsers = () => api.get('/users');
-```
+Never fetch a large collection in one go. Paginate (or infinite scroll) when the API supports it, passing page/limit/cursor as params. If it doesn't, warn the user and ask whether to fetch everything anyway; don't leave a `TODO`.
 
 ## Backend gaps
 
-Never code the backend. If the frontend needs something it lacks (endpoint, field, behavior), warn the user and leave a `TODO(backend)` next to the call, naming the backend if it is in the workspace.
-
-```tsx
-// TODO(backend: orders-api): GET /orders has no `status` filter, filtering client side for now.
-const getOrders = () => api.get('/orders');
-```
+Never code the backend. If the frontend needs something it lacks (endpoint, field, behavior), warn the user, naming the backend if it is in the workspace, and ask whether to work around it on the frontend; don't leave a `TODO`.
 
 ## Backend errors
 
-Never show a backend error as-is. The service maps every error code to a plain-language message (what went wrong, what to do next) and throws an `Error` with it; the UI displays `error.message`. Unknown codes get a generic friendly message, never the raw backend text. If the backend returns no code, warn the user and leave a `TODO(backend)`.
+Never show a backend error as-is. The service maps every error code to a plain-language message (what went wrong, what to do next) and throws an `Error` with it; the UI displays `error.message`. Unknown codes get a generic friendly message, never the raw backend text. If the backend returns no code, warn the user and ask whether to finish the error handling anyway.
 
 ```tsx
 const userErrorMessages: Record<string, string> = {
@@ -80,6 +70,10 @@ const updateUser = async (id: string, values: UserValues) => {
   }
 };
 ```
+
+## No TODO comments
+
+Never write `TODO` in code. If work would be left unfinished, warn the user in the response and ask for confirmation on whether to finish it.
 
 ## Components
 
