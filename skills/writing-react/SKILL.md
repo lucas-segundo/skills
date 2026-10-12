@@ -12,8 +12,8 @@ React is JavaScript: the `writing-javascript` files apply too.
 ## Reference files
 
 - [coding.md](coding.md): read before writing or reviewing React code.
-- [testing.md](testing.md): read before writing or reviewing component tests.
-- [../writing-javascript/coding.md](../writing-javascript/coding.md), [../writing-javascript/testing.md](../writing-javascript/testing.md): general JS/TS rules.
+- [../writing-javascript/coding.md](../writing-javascript/coding.md): general JS/TS rules.
+- [../writing-javascript/testing.md](../writing-javascript/testing.md): read before writing or reviewing tests, including component tests.
 - [../writing-javascript/verification.md](../writing-javascript/verification.md): read before ending any turn that edited JS/TS. Do not end the turn first.
 
 ## Planning
