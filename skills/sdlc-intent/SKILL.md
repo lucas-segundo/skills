@@ -1,7 +1,6 @@
 ---
 name: sdlc-intent
-description: Turns an idea, ticket or incident into intent.md, the first artifact of the AI-native SDLC, written for product owners, product managers and other business people. Interviews the user like a business analyst, writes the intent from a template, and commits it. Use when the user asks to capture, write, or draft an intent or intent.md. Manual use only.
-disable-model-invocation: true
+description: Turns an idea, ticket or incident into intent.md, the first artifact of the AI-native SDLC, written for product owners, product managers and other business people. Interviews the user like a business analyst, writes the intent from a template, and commits it. Use when the user says "write an intent", "capture the intent", "draft intent.md", "turn this idea/ticket/incident into an intent", or starts a new change with no intent yet.
 ---
 
 # Capturing intent

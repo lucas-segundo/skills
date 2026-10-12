@@ -25,7 +25,7 @@ claude.ai admin settings → Skills → Add → Sync from GitHub → pick this r
 
 ## SDLC
 
-Three manual skills, one per artifact of the AI-native SDLC. Each reads the previous artifact, stops if it is not `accepted`, and commits its file to `docs/changes/<YYYY-MM-DD>-<slug>/`:
+Three skills, invoked by name or by asking (e.g. "write an intent"), one per artifact of the AI-native SDLC. Each reads the previous artifact, stops if it is not `accepted`, and commits its file to `docs/changes/<YYYY-MM-DD>-<slug>/`:
 
 1. `/sdlc-intent` → `intent.md` (what is wanted and why)
 2. `/sdlc-spec` → `spec.md` (requirements, design, flagged concerns; you name the policy skills)
