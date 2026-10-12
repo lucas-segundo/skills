@@ -31,6 +31,12 @@ Three manual skills, one per artifact of the AI-native SDLC. Each reads the prev
 2. `/sdlc-spec` → `spec.md` (requirements, design, flagged concerns; you name the policy skills)
 3. `/sdlc-plan` → `plan.md` (files, order of work, risks, proof)
 
+## Pull requests
+
+- `/pr` writes a PR body (from [mattpocock/skills](https://github.com/mattpocock/skills), see Upstream skills).
+- `/pr-code-review` reviews a PR with terse one-line inline comments. The `claude.yml` workflow in `lucas-segundo/ai` uses it for reviews.
+- `/pr-fix` follows up a PR's review comments: fixes, replies to and resolves your own, reports the rest.
+
 ## Upstream skills
 
 Some skills are copied from other repos instead of written here. `.github/upstream.json` lists them per repo (paths under the upstream `skills/` folder); each lands at `skills/<name>/` with the upstream license files. Don't edit them here: changes are overwritten on the next sync.
