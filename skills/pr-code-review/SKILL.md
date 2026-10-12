@@ -17,6 +17,7 @@ Write code review comments terse and actionable. One line per finding. Location,
 - `🔴 bug:` — broken behavior, will cause incident
 - `🟡 risk:` — works but fragile (race, missing null check, swallowed error)
 - `🔵 nit:` — style, naming, micro-optim. Author can ignore
+- `❓ ask:` — unresolved after reading the code; needs author answer
 
 **Drop:**
 - "I noticed that...", "It seems like...", "You might want to consider..."
@@ -24,7 +25,7 @@ Write code review comments terse and actionable. One line per finding. Location,
 - "Great work!", "Looks good overall but..." — say it once at the top, not per comment
 - Restating what the line does — the reviewer can read the diff
 - Hedging ("perhaps", "maybe", "I think") — if unsure, verify; still unsure → drop it
-- Questions — every comment is a finding with a fix. Read the code to answer it yourself
+- Chat-only questions — answer from the code first. If still open, it is still a comment (see "Questions")
 
 **Keep:**
 - Exact line numbers
@@ -32,6 +33,15 @@ Write code review comments terse and actionable. One line per finding. Location,
 - Concrete fix, not "consider refactoring this"
 - The *why* if the fix isn't obvious from the problem statement
 - The evidence when the cause is outside the diff: `(see useFoo.ts:18)`
+
+## Questions
+
+A question, should-fix or should-check that survives verification is never dropped or left in chat. Post it as an inline comment on the exact line(s) it concerns, ranges via `startLine`/`line`.
+
+- Read the code first. Answered → post a finding or nothing.
+- Still open after reading → post `❓ ask: <question>? <what to check or fix if answer is bad>.` One line, symbol names in backticks.
+- `should fix` → `🔴`/`🟡`. `should check` → `🟡 risk:` or `❓ ask:`. Never a general PR comment or chat reply.
+- `❓ ask` does not count toward the nit budget.
 
 ## Context first
 
@@ -71,7 +81,9 @@ Budget: at most 3 `🔵 nit` per review. Pick the ones a teammate would actually
 
 ✅ `L23: 🟡 risk: no retry on 429. Wrap in withBackoff(3).`
 
-❌ `L63: does useFinishSession invalidate the useSession cache? If not, button hangs.` (no questions: read `useFinishSession`, then post a finding or nothing)
+❌ `L63: does useFinishSession invalidate the useSession cache? If not, button hangs.` (answerable: read `useFinishSession`, then post a finding or nothing)
+
+✅ `L31: ❓ ask: does the backend dedupe retried `POST /pay`? If not, add idempotency key.` (answer not in repo; anchored inline)
 
 ✅ `L63: 🔴 bug: useFinishSession invalidates ["session", id] but useSession keys ["sessions", id] (see useSession.ts:9). Button hangs on "Finishing…". Match the key.`
 
