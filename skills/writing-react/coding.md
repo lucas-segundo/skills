@@ -170,10 +170,6 @@ useEffect(() => {
 }, []);
 ```
 
-## Memoization
-
-No `useMemo`/`useCallback`/`memo` by default. Add only for a measured re-render or a required stable reference (memoized list rows, dependency arrays).
-
 ## Forms/mutations
 
 Disable submit while pending and show a loading state (ask the user how it should look, e.g. spinner on the button or inline indicator, unless the project already has a pattern), surface errors, refresh the affected data on success.
