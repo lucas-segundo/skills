@@ -8,12 +8,14 @@ Keep every heading. Write "None" rather than deleting a section.
 From: <intent.md (<date>), spec.md (<date>), or "direct request">. Author: <name>. Date: <YYYY-MM-DD>. Status: draft.
 
 ## Files that change
-- <path> (new | changed | deleted): <why>
+Rank all touched files by risk, then list only the riskiest ~20% (at least 1), riskiest first. Risky means: migrations, changed fetching or data-access logic, breaking changes (public API, schema, contracts), auth, config. Skip low-risk files (tests, copy, styling).
+- <path> (new | changed | deleted): <why it is risky>
 
 ## Order of work
 1. <Step>. Covers: R1, R2. Done when: <check>.
 
 ## Risks
+List only the riskiest ~20% of risks, riskiest first, using the same notion of risky as above (migrations, fetching changes, breaking changes). Skip minor ones.
 - <What could break, the riskiest step, and the mitigation.>
 
 ## Alternatives not taken
@@ -32,9 +34,7 @@ From: <intent.md (<date>), spec.md (<date>), or "direct request">. Author: <name
 From: intent.md (2026-06-02), spec.md (2026-06-03). Author: A. Lee. Date: 2026-06-04. Status: draft.
 
 ## Files that change
-- portal/src/claims/StatusPanel.tsx (new): status panel.
-- claims-api/routes/status.py (changed): status endpoint.
-- claims-api/tests/test_status.py (new): endpoint tests.
+- claims-api/routes/status.py (changed): new fetch path to claims-core, rate-limited upstream.
 
 ## Order of work
 1. Add the status endpoint behind existing auth. Covers: R1, R4. Done when: tests pass.
