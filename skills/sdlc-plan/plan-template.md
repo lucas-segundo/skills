@@ -5,7 +5,7 @@ Keep every heading. Write "None" rather than deleting a section.
 ```md
 # Plan: <title>
 
-From: intent.md (<date>), spec.md (<date>). Author: <name>. Date: <YYYY-MM-DD>. Status: draft.
+From: <intent.md (<date>), spec.md (<date>), or "direct request">. Author: <name>. Date: <YYYY-MM-DD>. Status: draft.
 
 ## Files that change
 - <path> (new | changed | deleted): <why>

@@ -1,18 +1,18 @@
 ---
 name: sdlc-plan
-description: Turns an accepted spec.md into plan.md, the implementation plan of the AI-native SDLC, by reading the code without changing it, interviewing the engineer and stress-testing the plan. Commits the plan. Use when the user says "write a plan", "plan the implementation", "draft plan.md", or "turn the spec into a plan".
+description: Turns a task, or an accepted spec.md and intent.md when they exist, into plan.md, the implementation plan of the AI-native SDLC, by reading the code without changing it, interviewing the engineer and stress-testing the plan. Commits the plan. Use when the user says "write a plan", "plan the implementation", "draft plan.md", or "turn the spec into a plan". Works with or without an intent or spec.
 ---
 
 # Planning implementation
 
-Stage 3 (Build) of the AI-native SDLC. Previous: `sdlc-spec`.
+Stage 3 (Build) of the AI-native SDLC. Previous (optional): `sdlc-spec`. Intent and spec are not required.
 
 **No code changes in this skill.** Read the repo, write only `plan.md`. Implementation starts after the plan is accepted.
 
 Copy this checklist and tick it off:
 
 ```
-- [ ] 1. Load the accepted intent and spec
+- [ ] 1. Load inputs (spec and intent if they exist)
 - [ ] 2. Read the codebase
 - [ ] 3. Interview the engineer
 - [ ] 4. Write plan.md
@@ -24,9 +24,10 @@ Copy this checklist and tick it off:
 
 ## 1. Load the inputs
 
-Use the change folder the user names. Otherwise list `docs/changes/*/spec.md` and ask which one with the AskUserQuestion tool. Read both `intent.md` and `spec.md`.
+Intent and spec are optional. Use the change folder the user names. Otherwise list `docs/changes/*/` and ask with the AskUserQuestion tool which one, or whether this is a new change.
 
-**If the spec's status is not `accepted`, stop.** Tell the user to accept it first (`/sdlc-spec`).
+- **`spec.md` exists:** read it (and `intent.md` if present). **If its status is not `accepted`, stop** and tell the user to accept it first (`/sdlc-spec`), unless they say to plan without it.
+- **No spec:** work from what the user described (or a ticket/link they give). Ask what is needed to pin down the goal and scope. For a new change, create `docs/changes/<YYYY-MM-DD>-<slug>/`.
 
 ## 2. Read the codebase
 
@@ -40,7 +41,7 @@ Use the AskUserQuestion tool to ask the engineer what the code cannot tell you, 
 
 Use [plan-template.md](plan-template.md). Save it next to the spec: `docs/changes/<folder>/plan.md`. Status: `draft`.
 
-- Every requirement in the spec (`R1`...) maps to at least one step and one proof. List any that do not and ask with AskUserQuestion.
+- Every requirement in the spec (`R1`...) maps to at least one step and one proof. List any that do not and ask with AskUserQuestion. With no spec, list the goals you derived from the user at the top of the plan and number them `R1`... so steps and proof can map to them.
 - Steps are ordered so each one leaves the code working and testable.
 - Proof names concrete tests (file and what they assert) and the commands that run them.
 
