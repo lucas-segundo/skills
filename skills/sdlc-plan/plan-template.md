@@ -6,6 +6,7 @@ Keep every heading. Write "None" rather than deleting a section.
 # Plan: <title>
 
 From: <intent.md (<date>), spec.md (<date>), or "direct request">. Author: <name>. Date: <YYYY-MM-DD>. Status: draft.
+Saves to: docs/changes/<folder>/plan.md.
 
 ## Files that change
 Rank all touched files by risk, then list only the riskiest ~20% (at least 1), riskiest first. Risky means: migrations, changed fetching or data-access logic, breaking changes (public API, schema, contracts), auth, config. Skip low-risk files (tests, copy, styling).
@@ -32,6 +33,7 @@ List only the riskiest ~20% of risks, riskiest first, using the same notion of r
 # Plan: claims status self-service
 
 From: intent.md (2026-06-02), spec.md (2026-06-03). Author: A. Lee. Date: 2026-06-04. Status: draft.
+Saves to: docs/changes/2026-06-02-claims-status/plan.md.
 
 ## Files that change
 - claims-api/routes/status.py (changed): new fetch path to claims-core, rate-limited upstream.
