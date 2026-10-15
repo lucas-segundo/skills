@@ -7,19 +7,11 @@ Interview the user relentlessly until you reach a shared understanding. Map this
 
 Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round: number each question and give your recommended answer. Then wait for the user's answers before the next round.
 
-Format a round like so:
+Ask each round with the **AskUserQuestion** tool, never as a big text block in chat. One call per round, one entry per frontier question (the tool takes at most 4 per call; if the frontier is larger, split it across consecutive calls). Per question:
 
-```
-❓ **Q1** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
-
-➡️ <your recommended answer>
-
----
-
-❓ **Q2** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
-
-➡️ <your recommended answer>
-```
+- `header`: short question title.
+- `question`: the question body, with any needed context.
+- `options`: the plausible answers, your recommended one first and labelled "(Recommended)". The user can always pick "Other" for free text.
 
 Word each question so "yes" accepts your recommended answer.
 
