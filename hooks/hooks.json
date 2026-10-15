@@ -6,16 +6,10 @@
           {
             "type": "command",
             "command": "cat \"${CLAUDE_PLUGIN_ROOT}/hooks/reporting-rule.md\""
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
+          },
           {
             "type": "command",
-            "command": "echo 'Caveman mode: caveman. Follow the caveman skill for this reply. Stop with \"stop caveman\" or \"normal mode\".'"
+            "command": "echo 'Caveman mode: caveman. Follow the caveman skill for the whole session. Stop with \"stop caveman\" or \"normal mode\".'"
           }
         ]
       }
