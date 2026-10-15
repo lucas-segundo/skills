@@ -23,6 +23,8 @@ claude.ai admin settings → Skills → Add → Sync from GitHub → pick this r
 
 `skills/caveman` is the terse-reply skill, synced from [juliusbrussee/caveman](https://github.com/juliusbrussee/caveman). `hooks/hooks.json` runs a `UserPromptSubmit` hook that reminds Claude to use caveman on every prompt. Edit the `echo` text there to change the mode or remove the hook to turn it off.
 
+A `SessionStart` hook in the same file loads `hooks/reporting-rule.md` into every session, so Claude reports finished files, artifacts and plans in a few lines instead of restating them. Edit that file to change the rule.
+
 ## SDLC
 
 Three skills, invoked by name or by asking (e.g. "write an intent"), one per artifact of the AI-native SDLC. Intent and spec feed the plan but are optional for it. When a previous artifact is used, the skill stops if it is not `accepted`. Each commits its file to `docs/changes/<YYYY-MM-DD>-<slug>/`:
