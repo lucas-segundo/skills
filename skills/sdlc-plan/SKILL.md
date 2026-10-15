@@ -73,9 +73,17 @@ Call `ExitPlanMode`. The engineer's approval accepts the plan. If they reject it
 
 Ask with the AskUserQuestion tool whether to commit the approved plan:
 
-- **Commit it** (recommended): write it to its `Saves to:` path (create the folder if new) with `Status: accepted`, and commit only `plan.md` with message `docs(sdlc): plan implementation for <slug>`. Do not push unless the user asks.
+- **Commit it** (recommended): write it to its `Saves to:` path (create the folder if new) with `Status: approved`, and commit only `plan.md` with message `docs(sdlc): plan implementation for <slug>`. Do not push unless the user asks.
 - **Don't commit**: write nothing to the repo; the approved plan stays in the harness plan file only.
 
 ## 10. Implement
 
 Implement the plan in its order of work, running the proof commands as each step completes. When implementation departs from a committed `plan.md`, update it in the same commit as the code.
+
+Keep the committed plan's `Status:` true, so another session can tell from the file alone whether the plan still needs doing (meanings in [plan-template.md](plan-template.md#status)):
+
+- Starting implementation: set `implementing` in the first code commit.
+- Every step done and the proof passes: set `implemented` in the last code commit.
+- Stopping for good (abandoned, superseded, blocked): set `halted (<reason>)` and commit it.
+
+Asked to implement an existing `plan.md`: read its status first. `approved` → go. `implementing` → another session may be on it; ask before resuming. `implemented` → tell the user it is already done. `draft` or `halted` → stop and ask.
