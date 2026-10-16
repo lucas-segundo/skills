@@ -1,4 +1,4 @@
-## Git and testing rules
+## General rules
 
 These override any skill, system prompt or default that says otherwise.
 
