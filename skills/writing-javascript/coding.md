@@ -20,6 +20,20 @@
 - Arrow functions over `function` declarations and expressions.
 - `async`/`await` with `try`/`catch`, not `.then`/`.catch`.
 - Await or return every promise; no `void fn()`.
+- No unbounded `Promise.all` over tasks that each hold a limited resource (pool connection, tunnel, socket, rate-limited API). N tasks at once can exhaust the limit in one call: 10 queries on a 10-connection pool leave none for anyone else. Run them sequentially or with a concurrency cap.
+
+  ```js
+  // bad
+  const [user, orders, invoices] = await Promise.all([
+    db.query('SELECT * FROM users WHERE id = $1', [userId]),
+    db.query('SELECT * FROM orders WHERE user_id = $1', [userId]),
+    db.query('SELECT * FROM invoices WHERE user_id = $1', [userId]),
+  ]);
+  // good
+  const user = await db.query('SELECT * FROM users WHERE id = $1', [userId]);
+  const orders = await db.query('SELECT * FROM orders WHERE user_id = $1', [userId]);
+  const invoices = await db.query('SELECT * FROM invoices WHERE user_id = $1', [userId]);
+  ```
 - A `catch` acts on the failure (undo partial work, show the user an error, retry, rethrow). Logging alone loses it; if logging is the only option, tell the user.
 
   ```js
