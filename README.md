@@ -6,6 +6,7 @@ Private Claude plugin with my personal skills.
 .claude-plugin/plugin.json        plugin manifest
 .claude-plugin/marketplace.json   marketplace (this repo = one plugin)
 skills/<skill-name>/SKILL.md      the skills
+agents/<agent-name>.md            subagents on cheaper models
 hooks/hooks.json                  plugin hooks
 ```
 
@@ -44,6 +45,15 @@ Three skills, invoked by name or by asking (e.g. "write an intent"), one per art
 ## Design
 
 `/designing-screens` designs screens and flows as interactive Artifact prototypes, or critiques existing ones.
+
+## Subagents
+
+`agents/` holds subagents that run simple tasks on cheaper, faster models, so the main model gets back short results instead of raw output.
+
+- Haiku: `test-runner` (only the failures), `log-summarizer` (only the root-cause lines), `git-scout` (history questions), `doc-fetcher` (doc lookups, with sources), `bulk-editor` (exact edits across many files)
+- Sonnet: `test-writer` (tests in the repo's own style), `fixer` (fixes for errors that are already diagnosed)
+
+Each one is a Markdown file with `name`, `description`, `model` and `tools` in its frontmatter. The `description` tells Claude when to delegate.
 
 ## Upstream skills
 
