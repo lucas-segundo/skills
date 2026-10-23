@@ -1,11 +1,13 @@
 ---
 name: sdlc-spec
-description: Turns an accepted intent.md into spec.md, the requirements and design spec of the AI-native SDLC, applying the policy skills the user names and flagging concerns. Commits the spec. Use when the user says "write a spec", "draft spec.md", "spec this out", or "turn the intent into a spec".
+description: Turns an accepted intent.md into spec.md, the requirements and design spec of the AI-native SDLC, applying the policy skills the user names and flagging concerns. Leaves the spec uncommitted for the user. Use when the user says "write a spec", "draft spec.md", "spec this out", or "turn the intent into a spec".
 ---
 
 # Writing specs
 
 Stage 2 (Design) of the AI-native SDLC. Previous: `sdlc-intent`. Next: `sdlc-plan`.
+
+Never commit, stage or offer to commit `spec.md`; what to do with it is the user's call.
 
 Copy this checklist and tick it off:
 
@@ -15,8 +17,7 @@ Copy this checklist and tick it off:
 - [ ] 3. Read the codebase
 - [ ] 4. Write spec.md
 - [ ] 5. Review with the user, concerns first
-- [ ] 6. Commit
-- [ ] 7. Accept (only on the user's word)
+- [ ] 6. Accept (only on the user's word)
 ```
 
 ## 1. Load the intent
@@ -48,10 +49,6 @@ Use [spec-template.md](spec-template.md). Save it next to the intent: `docs/chan
 
 Show the spec. Go through **Flagged concerns** first, one at a time; the user resolves each (or names who must), asked via AskUserQuestion. Then ask, also via AskUserQuestion: does the spec solve the stated problem? Are all open questions answered or carried? Apply fixes and repeat.
 
-## 6. Commit
+## 6. Accept
 
-Commit only `spec.md` with message `docs(sdlc): write spec for <slug>`. Do not push unless the user asks.
-
-## 7. Accept
-
-The spec is accepted only when the user says so; unresolved flagged concerns must be resolved or explicitly accepted first. Then set `Status: accepted` and commit with `docs(sdlc): accept spec for <slug>`. Tell the user the next step is `/sdlc-plan`. Do not start it yourself.
+The spec is accepted only when the user says so; unresolved flagged concerns must be resolved or explicitly accepted first. Then set `Status: accepted`. Tell the user the next step is `/sdlc-plan`. Do not start it yourself.

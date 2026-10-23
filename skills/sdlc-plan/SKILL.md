@@ -1,13 +1,15 @@
 ---
 name: sdlc-plan
-description: Turns a task, or an accepted spec.md and intent.md when they exist, into plan.md, the implementation plan of the AI-native SDLC, inside plan mode: reads the code, interviews the engineer, stress-tests the plan, then, once the engineer approves it, commits plan.md if they want and implements it. Use when the user says "write a plan", "plan the implementation", "draft plan.md", or "turn the spec into a plan". Works with or without an intent or spec.
+description: Turns a task, or an accepted spec.md and intent.md when they exist, into plan.md, the implementation plan of the AI-native SDLC, inside plan mode: reads the code, interviews the engineer, stress-tests the plan, then, once the engineer approves it, saves plan.md (uncommitted) and implements it. Use when the user says "write a plan", "plan the implementation", "draft plan.md", or "turn the spec into a plan". Works with or without an intent or spec.
 ---
 
 # Planning implementation
 
 Stage 3 (Build) of the AI-native SDLC. Previous (optional): `sdlc-spec`. Intent and spec are not required.
 
-Steps 1–7 run in **plan mode**: the repo stays read-only and the plan lives in the plan file the harness assigns. Approving the plan (`ExitPlanMode`) accepts it; only then is `plan.md` committed (if the user wants) and implementation starts.
+Steps 1–7 run in **plan mode**: the repo stays read-only and the plan lives in the plan file the harness assigns. Approving the plan (`ExitPlanMode`) accepts it; only then is `plan.md` saved and implementation starts.
+
+Never commit, stage or offer to commit `plan.md`; what to do with it is the user's call. This covers code commits too: leave `plan.md` out of them.
 
 Copy this checklist and tick it off:
 
@@ -20,7 +22,7 @@ Copy this checklist and tick it off:
 - [ ] 6. Stress-test the plan
 - [ ] 7. Cold-engineer check
 - [ ] 8. Exit plan mode for approval
-- [ ] 9. Commit plan.md (ask first)
+- [ ] 9. Save plan.md
 - [ ] 10. Implement
 ```
 
@@ -69,21 +71,18 @@ Re-read the plan as an engineer who never saw this conversation. Could they impl
 
 Call `ExitPlanMode`. The engineer's approval accepts the plan. If they reject it, revise in plan mode and call `ExitPlanMode` again.
 
-## 9. Commit plan.md (ask first)
+## 9. Save plan.md
 
-Ask with the AskUserQuestion tool whether to commit the approved plan:
-
-- **Commit it** (recommended): write it to its `Saves to:` path (create the folder if new) with `Status: approved`, and commit only `plan.md` with message `docs(sdlc): plan implementation for <slug>`. Do not push unless the user asks.
-- **Don't commit**: write nothing to the repo; the approved plan stays in the harness plan file only.
+Write the approved plan to its `Saves to:` path (create the folder if new) with `Status: approved`.
 
 ## 10. Implement
 
-Implement the plan in its order of work, running the proof commands as each step completes. When implementation departs from a committed `plan.md`, update it in the same commit as the code.
+Implement the plan in its order of work, running the proof commands as each step completes. When implementation departs from `plan.md`, update the file.
 
-Keep the committed plan's `Status:` true, so another session can tell from the file alone whether the plan still needs doing (meanings in [plan-template.md](plan-template.md#status)):
+Keep the plan's `Status:` true, so another session can tell from the file alone whether the plan still needs doing (meanings in [plan-template.md](plan-template.md#status)):
 
-- Starting implementation: set `implementing` in the first code commit.
-- Every step done and the proof passes: set `implemented` in the last code commit.
-- Stopping for good (abandoned, superseded, blocked): set `halted (<reason>)` and commit it.
+- Starting implementation: set `implementing`.
+- Every step done and the proof passes: set `implemented`.
+- Stopping for good (abandoned, superseded, blocked): set `halted (<reason>)`.
 
 Asked to implement an existing `plan.md`: read its status first. `approved` → go. `implementing` → another session may be on it; ask before resuming. `implemented` → tell the user it is already done. `draft` or `halted` → stop and ask.

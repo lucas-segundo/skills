@@ -1,11 +1,13 @@
 ---
 name: sdlc-intent
-description: Turns an idea, ticket or incident into intent.md, the first artifact of the AI-native SDLC, written for product owners, product managers and other business people. Interviews the user like a business analyst, writes the intent from a template, and commits it. Use when the user says "write an intent", "capture the intent", "draft intent.md", "turn this idea/ticket/incident into an intent", or starts a new change with no intent yet.
+description: Turns an idea, ticket or incident into intent.md, the first artifact of the AI-native SDLC, written for product owners, product managers and other business people. Interviews the user like a business analyst, writes the intent from a template, and leaves it uncommitted for the user. Use when the user says "write an intent", "capture the intent", "draft intent.md", "turn this idea/ticket/incident into an intent", or starts a new change with no intent yet.
 ---
 
 # Capturing intent
 
 Stage 1 (Plan) of the AI-native SDLC. Next stage: `sdlc-spec`.
+
+Never commit, stage or offer to commit `intent.md`; what to do with it is the user's call.
 
 The user is a product owner, product manager or other business person. Keep the conversation and the intent in business language: no code, file names, APIs, databases, architecture or technology choices. Technical detail belongs to the spec.
 
@@ -16,8 +18,7 @@ Copy this checklist and tick it off:
 - [ ] 2. Interview until the idea is concrete
 - [ ] 3. Write intent.md
 - [ ] 4. Let the user correct it
-- [ ] 5. Commit
-- [ ] 6. Accept (only on the user's word)
+- [ ] 5. Accept (only on the user's word)
 ```
 
 ## 1. Listen
@@ -49,10 +50,6 @@ Use [intent-template.md](intent-template.md).
 
 Show the file. Ask the user (AskUserQuestion) what you misunderstood. Apply fixes and repeat until they have none.
 
-## 5. Commit
+## 5. Accept
 
-Commit only `intent.md` with message `docs(sdlc): capture intent for <slug>`. Do not push unless the user asks.
-
-## 6. Accept
-
-The intent is accepted only when the user (product owner) says so. Then set `Status: accepted` and commit with `docs(sdlc): accept intent for <slug>`. Tell the user the next step is `/sdlc-spec`. Do not start it yourself.
+The intent is accepted only when the user (product owner) says so. Then set `Status: accepted`. Tell the user the next step is `/sdlc-spec`. Do not start it yourself.
