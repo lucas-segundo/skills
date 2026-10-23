@@ -53,3 +53,4 @@
 
 - No re-exports (`export ... from`, or import-then-export). Consumers import from the defining file.
 - No type or interface that duplicates another. Use the original.
+- Never write `TODO` in code. If work would be left unfinished, warn the user in the response and ask for confirmation on whether to finish it.

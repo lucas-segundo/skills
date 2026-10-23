@@ -91,10 +91,6 @@ const updateUser = async (id: string, values: UserValues) => {
 };
 ```
 
-## No TODO comments
-
-Never write `TODO` in code. If work would be left unfinished, warn the user in the response and ask for confirmation on whether to finish it.
-
 ## Components
 
 Small, single-purpose function components. Extract when JSX nests or a piece is reused. Screens are composition only.
