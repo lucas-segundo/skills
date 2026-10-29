@@ -1,15 +1,13 @@
 ---
 name: sdlc-plan
-description: Turns a task, or an accepted spec.md and intent.md when they exist, into plan.md, the implementation plan of the AI-native SDLC, inside plan mode: reads the code, interviews the engineer, stress-tests the plan, then, once the engineer approves it, saves plan.md (uncommitted) and implements it. Use when the user says "write a plan", "plan the implementation", "draft plan.md", or "turn the spec into a plan". Works with or without an intent or spec.
+description: Turns a task, or an accepted spec.md and intent.md when they exist, into the implementation plan of the AI-native SDLC, inside plan mode: reads the code, interviews the engineer, stress-tests the plan, then, once the engineer approves it, implements it. Use when the user says "write a plan", "plan the implementation", or "turn the spec into a plan". Works with or without an intent or spec.
 ---
 
 # Planning implementation
 
 Stage 3 (Build) of the AI-native SDLC. Previous (optional): `sdlc-spec`. Intent and spec are not required.
 
-Steps 1–7 run in **plan mode**: the repo stays read-only and the plan lives in the plan file the harness assigns. Approving the plan (`ExitPlanMode`) accepts it; only then is `plan.md` saved and implementation starts.
-
-Never commit, stage or offer to commit `plan.md`; what to do with it is the user's call. This covers code commits too: leave `plan.md` out of them.
+Steps 1–7 run in **plan mode**: the repo stays read-only and the plan lives in the plan file the harness assigns. Approving the plan (`ExitPlanMode`) accepts it; only then does implementation start. Do not save the plan to the repo unless the user asks.
 
 Copy this checklist and tick it off:
 
@@ -22,8 +20,7 @@ Copy this checklist and tick it off:
 - [ ] 6. Stress-test the plan
 - [ ] 7. Cold-engineer check
 - [ ] 8. Exit plan mode for approval
-- [ ] 9. Save plan.md
-- [ ] 10. Implement
+- [ ] 9. Implement
 ```
 
 ## 1. Enter plan mode
@@ -35,7 +32,7 @@ Call `EnterPlanMode`. Already in plan mode: carry on. The user declines: stop an
 Intent and spec are optional. Use the change folder the user names. Otherwise list `docs/changes/*/` and ask with the AskUserQuestion tool which one, or whether this is a new change.
 
 - **`spec.md` exists:** read it (and `intent.md` if present). **If its status is not `accepted`, stop** and tell the user to accept it first (`/sdlc-spec`), unless they say to plan without it.
-- **No spec:** work from what the user described (or a ticket/link they give). Ask what is needed to pin down the goal and scope. For a new change, pick the folder name `docs/changes/<YYYY-MM-DD>-<slug>/` now; create it in step 9.
+- **No spec:** work from what the user described (or a ticket/link they give). Ask what is needed to pin down the goal and scope.
 
 ## 3. Read the codebase
 
@@ -47,7 +44,7 @@ Use the AskUserQuestion tool to ask the engineer what the code cannot tell you, 
 
 ## 5. Write the plan
 
-Use [plan-template.md](plan-template.md). Write it to the plan file the harness assigned in plan mode. Status: `draft`. Fill `Saves to:` with `docs/changes/<folder>/plan.md`; step 9 writes the plan there.
+Use [plan-template.md](plan-template.md). Write it to the plan file the harness assigned in plan mode.
 
 - Every requirement in the spec (`R1`...) maps to at least one step and one proof. List any that do not and ask with AskUserQuestion. With no spec, list the goals you derived from the user at the top of the plan and number them `R1`... so steps and proof can map to them.
 - Steps are ordered so each one leaves the code working and testable.
@@ -71,18 +68,6 @@ Re-read the plan as an engineer who never saw this conversation. Could they impl
 
 Call `ExitPlanMode`. The engineer's approval accepts the plan. If they reject it, revise in plan mode and call `ExitPlanMode` again.
 
-## 9. Save plan.md
+## 9. Implement
 
-Write the approved plan to its `Saves to:` path (create the folder if new) with `Status: approved`.
-
-## 10. Implement
-
-Implement the plan in its order of work, running the proof commands as each step completes. When implementation departs from `plan.md`, update the file.
-
-Keep the plan's `Status:` true, so another session can tell from the file alone whether the plan still needs doing (meanings in [plan-template.md](plan-template.md#status)):
-
-- Starting implementation: set `implementing`.
-- Every step done and the proof passes: set `implemented`.
-- Stopping for good (abandoned, superseded, blocked): set `halted (<reason>)`.
-
-Asked to implement an existing `plan.md`: read its status first. `approved` → go. `implementing` → another session may be on it; ask before resuming. `implemented` → tell the user it is already done. `draft` or `halted` → stop and ask.
+Implement the plan in its order of work, running the proof commands as each step completes.

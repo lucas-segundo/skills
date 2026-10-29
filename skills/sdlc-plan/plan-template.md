@@ -2,23 +2,10 @@
 
 Keep every heading. Write "None" rather than deleting a section.
 
-## Status
-
-The `Status:` line tells any session, at a glance, whether this plan still needs doing. Exactly one of:
-
-| Status | Meaning |
-|---|---|
-| `draft` | Being written or revised in plan mode. Do not implement. |
-| `approved` | Approved and waiting: nobody has started it. Safe to pick up and implement. |
-| `implementing` | Implementation is underway in some session. Do not start it again; resume it only if the user says so. |
-| `implemented` | Every step is done and the proof passes. Nothing left to do. |
-| `halted` | Stopped before it was implemented (abandoned, superseded or blocked). Add the reason after it: `Status: halted (superseded by <folder>)`. |
-
 ```md
 # Plan: <title>
 
-From: <intent.md (<date>), spec.md (<date>), or "direct request">. Author: <name>. Date: <YYYY-MM-DD>. Status: <draft | approved | implementing | implemented | halted>.
-Saves to: docs/changes/<folder>/plan.md.
+From: <intent.md (<date>), spec.md (<date>), or "direct request">. Author: <name>. Date: <YYYY-MM-DD>.
 
 ## Files that change
 Rank all touched files by risk, then list only the riskiest ~20% (at least 1), riskiest first. Risky means: migrations, changed fetching or data-access logic, breaking changes (public API, schema, contracts), auth, config. Skip low-risk files (tests, copy, styling).
@@ -44,8 +31,7 @@ List only the riskiest ~20% of risks, riskiest first, using the same notion of r
 ```md
 # Plan: claims status self-service
 
-From: intent.md (2026-06-02), spec.md (2026-06-03). Author: A. Lee. Date: 2026-06-04. Status: approved.
-Saves to: docs/changes/2026-06-02-claims-status/plan.md.
+From: intent.md (2026-06-02), spec.md (2026-06-03). Author: A. Lee. Date: 2026-06-04.
 
 ## Files that change
 - claims-api/routes/status.py (changed): new fetch path to claims-core, rate-limited upstream.

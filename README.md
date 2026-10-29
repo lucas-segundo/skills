@@ -34,7 +34,7 @@ Three skills, invoked by name or by asking (e.g. "write an intent"), one per art
 
 1. `/sdlc-intent` → `intent.md` (what is wanted and why)
 2. `/sdlc-spec` → `spec.md` (requirements, design, flagged concerns; you name the policy skills)
-3. `/sdlc-plan` → `plan.md` (files, order of work, risks, proof)
+3. `/sdlc-plan` → implementation plan (files, order of work, risks, proof)
 
 ## Pull requests
 
