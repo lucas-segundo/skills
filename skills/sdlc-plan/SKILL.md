@@ -44,7 +44,7 @@ Use the AskUserQuestion tool to ask the engineer what the code cannot tell you, 
 
 ## 5. Write the plan
 
-Use [plan-template.md](plan-template.md). Write it to the plan file the harness assigned in plan mode.
+Use [plan-template.md](plan-template.md). Write it to the plan file the harness assigned in plan mode. Status: `not executed`.
 
 - Every requirement in the spec (`R1`...) maps to at least one step and one proof. List any that do not and ask with AskUserQuestion. With no spec, list the goals you derived from the user at the top of the plan and number them `R1`... so steps and proof can map to them.
 - Steps are ordered so each one leaves the code working and testable.
@@ -70,4 +70,4 @@ Call `ExitPlanMode`. The engineer's approval accepts the plan. If they reject it
 
 ## 9. Implement
 
-Implement the plan in its order of work, running the proof commands as each step completes.
+Implement the plan in its order of work, running the proof commands as each step completes. When every step is done and the proof passes, set the plan's `Status: executed`.

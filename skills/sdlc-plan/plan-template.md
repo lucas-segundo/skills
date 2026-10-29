@@ -5,7 +5,7 @@ Delete any section or collapsed block you have nothing to add to.
 ```md
 # Plan: <title>
 
-From: <intent.md (<date>), spec.md (<date>), or "direct request">. Author: <name>. Date: <YYYY-MM-DD>.
+From: <intent.md (<date>), spec.md (<date>), or "direct request">. Author: <name>. Date: <YYYY-MM-DD>. Status: not executed | executed.
 
 ## Files that change
 List every touched file, ranked by risk, riskiest first. Risky means: migrations, changed fetching or data-access logic, breaking changes (public API, schema, contracts), auth, config. Low-risk files (tests, copy, styling) go in the collapsed block.
@@ -47,7 +47,7 @@ List every risk, ranked riskiest first, using the same notion of risky as above.
 ```md
 # Plan: claims status self-service
 
-From: intent.md (2026-06-02), spec.md (2026-06-03). Author: A. Lee. Date: 2026-06-04.
+From: intent.md (2026-06-02), spec.md (2026-06-03). Author: A. Lee. Date: 2026-06-04. Status: executed.
 
 ## Files that change
 - claims-api/routes/status.py (changed) — high: new fetch path to claims-core, rate-limited upstream.
