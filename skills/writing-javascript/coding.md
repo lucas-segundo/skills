@@ -3,8 +3,17 @@
 - Use `Map`/`Set` for keyed lookups and dedupe, not repeated scans of arrays/objects.
 
   ```js
-  const usersById = new Map(users.map((u) => [u.id, u]));
+  const usersById = new Map(users.map((user) => [user.id, user]));
   const unique = [...new Set(ids)];
+  ```
+
+- Name variables and parameters descriptively; no single-letter names (`q` for `query`, `u` for `user`, `e` for `error`).
+
+  ```js
+  // bad
+  const find = (q) => items.filter((i) => i.name.includes(q));
+  // good
+  const find = (query) => items.filter((item) => item.name.includes(query));
   ```
 
 - Inline a constant (title, className, options, config) used once and not exported. Hoist only when reused or exported.
