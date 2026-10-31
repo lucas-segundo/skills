@@ -26,6 +26,28 @@
   export const fetchUser = (id) => fetch(`/users/${id}`, { signal: AbortSignal.timeout(5000) });
   ```
 
+- Leave one blank line above the final `return` of a block that follows other statements. Guard clauses (`if (...) return`) stay grouped with the statements before them, and a `return` alone in its block needs none.
+
+  ```js
+  // bad
+  const syncUser = async (identity) => {
+    const existing = await findUser(identity.externalId);
+
+    if (!existing) return createUser(identity);
+
+    if (existing.hasIdentity(identity)) return existing;
+    return updateUser(existing.id, identity);
+  };
+  // good
+  const syncUser = async (identity) => {
+    const existing = await findUser(identity.externalId);
+    if (!existing) return createUser(identity);
+    if (existing.hasIdentity(identity)) return existing;
+
+    return updateUser(existing.id, identity);
+  };
+  ```
+
 - Arrow functions over `function` declarations and expressions.
 - `async`/`await` with `try`/`catch`, not `.then`/`.catch`.
 - Await or return every promise; no `void fn()`.
