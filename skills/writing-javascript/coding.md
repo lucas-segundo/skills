@@ -95,11 +95,13 @@
   const orders = await db.query('SELECT * FROM orders WHERE user_id = $1', [userId]);
   const invoices = await db.query('SELECT * FROM invoices WHERE user_id = $1', [userId]);
   ```
-- A `catch` acts on the failure (undo partial work, show the user an error, retry, rethrow). Logging alone loses it; if logging is the only option, tell the user.
+- Never handle an error with only `console.log`/`console.warn`/`console.error`. A `catch` must act on the failure: undo partial work, show the user an error, redirect them to recover (for example, back to sign-in), retry, or rethrow. If the caller or framework already handles thrown errors, drop the `try`/`catch` and let the error propagate.
 
   ```js
   // bad
-  try { await SplashScreen.hideAsync(); } catch (error) { console.warn(error); }
+  try { await syncUser(user); } catch (error) { console.error('Sync failed', error); }
+  // good: the auth callback fails and sends the user back to sign in
+  handleCallbackRoute({ onSuccess: ({ user }) => syncUser(user), errorRedirectUrl: '/' });
   // good
   try { await saveUser(values); } catch (error) { toast.error(error.message); }
   ```
