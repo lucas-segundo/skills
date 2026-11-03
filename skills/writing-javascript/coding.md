@@ -48,6 +48,36 @@
   };
   ```
 
+- Split a function body that does several steps (load the actor, fetch the main data, fetch extras, shape the output) into blocks, one blank line between each. Statements of the same step stay together, and a guard clause stays with the statement it checks.
+
+  ```js
+  // bad
+  const listOrders = async (filters) => {
+    const user = await requireUser();
+    const orders = await findOrders({ ...filters, userId: user.id });
+    const total = await countOrders({ ...filters, userId: user.id });
+    const ids = orders.map(({ id }) => id);
+    const totals = await sumOrderItems(ids);
+    const items = orders.map((order) => ({ ...order, total: totals[order.id] }));
+
+    return { items, total };
+  };
+  // good
+  const listOrders = async (filters) => {
+    const user = await requireUser();
+
+    const orders = await findOrders({ ...filters, userId: user.id });
+    const total = await countOrders({ ...filters, userId: user.id });
+
+    const ids = orders.map(({ id }) => id);
+    const totals = await sumOrderItems(ids);
+
+    const items = orders.map((order) => ({ ...order, total: totals[order.id] }));
+
+    return { items, total };
+  };
+  ```
+
 - Arrow functions over `function` declarations and expressions.
 - `async`/`await` with `try`/`catch`, not `.then`/`.catch`.
 - Await or return every promise; no `void fn()`.
