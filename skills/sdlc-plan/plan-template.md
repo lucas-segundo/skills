@@ -15,7 +15,11 @@ List every touched file, ranked by risk, riskiest first. Risky means: migrations
 - <path> (new | changed | deleted) — minor | none: <what changes>
 
 ## Order of work
+For the most important or riskiest steps, add a short code snippet (5–20 lines) sketching the key change: the new signature, query, migration or control flow. Skip snippets for routine steps.
 1. <Step>. Covers: R1, R2. Done when: <check>.
+   ```<lang>
+   <sketch of the key change>
+   ```
 
 ## Risks
 List every risk, ranked riskiest first, using the same notion of risky as above. Minor risks go in the subsection below.
@@ -50,6 +54,17 @@ From: intent.md (2026-06-02), spec.md (2026-06-03). Author: A. Lee. Date: 2026-0
 
 ## Order of work
 1. Add the status endpoint behind existing auth. Covers: R1, R4. Done when: tests pass.
+   ```python
+   @router.get("/claims/{claim_id}/status")
+   @requires_auth
+   async def claim_status(claim_id: str, user: User = Depends(current_user)):
+       cached = cache.get(f"status:{claim_id}")
+       if cached:
+           return cached
+       status = await claims_core.get_status(claim_id, owner=user.id)  # 50 rps limit
+       cache.set(f"status:{claim_id}", status, ttl=60)
+       return status
+   ```
 2. Build the panel against the endpoint. Covers: R2.
 3. Wire the panel into the portal nav. Covers: R3.
 

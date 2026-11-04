@@ -61,6 +61,7 @@ Use [plan-template.md](plan-template.md). Status: `not executed`.
 - Without plan mode, write it outside the repo (the session scratchpad, or `/tmp` if there is none) and show it in chat.
 - Every requirement in the spec (`R1`...) maps to at least one step and one proof. List any that do not and ask about them. With no spec, list the goals you derived from the user at the top of the plan and number them `R1`... so steps and proof can map to them.
 - Steps are ordered so each one leaves the code working and testable.
+- The most important and the riskiest steps carry a short code snippet sketching the key change, so the engineer can judge the approach before approving. Routine steps get none.
 - Proof names concrete tests (file and what they assert) and the commands that run them.
 
 ## 6. Stress-test
