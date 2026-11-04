@@ -55,6 +55,8 @@ Three skills, invoked by name or by asking (e.g. "write an intent"), one per art
 
 Each one is a Markdown file with `name`, `description`, `model` and `tools` in its frontmatter. The `description` tells Claude when to delegate.
 
+A `SessionStart` hook loads `hooks/delegation-rule.md`, which maps each kind of task to its agent and tells Claude to delegate instead of working inline. Without it, the default system prompt tells Claude not to spawn agents unless asked. Edit that file to change the mapping.
+
 ## Upstream skills
 
 Some skills are copied from other repos instead of written here. `.github/upstream.json` lists them per repo (paths under the upstream `skills/` folder); each lands at `skills/<name>/` with the upstream license files. Don't edit them here: changes are overwritten on the next sync.
