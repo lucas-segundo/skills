@@ -40,8 +40,10 @@ Hexagonal layout, enforced by lint. Do not disable or bypass the rules; if one b
 
 - Layout: `src/domain` (entities, errors), `src/app` (ports, use cases), `src/infra/<persistence>` (adapters), `src/main` (routes, controllers, DTOs, wiring).
 - Dependency direction: `main` -> `app`/`infra` -> `domain`. `domain` imports nothing outward. `app` imports only `domain` and never a framework, ORM or validator. `infra` imports `app/ports` and `domain`, never `main`. Nothing imports `main`.
-- One operation per file, kebab-case. Ports `<Verb><Noun>Port`, adapters `<Tech><Verb><Noun>Adapter`.
-- Commands go through a use case; reads are query ports called by the controller.
+- Ports live in `app/ports/<area>/`, one folder per entity; adapters mirror them in `infra/<persistence>/<area>/`.
+- One operation per file, kebab-case, except the per-entity query and metric ports. Command ports `<Verb><Noun>Port`. Each entity has one `<Entity>QueryPort` with only `findOne` and `findMany`, and one `<Entity>MetricPort` with `get({ filter, metrics, groupBy? })` returning `{ totals, groups? }` (`groups` only when `groupBy` is passed; shared types in `app/ports/metrics.ts`). Adapters `<Tech><Verb><Noun>Adapter`, `<Tech><Entity>QueryAdapter`, `<Tech><Entity>MetricAdapter`.
+- Ports are generic data operations: a new read is a filter, sort, include or group key, never a new method or a port named after a use case. Query building shared by an adapter's methods lives in private methods.
+- Commands go through a use case; reads are query and metric ports called by the controller.
 - Business rules live in entities and use cases, never in controllers or adapters.
 - No barrel files. Cross-layer imports use `<alias>`; relative paths only within the same folder.
 - New endpoint order: entity, port, use case + test (commands only), adapter, wiring, DTO + controller + test. Run lint and tests before finishing.

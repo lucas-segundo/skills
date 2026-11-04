@@ -13,10 +13,12 @@ src/
 │       └── <entity>.spec.ts             # unit test beside it
 │
 ├── app/                                 # application layer, framework/ORM free
-│   ├── pagination.ts                    # Pagination, resolvePagination (Paginated<T> only if totals are requested)
 │   ├── ports/
-│   │   └── <area>/
-│   │       └── <verb>-<noun>.ts         # interface <Verb><Noun>Port { execute(...) }
+│   │   ├── metrics.ts                   # shared Metric, MetricsQuery, MetricsResult ({ totals, groups? })
+│   │   └── <area>/                      # one folder per entity
+│   │       ├── <verb>-<noun>.ts         # command: interface <Verb><Noun>Port { execute(...) }
+│   │       ├── <entity>-query.ts        # interface <Entity>QueryPort { findOne, findMany }
+│   │       └── <entity>-metric.ts       # interface <Entity>MetricPort { get }
 │   └── use-cases/
 │       └── <area>/
 │           └── <verb>-<noun>/
@@ -24,11 +26,14 @@ src/
 │               └── test.ts              # mocks ports, no I/O
 │
 ├── infra/                               # implementations of ports
-│   └── <persistence>/                   # e.g. prisma/, typeorm/, in-memory/
+│   └── <persistence>/                   # e.g. prisma/, drizzle/, in-memory/
 │       ├── schema | migrations          # storage definition
-│       └── adapters/
-│           └── <area>/
-│               └── <verb>-<noun>.ts     # <Tech><Verb><Noun>Adapter implements port
+│       ├── metrics.ts                   # toMetricsResult helper shared by metric adapters
+│       └── <area>/                      # mirrors app/ports/<area>
+│           ├── <verb>-<noun>.ts         # <Tech><Verb><Noun>Adapter implements command port
+│           ├── <entity>-query.ts        # <Tech><Entity>QueryAdapter
+│           ├── <entity>-metric.ts       # <Tech><Entity>MetricAdapter
+│           └── <entity>-where.ts        # filter -> where, only when query and metric adapters share it
 │
 └── main/                                # delivery layer: HTTP + wiring
     ├── app                              # root wiring, registers each area
@@ -42,7 +47,7 @@ src/
     │           └── <verb>-<noun>.ts     # request validation, conforms to use-case DTO
     └── shared/                          # cross-area helpers
         ├── domain-exception filter      # domain errors -> HTTP status
-        ├── pagination DTO
+        ├── pagination DTO + resolvePagination (page/limit -> offset/limit)
         ├── include helpers              # ?include= allow-list + builder
         └── db client wiring
 ```
@@ -55,12 +60,14 @@ src/
 
 | Thing | Pattern | Example |
 | --- | --- | --- |
-| File | kebab-case, one operation per file | `complete-set.ts` |
+| File | kebab-case, one operation per file (except the per-entity query and metric ports) | `complete-set.ts`, `session-query.ts` |
 | Entity | domain noun, PascalCase | `WorkoutSession` |
-| Port | `<Verb><Noun>Port` | `FindSessionByIdPort` |
+| Command port | `<Verb><Noun>Port` | `UpdateSessionPort` |
+| Query port | `<Entity>QueryPort` with `findOne`, `findMany` | `SessionQueryPort` |
+| Metric port | `<Entity>MetricPort` with `get` | `SessionMetricPort` |
 | Use case | verb class | `CompleteSet` |
 | Use-case input | `<Name>Dto` | `CompleteSetDto` |
-| Adapter | `<Tech><Verb><Noun>Adapter` | `PrismaCreateSessionAdapter` |
+| Adapter | `<Tech><Verb><Noun>Adapter`, `<Tech><Entity>QueryAdapter`, `<Tech><Entity>MetricAdapter` | `PrismaCreateSessionAdapter`, `PrismaSessionQueryAdapter` |
 | Tests | beside source: `<name>.spec.ts`, or `test.ts` in a use-case folder | |
 
 ## Layers
@@ -75,8 +82,8 @@ Each layer has its own file with role, rules and examples:
 ## Adding an endpoint (checklist)
 
 1. Entity change/factory + unit test if the domain needs it.
-2. Port in `app/ports/<area>/`.
-3. Use case + test. Skip for pure read (query) ports: the controller calls the port directly.
+2. Port in `app/ports/<area>/` (the entity's folder). For a read, add a filter field, sort field, include or group key to the entity's query or metric port before adding anything new.
+3. Use case + test. Skip for reads: the controller calls the query or metric port directly.
 4. Adapter (and schema/migration if storage changes).
 5. Register in the composition root / DI container.
 6. DTO, controller/route handler, wiring.
