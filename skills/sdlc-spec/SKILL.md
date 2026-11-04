@@ -20,6 +20,15 @@ Copy this checklist and tick it off:
 - [ ] 6. Accept (only on the user's word)
 ```
 
+## Asking questions
+
+Every question in this skill goes through the **AskUserQuestion** tool, never as a text block in chat:
+
+- Batch the questions you can ask now into one call (at most 4 per call; split a larger batch across consecutive calls). A question that depends on an answer you have not heard yet waits for the next call.
+- Per question: `header` a short title; `question` self-contained (name the thing asked about, since earlier chat may be hidden while the dialog is open); `options` 2–4 plausible answers, your recommended one first and labelled "(Recommended)". The user can always pick "Other" for free text.
+- After each call, wait for the answers. Never answer for the user or carry on with an assumed default.
+- If AskUserQuestion is missing or errors, ask the same questions in chat as a numbered list, each with your recommended answer, then end the turn and wait for the reply.
+
 ## 1. Load the intent
 
 Use the `intent.md` the user names. Otherwise list `docs/changes/*/intent.md` and ask which one with the AskUserQuestion tool.
@@ -28,7 +37,7 @@ Use the `intent.md` the user names. Otherwise list `docs/changes/*/intent.md` an
 
 ## 2. Ask which policy skills apply
 
-Use the AskUserQuestion tool to ask which skills or policy documents constrain this spec (for example brand, security, UX, architecture or coding skills). Load each one they name. Do not pick skills on your own. If they name none, confirm and continue without; record "None" in the spec header.
+Use AskUserQuestion with `multiSelect: true` to ask which skills or policy documents constrain this spec. Offer up to 3 available skills that look relevant (for example brand, security, UX, architecture or coding skills) plus "None"; the user names others via "Other". Load each one they name. Do not pick skills on your own. If they pick None, continue without; record "None" in the spec header.
 
 Treat every loaded skill as a hard constraint on the spec, not a suggestion.
 
@@ -47,8 +56,8 @@ Use [spec-template.md](spec-template.md). Save it next to the intent: `docs/chan
 
 ## 5. Review
 
-Show the spec. Go through **Flagged concerns** first, one at a time; the user resolves each (or names who must), asked via AskUserQuestion. Then ask, also via AskUserQuestion: does the spec solve the stated problem? Are all open questions answered or carried? Apply fixes and repeat.
+Show the spec. Go through **Flagged concerns** first, one question per concern, up to 4 per call; options are the resolutions you see (recommended first), "Accept the risk" and "Someone else decides" (they name who). Then ask, in one call: does the spec solve the stated problem? Are all open questions answered or carried? Apply fixes and repeat.
 
 ## 6. Accept
 
-The spec is accepted only when the user says so; unresolved flagged concerns must be resolved or explicitly accepted first. Then set `Status: accepted`. Tell the user the next step is `/sdlc-plan`. Do not start it yourself.
+Ask with AskUserQuestion: "Accept spec.md?" with options "Accept" and "Keep editing". The spec is accepted only when the user picks Accept or says so; unresolved flagged concerns must be resolved or explicitly accepted first. Then set `Status: accepted`. Tell the user the next step is `/sdlc-plan`. Do not start it yourself.
