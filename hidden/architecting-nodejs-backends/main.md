@@ -7,9 +7,9 @@
 - Thin: parse input, call a use case (commands) or a query port (reads), shape the response.
 - Validate only what comes from the request: shape, types, required fields, formats, allowed `include` paths, pagination bounds.
 - Business validation (existence, state, uniqueness, invariants) belongs to entities or use cases. Controllers never throw domain errors and never inspect port results to decide business outcomes.
-- Query ports (read-only, see [app.md](app.md)) are called directly by the controller, no use case. `null` from a find-by-id becomes the framework's not-found response.
+- Query and metric ports (read-only, see [app.md](app.md)) are called directly by the controller, no use case. `null` from `findOne` becomes the framework's not-found response.
 - Path params are merged with the body into the use-case DTO explicitly.
-- List envelope: `{ data, page, limit }` using `resolvePagination(query)`. Add `total` only when the user asks.
+- List envelope: `{ data, page, limit }`. `resolvePagination(query)` turns `page`/`limit` into the port's `offset`/`limit`. Add `total` only when the user asks; it comes from the metric port's `totals.count` with the same filter, run concurrently with `findMany`.
 - `?include=a,b`: allow-list per route, sanitize (depth and breadth capped), map to the port's `include` shape.
 
 ```ts
@@ -17,7 +17,7 @@ const SESSION_INCLUDES = new Set(['sets', 'program']);
 
 const findById = async (id: string, query: { include?: string[] }) => {
   const paths = sanitizeIncludes(query.include ?? [], SESSION_INCLUDES);
-  return findSessionByIdPort.execute(id, { include: { sets: paths.includes('sets') } });
+  return sessionQueryPort.findOne({ filter: { ids: [id] }, include: { sets: paths.includes('sets') } });
 };
 ```
 
@@ -57,11 +57,12 @@ const listSessionsQuery = schema({ page: number().int().min(1) });
 
 - Use cases and adapters are plain classes with no framework decorators. Only this layer composes them.
 - Constructor injection: `new UseCase(new Adapter(dbClient))`. Default to manual wiring; if the project already uses a DI container, register each port and use case the way the container expects.
-- Adapters get the DB client; use cases get their ports; controllers get use cases and query ports. Register each area in the app root.
+- Adapters get the DB client; use cases get their ports; controllers get use cases, query ports and metric ports. Register each area in the app root.
 
 ```ts
 // main/routes/sessions/module (composition root for the area)
-const findSessionByIdPort = new PostgresFindSessionByIdAdapter(db);
+const sessionQueryPort = new PostgresSessionQueryAdapter(db);
+const sessionMetricPort = new PostgresSessionMetricAdapter(db);
 const updateSessionPort = new PostgresUpdateSessionAdapter(db);
-const finishSession = new FinishSession(findSessionByIdPort, updateSessionPort);
+const finishSession = new FinishSession(sessionQueryPort, updateSessionPort);
 ```
