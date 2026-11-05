@@ -21,6 +21,17 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "mcp__.*[Gg]it[Hh]ub.*__create_pull_request",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/pr-size-guard.sh\""
+          }
+        ]
+      }
     ]
   }
 }
