@@ -48,6 +48,23 @@
   };
   ```
 
+- Write conditions without `!` when you can. If both branches return, test the positive case first. Keep `!` for guard clauses that throw or exit early before the main logic.
+
+  ```js
+  // bad
+  if (!lastSave) {
+    return { title: 'Discard this event?', save: 'Save draft and leave' };
+  }
+
+  return { title: 'Discard changes?', save: 'Save and leave' };
+  // good
+  if (lastSave) {
+    return { title: 'Discard changes?', save: 'Save and leave' };
+  }
+
+  return { title: 'Discard this event?', save: 'Save draft and leave' };
+  ```
+
 - Split a function body that does several steps (load the actor, fetch the main data, fetch extras, shape the output) into blocks, one blank line between each. Statements of the same step stay together, and a guard clause stays with the statement it checks.
 
   ```js
