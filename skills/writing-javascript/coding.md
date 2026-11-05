@@ -95,6 +95,29 @@
   };
   ```
 
+- Follow SOLID, applied to modules and functions as well as classes:
+  - Single responsibility: one reason to change per function, module or class. Split one that mixes concerns (fetching, business rules, formatting, I/O).
+  - Open/closed: add a case by adding data or a new implementation, not by editing a growing `switch`/`if` chain.
+  - Liskov substitution: an implementation of a shared contract accepts the same inputs, returns the same shape and throws the same errors as the others.
+  - Interface segregation: take only what you use. Accept `{ id, email }` instead of a whole `user`; keep interfaces small.
+  - Dependency inversion: pass dependencies (clients, repositories, clocks) in as parameters instead of importing concrete ones deep inside business logic.
+
+  Do not add an abstraction, interface or injection point with only one implementation and no test need for it.
+
+  ```js
+  // bad
+  const notify = async (user, channel) => {
+    if (channel === 'email') return sendEmail(user.email, 'Welcome');
+    if (channel === 'sms') return sendSms(user.phone, 'Welcome');
+  };
+  // good
+  const notifiers = {
+    email: ({ email }) => sendEmail(email, 'Welcome'),
+    sms: ({ phone }) => sendSms(phone, 'Welcome'),
+  };
+  const notify = (user, channel) => notifiers[channel](user);
+  ```
+
 - Arrow functions over `function` declarations and expressions.
 - `async`/`await` with `try`/`catch`, not `.then`/`.catch`.
 - Await or return every promise; no `void fn()`.
