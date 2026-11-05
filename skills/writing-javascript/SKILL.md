@@ -9,6 +9,7 @@ Write modern, boring, readable JavaScript. Follow the codebase's existing patter
 
 - No barrel files: import from the specific file.
 - Small, single-purpose functions. Named exports over default.
+- No code comments (inline, block or JSDoc) unless the user asks for them. Make the code explain itself through names and structure. Leave existing comments as they are.
 
 ## Reference files
 
