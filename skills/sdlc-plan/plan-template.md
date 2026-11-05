@@ -5,7 +5,11 @@ Delete any section or subsection you have nothing to add to.
 ```md
 # Plan: <title>
 
-From: <intent.md (<date>), spec.md (<date>), or "direct request">. Author: <name>. Date: <YYYY-MM-DD>. Status: not executed | executed.
+From: <intent.md (<date>), spec.md (<date>), or "direct request">. Author: <name>. Date: <YYYY-MM-DD>. Status: ready | in progress | executed.
+Estimated changed lines: <n> (limit ~1000). Depends on: <plan-01-<slug>.md, or "none">. Part <k> of <n> (omit when not split).
+
+## How to execute
+Work through **Order of work** in sequence. After each step, run its check and the **Proof** commands; stop and report if they fail. Set `Status: in progress` when you start and `Status: executed` when every step is done and the proof passes. Do not change files outside **Files that change** without saying why.
 
 ## Files that change
 List every touched file, ranked by risk, riskiest first. Risky means: migrations, changed fetching or data-access logic, breaking changes (public API, schema, contracts), auth, config. Low-risk files (tests, copy, styling) go in the subsection below.
@@ -42,6 +46,10 @@ List every risk, ranked riskiest first, using the same notion of risky as above.
 # Plan: claims status self-service
 
 From: intent.md (2026-06-02), spec.md (2026-06-03). Author: A. Lee. Date: 2026-06-04. Status: executed.
+Estimated changed lines: 340 (limit ~1000). Depends on: none.
+
+## How to execute
+Work through **Order of work** in sequence. After each step, run its check and the **Proof** commands; stop and report if they fail. Set `Status: in progress` when you start and `Status: executed` when every step is done and the proof passes. Do not change files outside **Files that change** without saying why.
 
 ## Files that change
 - claims-api/routes/status.py (changed) — high: new fetch path to claims-core, rate-limited upstream.
