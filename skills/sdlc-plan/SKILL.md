@@ -67,7 +67,7 @@ Re-read the plan as an agent that never saw this conversation and will execute o
 
 ## 7. Get approval and save
 
-Show the plan in chat. Ask with AskUserQuestion: "Approve and save this plan?" with options "Approve and save (Recommended)" and "Revise". Only an explicit approval accepts it. "Revise": ask what to change, revise, and ask again.
+When planning is finished, send the draft plan file to the engineer for review. Never paste the plan into the chat: give the full absolute path of the draft `.md` in the scratchpad (one line, nothing else about its content), then ask with AskUserQuestion: "Approve and save this plan?" with options "Approve and save (Recommended)" and "Revise". Wait for the answer; do not save or continue before it arrives. Only an explicit approval accepts the plan. "Revise": ask what to change, update the draft file, send its path again, and wait again. Repeat until approved. If a subagent drafted the plan, its output is a draft: the engineer reviews it here, never the subagent.
 
 On approval, save to the change folder:
 
