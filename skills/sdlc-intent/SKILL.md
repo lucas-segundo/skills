@@ -37,7 +37,7 @@ Ask the questions a business analyst would ask until each template section has a
 - **Outcome:** what is true when this is done? How would we measure it?
 - **Users and teams:** who uses it, which teams, customers, partners and business processes are touched.
 - **Constraints:** privacy, compliance, budget, deadlines, policies, contracts.
-- **Scope:** what is explicitly out.
+- **Scope:** what is explicitly out (record it under Constraints).
 
 Do not read the code or ask technical questions. If the user brings up a technical detail, ask what business need is behind it and record that need; leave the detail for the spec.
 

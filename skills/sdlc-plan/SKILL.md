@@ -1,6 +1,6 @@
 ---
 name: sdlc-plan
-description: Turns a task, or an accepted spec.md and intent.md when they exist, into an implementation plan of the AI-native SDLC, saved as .md files in the repo for other agents to execute: reads the code read-only, interviews the engineer with AskUserQuestion, stress-tests the plan, and enters plan mode, and saves it once the engineer approves, then asks whether to only save it or also implement it. Use when the user says "write a plan", "plan the implementation", or "turn the spec into a plan". Works with or without an intent or spec.
+description: Turns a task, or an accepted spec.md and intent.md when they exist, into an implementation plan of the AI-native SDLC, saved as .md files in the repo for other agents to execute: enters plan mode, reads the code read-only, interviews the engineer with AskUserQuestion, stress-tests the plan, and saves it once the engineer approves, in the same question choosing whether to only save it or also implement it. Use when the user says "write a plan", "plan the implementation", or "turn the spec into a plan". Works with or without an intent or spec.
 ---
 
 # Planning implementation
@@ -46,17 +46,17 @@ Ask the engineer what the code cannot tell you: preferred approach where several
 
 ## 4. Write the plan
 
-Use [plan-template.md](plan-template.md). Status: `ready`. Write the draft to the plan mode plan file, or the scratchpad.
+Use [plan-template.md](plan-template.md), exactly its four sections. Write the draft to the plan mode plan file, or the scratchpad.
 
-- Every requirement in the spec (`R1`...) maps to at least one step and one proof. List any that do not and ask about them. With no spec, list the goals you derived from the user at the top of the plan and number them `R1`... so steps and proof can map to them.
-- Name the chosen writing skills in the plan, so the agent that executes it loads them before writing code.
+- Every requirement in the spec (`R1`...) maps to at least one step and one proof; cite the ids in the step and the proof text. List any that do not and ask about them. With no spec, list the goals you derived from the user at the top of the plan and number them `R1`... so steps and proof can map to them.
+- Name the chosen writing skills in Order of work, so the agent that executes it loads them before writing code.
 - Steps are ordered so each one leaves the code working and testable.
 - Snippets on the key and risky steps let the engineer judge the approach before approving (see the template).
-- Proof names concrete tests (file and what they assert) and the commands that run them.
+- Proof names concrete tests (file and what they assert) and the commands that run them. For a bug fix, the first step writes the failing test.
 
 ## 5. Stress-test
 
-Answer these in the plan's **Risks** and **Alternatives not taken** sections:
+Answer these in the plan's **Risks** section (rejected approaches go there too):
 
 - What could this change break? (callers, data, performance, other teams)
 - Which step is most risky, and how is that risk reduced?
@@ -70,15 +70,15 @@ Re-read the plan as an agent that never saw this conversation and will execute o
 
 ## 7. Get approval and save
 
-When planning is finished, send the draft plan file to the engineer for review. Never paste the plan into the chat: give the full absolute path of the draft `.md` (one line, nothing else about its content), then ask with AskUserQuestion: "Approve and save this plan?" with options "Approve and save (Recommended)" and "Revise". Wait for the answer; do not save or continue before it arrives. Only an explicit approval accepts the plan. "Revise": ask what to change, update the draft file, send its path again, and wait again. Repeat until approved. If a subagent drafted the plan, its output is a draft: the engineer reviews it here, never the subagent.
+When planning is finished, send the draft plan file to the engineer for review. Never paste the plan into the chat: give the full absolute path of the draft `.md` (one line, nothing else about its content), then ask once with AskUserQuestion: "Approve this plan?" with options "Approve and save only (Recommended)", "Approve, save and implement" and "Revise". Wait for the answer; do not save or continue before it arrives. Only an explicit approval accepts the plan. "Revise": ask what to change, update the draft file, send its path again, and wait again. Repeat until approved. If a subagent drafted the plan, its output is a draft: the engineer reviews it here, never the subagent.
 
-On approval, ask one final question with AskUserQuestion: "What should happen after the plan is approved?" with options "Save the plan only (Recommended)" and "Save the plan and implement it". Wait for the answer. Then call `ExitPlanMode` to leave plan mode (skip if not in plan mode) and save to the change folder:
+On either approval, call `ExitPlanMode` to leave plan mode (skip if not in plan mode) and save to the change folder:
 
 Save to `docs/changes/<folder>/plan.md`.
 
 - No change folder yet: create `docs/changes/<YYYY-MM-DD>-<slug>/` (today's date, slug 2–5 kebab-case words from the title). If it already exists, ask whether to update it or pick a new slug.
 
-Leave the files uncommitted. Tell the user the plan paths.
+Leave the files uncommitted. Tell the user the plan paths, and that committing them keeps the audit trail.
 
 - **Save only:** stop. Do not start implementing.
-- **Save and implement:** execute `plan.md` step by step, in order, running each step's proof before the next. Leave the changes uncommitted unless the user asks.
+- **Save and implement:** execute `plan.md` step by step, in order, touching only the files it lists unless you say why. After each step run the proof commands and show their real output; if a test fails, fix the code, never the test. For a bug fix, write the failing test first. Update `plan.md` in the same change whenever the implementation departs from it. Leave the changes uncommitted unless the user asks.

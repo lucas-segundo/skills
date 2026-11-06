@@ -32,7 +32,7 @@ Use the `intent.md` the user names. Otherwise list `docs/changes/*/intent.md` an
 
 ## 2. Ask which policy skills apply
 
-Use AskUserQuestion with `multiSelect: true` to ask which skills or policy documents constrain this spec. Offer up to 3 available skills that look relevant (for example brand, security, UX, architecture or coding skills) plus "None"; the user names others via "Other". Load each one they name. Do not pick skills on your own. If they pick None, continue without; record "None" in the spec header.
+Use AskUserQuestion with `multiSelect: true` to ask which skills or policy documents constrain this spec. Offer up to 3 available skills that look relevant (for example brand, security, UX, architecture or coding skills) plus "None"; the user names others via "Other". Load each one they name. Do not pick skills on your own. If they pick None, continue without; write "Policy skills applied: None" as the first line of Design.
 
 Treat every loaded skill as a hard constraint on the spec, not a suggestion.
 
@@ -42,16 +42,19 @@ Read only what the change touches: entry points, the modules and APIs named in t
 
 ## 4. Write spec.md
 
-Use [spec-template.md](spec-template.md). Save it next to the intent: `docs/changes/<folder>/spec.md`. Status: `draft`.
+Build the spec from this prompt, from the playbook, with the intent attached and the policy skills from step 2 loaded. There is no template: the prompt decides the content.
 
-- Requirements say **what** must be true, each testable and numbered (`R1`, `R2`...). Design says **how** it fits the codebase, at the level of components, data and interfaces, not files and steps (that is the plan).
-- Every open question from the intent appears under **Open questions**, either answered with the decision or carried forward. None is dropped silently.
-- **Flagged concerns** is required. Flag where a policy cannot be met, where two policies contradict, where the intent is ambiguous, and where risk is high. Name the policy (skill) behind each one. Write "None" only if there truly are none.
-- Do not change the intent. If the intent looks wrong, flag it.
+> Read the attached intent.md and produce a requirements and design spec for integrating it into our existing codebase. Apply the skills available to you so the plan conforms to our brand guidelines, security policies and UX standards. Document the spec fully as spec.md, ready to hand to the engineering team. Describe clearly any areas of concern, especially where you cannot satisfy contradicting policies.
+
+Save it next to the intent: `docs/changes/<folder>/spec.md`. Start it with `# Spec: <title>` and `Author: <name>. Status: draft.`
+
+- Number the requirements (`R1`, `R2`...) so the plan can cite them.
+- Carry every open question from the intent forward, answered or still open. None is dropped silently.
+- Name the area of concern behind each policy, and where two policies contradict. Do not change the intent; if it looks wrong, flag it.
 
 ## 5. Review
 
-Show the spec. Go through **Flagged concerns** first, one question per concern, up to 4 per call; options are the resolutions you see (recommended first), "Accept the risk" and "Someone else decides" (they name who). Then ask, in one call: does the spec solve the stated problem? Are all open questions answered or carried? Apply fixes and repeat.
+Show the spec. Go through the areas of concern first, one question per concern, up to 4 per call; options are the resolutions you see (recommended first), "Accept the risk" and "Someone else decides" (they name who). Then ask, in one call: does the spec solve the stated problem? Are all open questions answered or carried? Apply fixes and repeat.
 
 ## 6. Accept
 
