@@ -36,7 +36,7 @@ Three skills, invoked by name or by asking (e.g. "write an intent"), one per art
 
 ## Pull requests
 
-- `/pr` writes a PR body (from [mattpocock/skills](https://github.com/mattpocock/skills), see Upstream skills).
+- `/pr` writes a PR body (from [mattpocock/skills](https://github.com/mattpocock/skills)).
 - `/pr-code-review` reviews a PR with terse one-line inline comments. The `claude.yml` workflow in `lucas-segundo/ai` uses it for reviews.
 - `/pr-fix` follows up a PR's review comments: fixes, replies to and resolves your own, reports the rest.
 
@@ -54,10 +54,3 @@ Three skills, invoked by name or by asking (e.g. "write an intent"), one per art
 Each one is a Markdown file with `name`, `description`, `model` and `tools` in its frontmatter. The `description` tells Claude when to delegate.
 
 A `SessionStart` hook loads `hooks/delegation-rule.md`, which maps each kind of task to its agent and tells Claude to delegate instead of working inline. Without it, the default system prompt tells Claude not to spawn agents unless asked. Edit that file to change the mapping.
-
-## Upstream skills
-
-Some skills are copied from other repos instead of written here. `.github/upstream.json` lists them per repo (paths under the upstream `skills/` folder); each lands at `skills/<name>/` with the upstream license files. Don't edit them here: changes are overwritten on the next sync.
-
-- Add or drop one: edit the list, run `python3 .github/scripts/sync_upstream.py`, commit.
-- Updates: the `Sync upstream skills` workflow runs weekly (or on demand) and opens a PR when a picked skill changed upstream. `.github/upstream.lock.json` records each upstream commit.
