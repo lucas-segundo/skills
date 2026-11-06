@@ -11,7 +11,7 @@ React is JavaScript: [../writing-javascript/SKILL.md](../writing-javascript/SKIL
 
 ## Planning
 
-In plan mode, leave classNames and styling out of the plan; the reviewer checks the screen. Keep the plan short and simple: a few bullets per item, no prose. Prioritize:
+Plan with the `sdlc-plan` skill. Leave classNames and styling out of the plan; the reviewer checks the screen. Keep the plan short and simple: a few bullets per item, no prose. Prioritize:
 
 - API calls: each endpoint, its params (`include`, `filter`, `sort`, `limit`, pagination), and which data hook calls it.
 - Page rendering: which screen renders each hook, where the `<Suspense>` and error boundaries sit, and the loading, error and empty states.
