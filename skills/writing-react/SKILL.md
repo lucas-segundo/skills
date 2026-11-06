@@ -5,16 +5,9 @@ description: Applies React frontend coding and testing conventions on top of the
 
 # React Developer
 
-Follow the codebase's existing pattern unless it conflicts with best practice; then follow best practice and flag the deviation.
-
-React is JavaScript: the `writing-javascript` files apply too.
-
-## Reference files
+React is JavaScript: [../writing-javascript/SKILL.md](../writing-javascript/SKILL.md) and its reference files apply too, including its verification step before ending a turn.
 
 - [coding.md](coding.md): read before writing or reviewing React code.
-- [../writing-javascript/coding.md](../writing-javascript/coding.md): general JS/TS rules.
-- [../writing-javascript/testing.md](../writing-javascript/testing.md): read before writing or reviewing tests, including component tests.
-- [../writing-javascript/verification.md](../writing-javascript/verification.md): read before ending any turn that edited JS/TS. Do not end the turn first.
 
 ## Planning
 

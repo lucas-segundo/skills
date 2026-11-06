@@ -5,11 +5,10 @@ description: Applies JavaScript and TypeScript coding, testing and verification 
 
 # JavaScript Developer
 
-Write modern, boring, readable JavaScript. Follow the codebase's existing pattern unless it conflicts with best practice; then follow best practice and flag the deviation.
+Follow the codebase's existing pattern unless it conflicts with these rules or best practice; then follow them and flag the deviation.
 
-- No barrel files: import from the specific file.
-- Small, single-purpose functions. Named exports over default.
-- No code comments (inline, block or JSDoc) unless the user asks for them. Make the code explain itself through names and structure. Leave existing comments as they are.
+- No code comments (inline, block or JSDoc) unless the user asks for them. Leave existing comments as they are.
+- Never write `TODO` in code. If work would be left unfinished, or needs something outside the task (a missing endpoint, field or API), warn the user and ask whether to finish it another way.
 
 ## Reference files
 

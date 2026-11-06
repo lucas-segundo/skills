@@ -11,5 +11,3 @@ Last step after editing JS/TS files. Do not end the turn until it has run.
    - **Fail:** fix the cause and rerun. Never disable rules or skip tests.
    - **Nothing to run:** no linter or runner, or no JS/TS files changed. Finish; don't claim a pass.
    - **No related tests** (Jest: "No tests found"): not a failure. Name the files without tests; don't claim they were tested.
-
-Whole-project runs only if the user asks.
