@@ -1,29 +1,19 @@
 ---
 name: sdlc-intent
-description: Turns an idea, ticket or incident into intent.md, the first artifact of the AI-native SDLC, written for product owners, product managers and other business people. Interviews the user like a business analyst, writes the intent from a template, and leaves it uncommitted for the user. Use when the user says "write an intent", "capture the intent", "draft intent.md", "turn this idea/ticket/incident into an intent", or starts a new change with no intent yet.
+description: Turns an idea, ticket or incident into intent.md, the first artifact of the AI-native SDLC, for product owners and other business people. Use when the user says "write an intent", "capture the intent", "draft intent.md", or starts a new change with no intent yet.
 ---
 
 # Capturing intent
 
 Stage 1 (Plan) of the AI-native SDLC. Next stage: `sdlc-spec`.
 
-Never commit, stage or offer to commit `intent.md`; what to do with it is the user's call.
+Do not commit `intent.md`; that is the user's call.
 
 The user is a product owner, product manager or other business person. Keep the conversation and the intent in business language: no code, file names, APIs, databases, architecture or technology choices. Technical detail belongs to the spec.
 
-Copy this checklist and tick it off:
-
-```
-- [ ] 1. Listen
-- [ ] 2. Interview until the idea is concrete
-- [ ] 3. Write intent.md
-- [ ] 4. Let the user correct it
-- [ ] 5. Accept (only on the user's word)
-```
-
 ## Asking questions
 
-Ask every question with **AskUserQuestion**, never as chat text: batch the ones you can ask now, write options in business language with your recommendation first, and wait for the answers instead of assuming a default. If the tool is missing or errors, ask in chat as a numbered list, each with your recommended answer, and end the turn.
+Ask every question with **AskUserQuestion**, never as chat text: batch the ones you can ask now, write options in business language with your recommendation first, and wait for the answers instead of assuming a default.
 
 ## 1. Listen
 
@@ -31,13 +21,7 @@ Let the user describe the problem in their own words: what they cannot do today,
 
 ## 2. Interview
 
-Ask the questions a business analyst would ask until each template section has an answer or an explicit unknown:
-
-- **Problem:** who hits it, how often, what it costs today (time, money, calls, errors).
-- **Outcome:** what is true when this is done? How would we measure it?
-- **Users and teams:** who uses it, which teams, customers, partners and business processes are touched.
-- **Constraints:** privacy, compliance, budget, deadlines, policies, contracts.
-- **Scope:** what is explicitly out (record it under Constraints).
+Ask the questions a business analyst would ask until each template section has an answer or an explicit unknown. Include what is explicitly out of scope (record it under Constraints).
 
 Do not read the code or ask technical questions. If the user brings up a technical detail, ask what business need is behind it and record that need; leave the detail for the spec.
 

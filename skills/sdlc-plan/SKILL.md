@@ -1,6 +1,6 @@
 ---
 name: sdlc-plan
-description: Turns a task, or an accepted spec.md and intent.md when they exist, into an implementation plan of the AI-native SDLC, saved as .md files in the repo for other agents to execute: enters plan mode, reads the code read-only, interviews the engineer with AskUserQuestion, stress-tests the plan, and saves it once the engineer approves, in the same question choosing whether to only save it or also implement it. Use when the user says "write a plan", "plan the implementation", or "turn the spec into a plan". Works with or without an intent or spec.
+description: Turns a task, or an accepted spec.md and intent.md when they exist, into an implementation plan saved as plan.md for other agents to execute, then optionally implements it. Use when the user says "write a plan", "plan the implementation", or "turn the spec into a plan".
 ---
 
 # Planning implementation
@@ -11,23 +11,11 @@ This skill writes a plan. The plan is saved as a `.md` file so another agent, wi
 
 **Call `EnterPlanMode` first**, before step 1. If the session is already in plan mode, skip the call.
 
-Steps 1–6 are **read-only**: only read, search and run read-only commands. No edits, writes, installs, migrations or commits in the repo. Drafts live outside the repo (the plan file plan mode gives you, or the session scratchpad) until step 7.
-
-Copy this checklist and tick it off:
-
-```
-- [ ] 1. Load inputs (spec and intent if they exist)
-- [ ] 2. Read the codebase
-- [ ] 3. Interview the engineer
-- [ ] 4. Write the plan
-- [ ] 5. Stress-test the plan
-- [ ] 6. Cold-agent check
-- [ ] 7. Get approval and save
-```
+Drafts live in the plan mode plan file, or the session scratchpad, until step 7.
 
 ## Asking questions
 
-Ask every question with **AskUserQuestion**, never as chat text: batch the ones you can ask now, recommendation first, and wait for the answers instead of assuming a default. If the tool is missing or errors, ask in chat as a numbered list, each with your recommended answer, and end the turn.
+Ask every question with **AskUserQuestion**, never as chat text: batch the ones you can ask now, recommendation first, and wait for the answers instead of assuming a default.
 
 ## 1. Load the inputs
 
@@ -38,7 +26,7 @@ Intent and spec are optional. Use the change folder the user names. Otherwise li
 
 ## 2. Read the codebase
 
-Find every file the change touches, the existing patterns to follow, the test setup and the commands to run tests and lint (`CLAUDE.md`/`AGENTS.md`, `package.json`, CI config). Verify file paths exist; mark new files as `(new)`.
+Verify file paths exist; mark new files as `(new)`.
 
 ## 3. Interview
 
@@ -46,11 +34,10 @@ Ask the engineer what the code cannot tell you: preferred approach where several
 
 ## 4. Write the plan
 
-Use [plan-template.md](plan-template.md), exactly its four sections. Write the draft to the plan mode plan file, or the scratchpad.
+Use [plan-template.md](plan-template.md), exactly its four sections.
 
 - Every requirement in the spec (`R1`...) maps to at least one step and one proof; cite the ids in the step and the proof text. List any that do not and ask about them. With no spec, list the goals you derived from the user at the top of the plan and number them `R1`... so steps and proof can map to them.
 - Name the chosen writing skills in Order of work, so the agent that executes it loads them before writing code.
-- Steps are ordered so each one leaves the code working and testable.
 - Snippets on the key and risky steps let the engineer judge the approach before approving (see the template).
 - Proof names concrete tests (file and what they assert) and the commands that run them. For a bug fix, the first step writes the failing test.
 
@@ -78,7 +65,7 @@ Save to `docs/changes/<folder>/plan.md`.
 
 - No change folder yet: create `docs/changes/<YYYY-MM-DD>-<slug>/` (today's date, slug 2–5 kebab-case words from the title). If it already exists, ask whether to update it or pick a new slug.
 
-Leave the files uncommitted. Tell the user the plan paths, and that committing them keeps the audit trail.
+Do not commit. Tell the user the plan paths, and that committing them keeps the audit trail.
 
 - **Save only:** stop. Do not start implementing.
-- **Save and implement:** execute `plan.md` step by step, in order, touching only the files it lists unless you say why. After each step run the proof commands and show their real output; if a test fails, fix the code, never the test. For a bug fix, write the failing test first. Update `plan.md` in the same change whenever the implementation departs from it. Leave the changes uncommitted unless the user asks.
+- **Save and implement:** execute `plan.md` step by step, in order, touching only the files it lists unless you say why. If a test fails, fix the code, never the test. For a bug fix, write the failing test first. Update `plan.md` in the same change whenever the implementation departs from it. Leave the changes uncommitted unless the user asks.
