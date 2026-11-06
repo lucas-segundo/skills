@@ -11,4 +11,7 @@ React is JavaScript: [../writing-javascript/SKILL.md](../writing-javascript/SKIL
 
 ## Planning
 
-In plan mode, leave classNames and styling out of the plan; the reviewer checks the screen.
+In plan mode, leave classNames and styling out of the plan; the reviewer checks the screen. Prioritize:
+
+- API calls: each endpoint, its params (`include`, `filter`, `sort`, `limit`, pagination), and which data hook calls it.
+- Page rendering: which screen renders each hook, where the `<Suspense>` and error boundaries sit, and the loading, error and empty states.
