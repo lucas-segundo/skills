@@ -1,13 +1,13 @@
 ---
 name: sdlc-plan
-description: Turns a task, or an accepted spec.md and intent.md when they exist, into implementation plans of the AI-native SDLC, saved as .md files in the repo for other agents to execute: reads the code read-only, interviews the engineer with AskUserQuestion, stress-tests the plan, splits it so no plan exceeds ~1000 changed lines, and saves it once the engineer approves. Does not use plan mode and does not implement. Use when the user says "write a plan", "plan the implementation", or "turn the spec into a plan". Works with or without an intent or spec.
+description: Turns a task, or an accepted spec.md and intent.md when they exist, into an implementation plan of the AI-native SDLC, saved as .md files in the repo for other agents to execute: reads the code read-only, interviews the engineer with AskUserQuestion, stress-tests the plan, and saves it once the engineer approves. Does not use plan mode and does not implement. Use when the user says "write a plan", "plan the implementation", or "turn the spec into a plan". Works with or without an intent or spec.
 ---
 
 # Planning implementation
 
 Stage 3 (Build) of the AI-native SDLC. Previous (optional): `sdlc-spec`. Intent and spec are not required.
 
-This skill writes plans; it never implements them. Each plan is saved as a `.md` file so another agent, with no access to this conversation, can execute it. Do not call `EnterPlanMode` or `ExitPlanMode`.
+This skill writes a plan; it never implements it. The plan is saved as a `.md` file so another agent, with no access to this conversation, can execute it. Do not call `EnterPlanMode` or `ExitPlanMode`.
 
 Steps 1–6 are **read-only**: only read, search and run read-only commands. No edits, writes, installs, migrations or commits in the repo. Drafts live outside the repo (the session scratchpad, or `/tmp` if there is none) until step 7.
 
@@ -17,8 +17,8 @@ Copy this checklist and tick it off:
 - [ ] 1. Load inputs (spec and intent if they exist)
 - [ ] 2. Read the codebase
 - [ ] 3. Interview the engineer
-- [ ] 4. Write and size the plan(s)
-- [ ] 5. Stress-test the plan(s)
+- [ ] 4. Write the plan
+- [ ] 5. Stress-test the plan
 - [ ] 6. Cold-agent check
 - [ ] 7. Get approval and save
 ```
@@ -42,7 +42,7 @@ Find every file the change touches, the existing patterns to follow, the test se
 
 Ask the engineer what the code cannot tell you: preferred approach where several fit, rollout (flag, migration, backfill), test depth, anything off-limits. Skip questions the code already answers. Keep asking rounds until nothing the plan depends on is assumed.
 
-## 4. Write and size the plan(s)
+## 4. Write the plan
 
 Use [plan-template.md](plan-template.md). Status: `ready`. Write drafts to the scratchpad.
 
@@ -51,15 +51,9 @@ Use [plan-template.md](plan-template.md). Status: `ready`. Write drafts to the s
 - Snippets on the key and risky steps let the engineer judge the approach before approving (see the template).
 - Proof names concrete tests (file and what they assert) and the commands that run them.
 
-**Size limit: one plan must not exceed ~1000 changed lines** (added + removed, tests included, lockfiles and generated files excluded), so its PR stays reviewable. Estimate lines per file from the code you read and record the total in the plan.
-
-- Over the limit: split into several plans, each one a mergeable PR that leaves the code working on its own. Split along natural seams (data/schema first, then backend, then UI; or one slice per requirement), never mid-step.
-- Each split plan states what it depends on (`Depends on: plan-01`) and covers its own subset of `R`s; together they cover all of them.
-- If a single step alone is over the limit, break the step down further, or flag it to the engineer with the reason it cannot be split.
-
 ## 5. Stress-test
 
-Answer these in each plan's **Risks** and **Alternatives not taken** sections:
+Answer these in the plan's **Risks** and **Alternatives not taken** sections:
 
 - What could this change break? (callers, data, performance, other teams)
 - Which step is most risky, and how is that risk reduced?
@@ -69,16 +63,16 @@ Then ask the engineer about the riskiest points, one question each: options are 
 
 ## 6. Cold-agent check
 
-Re-read each plan as an agent that never saw this conversation and will execute only that plan. Could it implement the change from the plan alone? If anything relies on chat context or on another plan's text, write it into the plan.
+Re-read the plan as an agent that never saw this conversation and will execute only it. Could it implement the change from the plan alone? If anything relies on chat context, write it into the plan.
 
 ## 7. Get approval and save
 
-Show the plan(s) in chat (path and one line per plan: title, estimated lines, depends on). Ask with AskUserQuestion: "Approve and save these plans?" with options "Approve and save (Recommended)" and "Revise". Only an explicit approval accepts them. "Revise": ask what to change, revise, and ask again.
+Show the plan in chat. Ask with AskUserQuestion: "Approve and save this plan?" with options "Approve and save (Recommended)" and "Revise". Only an explicit approval accepts it. "Revise": ask what to change, revise, and ask again.
 
 On approval, save to the change folder:
 
-- One plan: `docs/changes/<folder>/plan.md`.
-- Split: `docs/changes/<folder>/plan-01-<slug>.md`, `plan-02-<slug>.md`... in execution order; slug is 2–4 kebab-case words.
+Save to `docs/changes/<folder>/plan.md`.
+
 - No change folder yet: create `docs/changes/<YYYY-MM-DD>-<slug>/` (today's date, slug 2–5 kebab-case words from the title). If it already exists, ask whether to update it or pick a new slug.
 
 Leave the files uncommitted. Tell the user the plan paths and stop. Do not start implementing.
