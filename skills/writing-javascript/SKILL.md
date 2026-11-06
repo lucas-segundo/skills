@@ -10,6 +10,13 @@ Follow the codebase's existing pattern unless it conflicts with these rules or b
 - No code comments (inline, block or JSDoc) unless the user asks for them. Leave existing comments as they are.
 - Never write `TODO` in code. If work would be left unfinished, or needs something outside the task (a missing endpoint, field or API), warn the user and ask whether to finish it another way.
 
+## Planning
+
+In plan mode, this skill plans backend code. Keep the plan short and simple: a few bullets per item, no prose. Prioritize:
+
+- Domain rules (business rules): each rule, where it is enforced, and the cases it rejects.
+- DB migrations: schema changes, their order, and how to roll back.
+
 ## Reference files
 
 - [coding.md](coding.md): read before writing or reviewing JS/TS.
