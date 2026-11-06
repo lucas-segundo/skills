@@ -15,9 +15,7 @@ Copy this checklist and tick it off:
 - [ ] 5. Summarize to the user
 ```
 
-## Tooling
-
-Use whatever tool the environment offers to read and write GitHub data (fetch comments, push commits, post replies, resolve threads). It may be a connector, a CLI, an API, or something else, depending on whether you run locally or in the cloud. This guide describes what to do, not which command to run.
+Use whatever GitHub tool the environment offers (connector, CLI, API).
 
 ## 1. Identify the PR and the user
 
@@ -26,9 +24,7 @@ Use whatever tool the environment offers to read and write GitHub data (fetch co
 
 ## 2. Collect comments
 
-Fetch all **unresolved** review threads (inline code comments, with their replies) plus review summary comments and general PR comments. Skip threads that are resolved or outdated-and-already-addressed. Keep for each: thread id, author, file, line, full reply chain.
-
-Fetch comments grouped by review thread, with whatever identifier the environment needs later to reply to and resolve each thread.
+Fetch all **unresolved** review threads (inline code comments, with their replies) plus review summary comments and general PR comments. Skip threads that are resolved or outdated-and-already-addressed. Keep for each: the id needed to reply and resolve, author, file, line, full reply chain.
 
 ## 3. Evaluate every comment first
 

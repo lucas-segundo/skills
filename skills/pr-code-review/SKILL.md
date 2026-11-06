@@ -7,41 +7,23 @@ description: >
   /pr-code-review. Auto-triggers when reviewing pull requests.
 ---
 
-Write code review comments terse and actionable. One line per finding. Location, problem, fix. No throat-clearing. Terse is the format, not the bar: every finding is verified against the code before it is posted (see "Before posting: verify"). Post findings as inline PR line comments (see "Comment on the PR line"), not in a big comment block.
+One line per finding: problem, fix. Terse is the format, not the bar: every finding is verified against the code before it is posted.
 
 ## Rules
 
-**Format:** `L<line>: <problem>. <fix>.` — or `<file>:L<line>: ...` when reviewing multi-file diffs.
-
-**Severity prefix (optional, when mixed):**
+**Severity prefix:**
 - `🔴 bug:` — broken behavior, will cause incident
 - `🟡 risk:` — works but fragile (race, missing null check, swallowed error)
 - `🔵 nit:` — style, naming, micro-optim. Author can ignore
 - `❓ ask:` — unresolved after reading the code; needs author answer
 
-**Drop:**
-- "I noticed that...", "It seems like...", "You might want to consider..."
-- "This is just a suggestion but..." — use `nit:` instead
-- "Great work!", "Looks good overall but..." — say it once at the top, not per comment
-- Restating what the line does — the reviewer can read the diff
-- Hedging ("perhaps", "maybe", "I think") — if unsure, verify; still unsure → drop it
-- Chat-only questions — answer from the code first. If still open, it is still a comment (see "Questions")
+**Drop:** hedging, praise per comment, restating what the line does, "consider refactoring" without a concrete fix.
 
-**Keep:**
-- Exact line numbers
-- Exact symbol/function/variable names in backticks
-- Concrete fix, not "consider refactoring this"
-- The *why* if the fix isn't obvious from the problem statement
-- The evidence when the cause is outside the diff: `(see useFoo.ts:18)`
+**Keep:** symbol names in backticks, the *why* when the fix isn't obvious, the evidence when the cause is outside the diff: `(see useFoo.ts:18)`.
 
 ## Questions
 
-A question, should-fix or should-check that survives verification is never dropped or left in chat. Post it as an inline comment on the exact line(s) it concerns, ranges via `startLine`/`line`.
-
-- Read the code first. Answered → post a finding or nothing.
-- Still open after reading → post `❓ ask: <question>? <what to check or fix if answer is bad>.` One line, symbol names in backticks.
-- `should fix` → `🔴`/`🟡`. `should check` → `🟡 risk:` or `❓ ask:`. Never a general PR comment or chat reply.
-- `❓ ask` does not count toward the nit budget.
+Answer a question from the code first: answered → a finding or nothing. Use `❓ ask:` only when the answer is outside the repo (backend, product decision): `❓ ask: <question>? <what to fix if the answer is bad>.` It is an inline comment like any finding, never chat, and doesn't count toward the nit budget.
 
 ## Context first
 
@@ -61,7 +43,7 @@ Find the change's `spec.md` (`docs/changes/*/spec.md`, or the one the PR body li
 
 The diff is where you start, not all you read. For every candidate finding:
 1. Open the code it depends on: callers, callees, hooks, query keys, types. Grep the symbol.
-2. Write the failure path: concrete input or state → steps → wrong result. Can't write one → drop it. Don't post it as a question.
+2. Write the failure path: concrete input or state → steps → wrong result. Can't write one from the repo → drop it, unless it hinges on something outside the repo (then `❓ ask`).
 3. Bar per severity: `🔴 bug` needs a path reachable from real use today. `🟡 risk` needs a realistic trigger, not "if the cache were stale" or "if someone typed this URL".
 4. Weigh the fix: when it costs more code than the failure it prevents, drop it.
 
@@ -89,20 +71,16 @@ Budget: at most 3 `🔵 nit` per review. Pick the ones a teammate would actually
 
 ## Comment on the PR line
 
-Never edit source files. Post each finding as an inline thread in one pending review, then submit it. No big comment block.
+Post each finding as an inline thread in one pending review, then submit it. Use whatever inline-comment tool is available (a dedicated inline-comment tool, GitHub MCP pending-review tools, `gh api`); if one fails, try another.
 
-- Body = `<severity> <problem>. <fix>.` One line, no `L<line>:`.
+- Body = `<severity> <problem>. <fix>.` One line.
 - Anchor: `path`, `line` (`startLine` for ranges), `side: RIGHT`. Only lines in the PR diff.
 - Spec warning (no `spec.md`) goes in the review body, never as an inline thread.
 - Chat reply: count per severity and the `<file>:L<line>` list only. No comment text, no preamble.
-- No PR (local diff, pasted code, no `gh`): `L<line>: ...` lines in chat.
+- No PR (local diff, pasted code, no `gh`): `<file>:L<line>: <severity> <problem>. <fix>.` lines in chat.
 
 ### Posting
 
-Use whatever inline-comment tool works in this environment: a dedicated inline-comment tool (e.g. `mcp__github_inline_comment__create_inline_comment` in the Claude GitHub Action), GitHub MCP pending-review tools, or `gh api` (REST or GraphQL). Pick the one that is available and allowed. If it fails, try another before giving up.
-
-Outcome, whatever the tool:
-- Each finding is its own inline thread on its diff line, ideally grouped in one review.
 - Submit as `REQUEST_CHANGES` when the tool supports reviews, body empty or one line ("2 🔴, 1 🟡"), plus the spec warning when it applies. Never approve.
 - Nothing new to post → no empty review. Delete a pending review you created with no comments.
 - Inline posting impossible with every available tool → post the one-line findings as one PR comment and say in the summary why inline failed.
@@ -121,8 +99,8 @@ First list the existing review threads (resolved and outdated state, path, line,
 
 ## Auto-Clarity
 
-Drop terse mode for: security findings (CVE-class bugs need full explanation + reference), architectural disagreements (need rationale, not just a one-liner), and onboarding contexts where the author is new and needs the "why". In those cases write a normal paragraph, then resume terse for the rest. The inline comment stays one line and points to the chat explanation.
+Drop terse mode for security findings (explanation + reference), architectural disagreements (rationale) and authors new to the codebase (the "why"). Write a normal paragraph in that inline comment, then resume terse for the rest.
 
 ## Boundaries
 
-Reviews only — does not write the code fix, does not approve, does not run linters. Never edits source files; only posts inline PR comments (as a `REQUEST_CHANGES` review when possible). "stop pr-code-review" or "normal mode": revert to verbose review style.
+Reviews only: never edits source files, writes the fix, approves or runs linters.

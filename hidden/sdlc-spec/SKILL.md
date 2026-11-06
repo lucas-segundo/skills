@@ -22,16 +22,11 @@ Copy this checklist and tick it off:
 
 ## Asking questions
 
-Every question in this skill goes through the **AskUserQuestion** tool, never as a text block in chat:
-
-- Batch the questions you can ask now into one call (at most 4 per call; split a larger batch across consecutive calls). A question that depends on an answer you have not heard yet waits for the next call.
-- Per question: `header` a short title; `question` self-contained (name the thing asked about, since earlier chat may be hidden while the dialog is open); `options` 2–4 plausible answers, your recommended one first and labelled "(Recommended)". The user can always pick "Other" for free text.
-- After each call, wait for the answers. Never answer for the user or carry on with an assumed default.
-- If AskUserQuestion is missing or errors, ask the same questions in chat as a numbered list, each with your recommended answer, then end the turn and wait for the reply.
+Ask every question with **AskUserQuestion**, never as chat text: batch the ones you can ask now, recommendation first, and wait for the answers instead of assuming a default. If the tool is missing or errors, ask in chat as a numbered list, each with your recommended answer, and end the turn.
 
 ## 1. Load the intent
 
-Use the `intent.md` the user names. Otherwise list `docs/changes/*/intent.md` and ask which one with the AskUserQuestion tool.
+Use the `intent.md` the user names. Otherwise list `docs/changes/*/intent.md` and ask which one.
 
 **If its status is not `accepted`, stop.** Tell the user to accept it first (`/sdlc-intent`).
 

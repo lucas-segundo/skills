@@ -6,8 +6,6 @@ disable-model-invocation: true
 
 # React Architect
 
-Owns React project structure. `writing-react` covers code conventions only.
-
 ## Steps
 
 Copy this checklist and check off each step:

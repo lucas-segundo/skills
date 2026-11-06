@@ -6,17 +6,15 @@
 
 - Thin: parse input, call a use case (commands) or a query port (reads), shape the response.
 - Validate only what comes from the request: shape, types, required fields, formats, allowed `include` paths, pagination bounds.
-- Business validation (existence, state, uniqueness, invariants) belongs to entities or use cases. Controllers never throw domain errors and never inspect port results to decide business outcomes.
-- Query and metric ports (read-only, see [app.md](app.md)) are called directly by the controller, no use case. `null` from `findOne` becomes the framework's not-found response.
+- Business validation (existence, state, uniqueness, invariants) belongs to entities or use cases. Controllers never throw domain errors and never inspect port results to decide business outcomes; the one exception is `null` from `findOne`, which becomes the framework's not-found response.
 - Path params are merged with the body into the use-case DTO explicitly.
 - List envelope: `{ data, page, limit }`. `resolvePagination(query)` turns `page`/`limit` into the port's `offset`/`limit`. Add `total` only when the user asks; it comes from the metric port's `totals.count` with the same filter, run concurrently with `findMany`.
 - `?include=a,b`: allow-list per route, sanitize (depth and breadth capped), map to the port's `include` shape.
 
 ```ts
-const SESSION_INCLUDES = new Set(['sets', 'program']);
-
 const findById = async (id: string, query: { include?: string[] }) => {
-  const paths = sanitizeIncludes(query.include ?? [], SESSION_INCLUDES);
+  const paths = sanitizeIncludes(query.include ?? [], new Set(['sets', 'program']));
+
   return sessionQueryPort.findOne({ filter: { ids: [id] }, include: { sets: paths.includes('sets') } });
 };
 ```
@@ -29,10 +27,16 @@ Domain errors are translated to HTTP in one shared place (filter, middleware, or
 - Body: `{ code, message, meta }`.
 
 ```ts
-const toHttp = (error: DomainError) => {
-  const status = error instanceof NotFoundError ? 404 : error instanceof ConflictError ? 409 : 400;
-  return { status, body: { code: error.code, message: error.message, meta: error.meta } };
-};
+const statusByError = new Map([
+  [NotFoundError, 404],
+  [ConflictError, 409],
+  [ValidationError, 400],
+]);
+
+const toHttp = (error: DomainError) => ({
+  status: statusByError.get(error.constructor) ?? 500,
+  body: { code: error.code, message: error.message, meta: error.meta },
+});
 ```
 
 ## DTOs / request validation
@@ -41,7 +45,6 @@ const toHttp = (error: DomainError) => {
 - Input source: GET reads query params; every other method (POST, PUT, PATCH, DELETE) reads the body.
 - Validate at the boundary with the project's validator (decorators, schemas, whatever exists). Strip unknown fields, coerce query numbers.
 - Make the request schema conform to the use-case DTO type so drift fails compile.
-- Validate once at the edge; do not re-validate in controllers.
 
 ```ts
 // POST -> body

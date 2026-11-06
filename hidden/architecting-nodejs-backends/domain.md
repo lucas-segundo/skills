@@ -24,6 +24,7 @@ export class WorkoutSession {
     if (!programId.trim()) {
       throw new ValidationError('SESSION_PROGRAM_REQUIRED', 'Session programId cannot be empty', { field: 'programId' });
     }
+
     return new WorkoutSession(crypto.randomUUID(), programId, new Date(), null);
   }
 
@@ -35,6 +36,7 @@ export class WorkoutSession {
     if (!this.isActive) {
       throw new ConflictError('SESSION_ALREADY_FINISHED', 'Session is already finished', { id: this.id });
     }
+
     return new WorkoutSession(this.id, this.programId, this.startedAt, new Date());
   }
 }

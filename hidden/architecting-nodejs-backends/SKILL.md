@@ -6,8 +6,6 @@ disable-model-invocation: true
 
 # Node.js Architect
 
-Owns Node backend structure. `writing-javascript` covers code conventions only.
-
 ## Steps
 
 Copy this checklist and check off each step:

@@ -22,7 +22,6 @@ infra/<tech>/
 - Receives the DB client through the constructor.
 - Maps rows explicitly. Never leaks ORM or driver types out. Always build domain entities or the port's declared shape; included relations are attached under their name.
 - Stateless. Adapters are shared singletons: never store per-call results on adapter fields, it is a race.
-- Contains no business rules. Guards and invariants belong to entities and use cases.
 
 ## Query adapters
 
@@ -37,6 +36,7 @@ export class PostgresSessionQueryAdapter implements SessionQueryPort {
 
   async findOne<I extends SessionInclude = object>({ filter, include }: { filter: SessionFilter; include?: I }) {
     const [row] = await this.baseQuery(filter, include).limit(1);
+
     return row ? this.toSession<I>(row) : null;
   }
 
@@ -45,6 +45,7 @@ export class PostgresSessionQueryAdapter implements SessionQueryPort {
       .orderBy(...sort.map(({ field, direction }) => [sortColumns[field], direction]), sessions.id)
       .offset(offset)
       .limit(limit);
+
     return rows.map((row) => this.toSession<I>(row));
   }
 

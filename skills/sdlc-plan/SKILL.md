@@ -25,12 +25,7 @@ Copy this checklist and tick it off:
 
 ## Asking questions
 
-Every question in this skill goes through the **AskUserQuestion** tool, never as a text block in chat:
-
-- Batch the questions you can ask now into one call (at most 4 per call; split a larger batch across consecutive calls). A question that depends on an answer you have not heard yet waits for the next call.
-- Per question: `header` a short title; `question` self-contained (name the thing asked about, since earlier chat may be hidden while the dialog is open); `options` 2–4 plausible answers, your recommended one first and labelled "(Recommended)". The user can always pick "Other" for free text.
-- After each call, wait for the answers. Never answer for the user or carry on with an assumed default.
-- If AskUserQuestion is missing or errors, ask the same questions in chat as a numbered list, each with your recommended answer, then end the turn and wait for the reply.
+Ask every question with **AskUserQuestion**, never as chat text: batch the ones you can ask now, recommendation first, and wait for the answers instead of assuming a default. If the tool is missing or errors, ask in chat as a numbered list, each with your recommended answer, and end the turn.
 
 ## 1. Load the inputs
 
@@ -53,7 +48,7 @@ Use [plan-template.md](plan-template.md). Status: `ready`. Write drafts to the s
 
 - Every requirement in the spec (`R1`...) maps to at least one step and one proof. List any that do not and ask about them. With no spec, list the goals you derived from the user at the top of the plan and number them `R1`... so steps and proof can map to them.
 - Steps are ordered so each one leaves the code working and testable.
-- The most important and the riskiest steps carry a short code snippet sketching the key change, so the engineer can judge the approach before approving. Routine steps get none.
+- Snippets on the key and risky steps let the engineer judge the approach before approving (see the template).
 - Proof names concrete tests (file and what they assert) and the commands that run them.
 
 **Size limit: one plan must not exceed ~1000 changed lines** (added + removed, tests included, lockfiles and generated files excluded), so its PR stays reviewable. Estimate lines per file from the code you read and record the total in the plan.

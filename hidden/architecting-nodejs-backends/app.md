@@ -38,10 +38,8 @@ Every read of rows (list, detail) goes through the entity's one query port. It h
 - `findOne` returns `null` when nothing matches. The controller maps `null` to the framework's not-found response (no use case to throw `NotFoundError`).
 - `findMany` returns a plain array. No `total`: totals come from the metric port, called only when the caller needs them.
 - Sort is an array of `{ field, direction }`, with `field` a union of allowed names (relation fields dotted: `'program.name'`). The adapter adds a unique tie-breaker so paging is stable.
-- Read-only, no side effects. Mutations belong to command ports.
 - No separate read-model types: the port returns the entity. Optional relations use an `include` param, typed so the result only has the relation when it was asked for (`SessionWith<I>`). If the entity already declares the relation, return the entity.
-- A command use case may still inject a query port to load what it needs (see `FinishSession`). The guard stays in that use case.
-- Guards, state checks and decisions never live in a query port or its controller call: they belong to a command use case.
+- A command use case may inject a query port to load what it needs (see `FinishSession`). Guards, state checks and decisions stay in that use case, never in the query port or its controller call.
 
 ```ts
 import type { WorkoutSession } from 'src/domain/entities/workout-session';
@@ -104,7 +102,6 @@ export type MetricsQuery<F, G extends string | undefined, M extends Metric> = {
   groupBy?: G;
 };
 
-/** Totals over the whole filter, plus one entry per group when grouped. */
 export type MetricsResult<G extends string | undefined, M extends Metric> = {
   totals: MetricValues<M>;
 } & ([G] extends [string] ? { groups: MetricsGroup<G, M>[] } : object);
@@ -131,8 +128,6 @@ await sessionMetricPort.get({ filter: {}, metrics: ['count'], groupBy: 'programI
 - Class named by verb (`FinishSession`). Constructor takes ports as `private readonly xPort: XPort`. One `async execute(dto)`.
 - Export the input as a plain `<Name>Dto` interface from the same file. No framework or validation decorators.
 - Flow: load, guard (throw domain error), call entity factory/method, persist via port, return entity.
-- Business rules live here or in the entity, never in the controller or adapter.
-- Only commands get use cases. Reads are query and metric ports with no use case, see above.
 - Test in `test.ts` beside `index.ts`: mock ports, no I/O.
 
 ```ts
@@ -152,6 +147,7 @@ export class FinishSession {
 
     const finished = session.finish();
     await this.updateSessionPort.execute({ session: finished });
+
     return finished;
   }
 }

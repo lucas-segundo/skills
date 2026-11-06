@@ -52,32 +52,7 @@ src/
         └── db client wiring
 ```
 
-## Dependency direction
-
-`main` -> `app`/`infra` -> `domain`; `infra` -> `app/ports`. Rules per layer are in the layer files below; cross-layer imports use the project alias, relative paths only within a folder.
-
-## Naming
-
-| Thing | Pattern | Example |
-| --- | --- | --- |
-| File | kebab-case, one operation per file (except the per-entity query and metric ports) | `complete-set.ts`, `session-query.ts` |
-| Entity | domain noun, PascalCase | `WorkoutSession` |
-| Command port | `<Verb><Noun>Port` | `UpdateSessionPort` |
-| Query port | `<Entity>QueryPort` with `findOne`, `findMany` | `SessionQueryPort` |
-| Metric port | `<Entity>MetricPort` with `get` | `SessionMetricPort` |
-| Use case | verb class | `CompleteSet` |
-| Use-case input | `<Name>Dto` | `CompleteSetDto` |
-| Adapter | `<Tech><Verb><Noun>Adapter`, `<Tech><Entity>QueryAdapter`, `<Tech><Entity>MetricAdapter` | `PrismaCreateSessionAdapter`, `PrismaSessionQueryAdapter` |
-| Tests | beside source: `<name>.spec.ts`, or `test.ts` in a use-case folder | |
-
-## Layers
-
-Each layer has its own file with role, rules and examples:
-
-- [domain.md](domain.md): entities and domain errors.
-- [app.md](app.md): ports and use cases.
-- [infra.md](infra.md): adapters.
-- [main.md](main.md): controllers, DTOs, error mapping and wiring.
+Dependency direction and naming are in the AGENTS.md block in [SKILL.md](SKILL.md); per-layer rules in the layer files.
 
 ## Adding an endpoint (checklist)
 

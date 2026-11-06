@@ -23,12 +23,7 @@ Copy this checklist and tick it off:
 
 ## Asking questions
 
-Every question in this skill goes through the **AskUserQuestion** tool, never as a text block in chat:
-
-- Batch the questions you can ask now into one call (at most 4 per call; split a larger batch across consecutive calls). A question that depends on an answer you have not heard yet waits for the next call.
-- Per question: `header` a short title; `question` self-contained (name the thing asked about, since earlier chat may be hidden while the dialog is open); `options` 2–4 plausible answers, in business language, your recommended one first and labelled "(Recommended)". The user can always pick "Other" for free text.
-- After each call, wait for the answers. Never answer for the user or carry on with an assumed default.
-- If AskUserQuestion is missing or errors, ask the same questions in chat as a numbered list, each with your recommended answer, then end the turn and wait for the reply.
+Ask every question with **AskUserQuestion**, never as chat text: batch the ones you can ask now, write options in business language with your recommendation first, and wait for the answers instead of assuming a default. If the tool is missing or errors, ask in chat as a numbered list, each with your recommended answer, and end the turn.
 
 ## 1. Listen
 
@@ -36,7 +31,7 @@ Let the user describe the problem in their own words: what they cannot do today,
 
 ## 2. Interview
 
-Ask the questions a business analyst would ask (see **Asking questions**), until each template section has an answer or an explicit unknown:
+Ask the questions a business analyst would ask until each template section has an answer or an explicit unknown:
 
 - **Problem:** who hits it, how often, what it costs today (time, money, calls, errors).
 - **Outcome:** what is true when this is done? How would we measure it?
@@ -44,7 +39,7 @@ Ask the questions a business analyst would ask (see **Asking questions**), until
 - **Constraints:** privacy, compliance, budget, deadlines, policies, contracts.
 - **Scope:** what is explicitly out.
 
-Do not read the code or ask technical questions. If the user brings up a technical detail, ask what business need is behind it and record that need; leave the detail for the spec. Never design the solution here: that is the spec's job.
+Do not read the code or ask technical questions. If the user brings up a technical detail, ask what business need is behind it and record that need; leave the detail for the spec.
 
 ## 3. Write intent.md
 
