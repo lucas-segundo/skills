@@ -1,15 +1,17 @@
 ---
 name: sdlc-plan
-description: Turns a task, or an accepted spec.md and intent.md when they exist, into an implementation plan of the AI-native SDLC, saved as .md files in the repo for other agents to execute: reads the code read-only, interviews the engineer with AskUserQuestion, stress-tests the plan, and saves it once the engineer approves. Does not use plan mode and does not implement. Use when the user says "write a plan", "plan the implementation", or "turn the spec into a plan". Works with or without an intent or spec.
+description: Turns a task, or an accepted spec.md and intent.md when they exist, into an implementation plan of the AI-native SDLC, saved as .md files in the repo for other agents to execute: reads the code read-only, interviews the engineer with AskUserQuestion, stress-tests the plan, and enters plan mode, and saves it once the engineer approves, then asks whether to only save it or also implement it. Use when the user says "write a plan", "plan the implementation", or "turn the spec into a plan". Works with or without an intent or spec.
 ---
 
 # Planning implementation
 
 Stage 3 (Build) of the AI-native SDLC. Previous (optional): `sdlc-spec`. Intent and spec are not required.
 
-This skill writes a plan; it never implements it. The plan is saved as a `.md` file so another agent, with no access to this conversation, can execute it. Do not call `EnterPlanMode` or `ExitPlanMode`.
+This skill writes a plan. The plan is saved as a `.md` file so another agent, with no access to this conversation, can execute it. Implementing it is optional and only happens if the engineer chooses it in step 7.
 
-Steps 1–6 are **read-only**: only read, search and run read-only commands. No edits, writes, installs, migrations or commits in the repo. Drafts live outside the repo (the session scratchpad, or `/tmp` if there is none) until step 7.
+**Call `EnterPlanMode` first**, before step 1. If the session is already in plan mode, skip the call.
+
+Steps 1–6 are **read-only**: only read, search and run read-only commands. No edits, writes, installs, migrations or commits in the repo. Drafts live outside the repo (the plan file plan mode gives you, or the session scratchpad) until step 7.
 
 Copy this checklist and tick it off:
 
@@ -40,13 +42,14 @@ Find every file the change touches, the existing patterns to follow, the test se
 
 ## 3. Interview
 
-Ask the engineer what the code cannot tell you: preferred approach where several fit, rollout (flag, migration, backfill), test depth, anything off-limits. Skip questions the code already answers. Keep asking rounds until nothing the plan depends on is assumed.
+Ask the engineer what the code cannot tell you: preferred approach where several fit, rollout (flag, migration, backfill), test depth, anything off-limits. Skip questions the code already answers. Always ask which writing skills the implementation should follow, as a multi-select AskUserQuestion listing the available ones (for example `writing-javascript`, `writing-react`), recommending those that match the files you found in step 2, plus "None". Keep asking rounds until nothing the plan depends on is assumed.
 
 ## 4. Write the plan
 
-Use [plan-template.md](plan-template.md). Status: `ready`. Write drafts to the scratchpad.
+Use [plan-template.md](plan-template.md). Status: `ready`. Write the draft to the plan mode plan file, or the scratchpad.
 
 - Every requirement in the spec (`R1`...) maps to at least one step and one proof. List any that do not and ask about them. With no spec, list the goals you derived from the user at the top of the plan and number them `R1`... so steps and proof can map to them.
+- Name the chosen writing skills in the plan, so the agent that executes it loads them before writing code.
 - Steps are ordered so each one leaves the code working and testable.
 - Snippets on the key and risky steps let the engineer judge the approach before approving (see the template).
 - Proof names concrete tests (file and what they assert) and the commands that run them.
@@ -67,12 +70,15 @@ Re-read the plan as an agent that never saw this conversation and will execute o
 
 ## 7. Get approval and save
 
-When planning is finished, send the draft plan file to the engineer for review. Never paste the plan into the chat: give the full absolute path of the draft `.md` in the scratchpad (one line, nothing else about its content), then ask with AskUserQuestion: "Approve and save this plan?" with options "Approve and save (Recommended)" and "Revise". Wait for the answer; do not save or continue before it arrives. Only an explicit approval accepts the plan. "Revise": ask what to change, update the draft file, send its path again, and wait again. Repeat until approved. If a subagent drafted the plan, its output is a draft: the engineer reviews it here, never the subagent.
+When planning is finished, send the draft plan file to the engineer for review. Never paste the plan into the chat: give the full absolute path of the draft `.md` (one line, nothing else about its content), then ask with AskUserQuestion: "Approve and save this plan?" with options "Approve and save (Recommended)" and "Revise". Wait for the answer; do not save or continue before it arrives. Only an explicit approval accepts the plan. "Revise": ask what to change, update the draft file, send its path again, and wait again. Repeat until approved. If a subagent drafted the plan, its output is a draft: the engineer reviews it here, never the subagent.
 
-On approval, save to the change folder:
+On approval, ask one final question with AskUserQuestion: "What should happen after the plan is approved?" with options "Save the plan only (Recommended)" and "Save the plan and implement it". Wait for the answer. Then call `ExitPlanMode` to leave plan mode (skip if not in plan mode) and save to the change folder:
 
 Save to `docs/changes/<folder>/plan.md`.
 
 - No change folder yet: create `docs/changes/<YYYY-MM-DD>-<slug>/` (today's date, slug 2–5 kebab-case words from the title). If it already exists, ask whether to update it or pick a new slug.
 
-Leave the files uncommitted. Tell the user the plan paths and stop. Do not start implementing.
+Leave the files uncommitted. Tell the user the plan paths.
+
+- **Save only:** stop. Do not start implementing.
+- **Save and implement:** execute `plan.md` step by step, in order, running each step's proof before the next. Leave the changes uncommitted unless the user asks.
