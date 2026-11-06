@@ -121,6 +121,23 @@
 - Arrow functions over `function` declarations and expressions.
 - `async`/`await` with `try`/`catch`, not `.then`/`.catch`.
 - Await or return every promise; no `void fn()`.
+- No `await` inside a loop. Prefer one batch call (`createMany`, `insert ... values (...), (...)`, a bulk endpoint); add one to the port or repository if missing. Without a batch API, run independent tasks together with `Promise.all`, within the limit below. Keep a sequential loop only when each step needs the previous result.
+
+  ```js
+  // bad
+  await this.unitOfWorkPort.run(async () => {
+    await this.createEventPort.execute({ event });
+    for (const guestList of guestLists) {
+      await this.createGuestListPort.execute({ guestList });
+    }
+  });
+  // good
+  await this.unitOfWorkPort.run(async () => {
+    await this.createEventPort.execute({ event });
+    await this.createGuestListsPort.execute({ guestLists });
+  });
+  ```
+
 - No unbounded `Promise.all` over tasks that each hold a limited resource (pool connection, tunnel, socket, rate-limited API). N tasks at once can exhaust the limit in one call: 10 queries on a 10-connection pool leave none for anyone else. Run them sequentially or with a concurrency cap.
 
   ```js
