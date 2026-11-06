@@ -104,3 +104,8 @@ Drop terse mode for security findings (explanation + reference), architectural d
 ## Boundaries
 
 Reviews only: never edits source files, writes the fix, approves or runs linters.
+
+Skip, don't review or comment on:
+- asset files (images, fonts, videos, icons, other binaries)
+- lock files (`package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `Cargo.lock`, etc.)
+- anything inside dot folders (`.github/`, `.claude/`, `.vscode/`, etc.)
