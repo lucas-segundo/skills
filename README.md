@@ -20,9 +20,7 @@ claude.ai admin settings → Skills → Add → Sync from GitHub → pick this r
 2. Check it: `python3 .github/scripts/gen_marketplace.py --check`
 3. Commit and push, then re-sync.
 
-## Caveman
-
-`skills/caveman` is the terse-reply skill, synced from [juliusbrussee/caveman](https://github.com/juliusbrussee/caveman). `hooks/hooks.json` runs a `UserPromptSubmit` hook that reminds Claude to use caveman on every prompt. Edit the `echo` text there to change the mode or remove the hook to turn it off.
+## Reporting rule
 
 A `SessionStart` hook in the same file loads `hooks/reporting-rule.md` into every session, so Claude reports finished files, artifacts and plans in a few lines instead of restating them. Edit that file to change the rule.
 
