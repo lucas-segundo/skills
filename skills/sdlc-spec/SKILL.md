@@ -1,6 +1,6 @@
 ---
 name: sdlc-spec
-description: Turns an accepted intent.md into spec.md, the requirements and design spec of the AI-native SDLC, applying the policy skills the user names and flagging concerns. Leaves the spec uncommitted for the user. Use when the user says "write a spec", "draft spec.md", "spec this out", or "turn the intent into a spec".
+description: Turns a task, or an accepted intent.md when one exists, into spec.md, the requirements and design spec of the AI-native SDLC, applying the policy skills the user names and flagging concerns. Leaves the spec uncommitted for the user. Use when the user says "write a spec", "draft spec.md", "spec this out", or "turn the intent into a spec".
 ---
 
 # Writing specs
@@ -15,9 +15,11 @@ Ask every question with **AskUserQuestion**, never as chat text: batch the ones 
 
 ## 1. Load the intent
 
-Use the `intent.md` the user names. Otherwise list `docs/changes/*/intent.md` and ask which one.
+`intent.md` is optional. Use the one the user names. Otherwise list `docs/changes/*/intent.md`; if any exist, ask which one applies, with "None, work from the task" as an option.
 
-**If its status is not `accepted`, stop.** Tell the user to accept it first (`/sdlc-intent`).
+**If an intent is used and its status is not `accepted`, stop.** Tell the user to accept it first (`/sdlc-intent`).
+
+With no intent, work from the task the user described and ask about anything missing that the spec needs.
 
 ## 2. Ask which policy skills apply
 
@@ -27,14 +29,14 @@ Treat every loaded skill as a hard constraint on the spec, not a suggestion.
 
 ## 3. Write spec.md
 
-Build the spec from this prompt, from the playbook, with the intent attached, the policy skills from step 2 loaded, and the relevant code read. There is no template: the prompt decides the content.
+Build the spec from this prompt, from the playbook, with the intent attached (if any), the policy skills from step 2 loaded, and the relevant code read. There is no template: the prompt decides the content.
 
-> Read the attached intent.md and produce a requirements and design spec for integrating it into our existing codebase. Apply the skills available to you so the plan conforms to our brand guidelines, security policies and UX standards. Document the spec fully as spec.md, ready to hand to the engineering team. Describe clearly any areas of concern, especially where you cannot satisfy contradicting policies.
+> Read the attached intent.md (or the task description, if there is no intent) and produce a requirements and design spec for integrating it into our existing codebase. Apply the skills available to you so the plan conforms to our brand guidelines, security policies and UX standards. Document the spec fully as spec.md, ready to hand to the engineering team. Describe clearly any areas of concern, especially where you cannot satisfy contradicting policies.
 
-Save it next to the intent: `docs/changes/<folder>/spec.md`. Start it with `# Spec: <title>` and `Author: <name>. Status: draft.`
+Save it next to the intent: `docs/changes/<folder>/spec.md`. With no intent, ask where to save it, defaulting to a new `docs/changes/<folder>/`. Start it with `# Spec: <title>` and `Author: <name>. Status: draft.`
 
 - Number the requirements (`R1`, `R2`...) so the plan can cite them.
-- Carry every open question from the intent forward, answered or still open. None is dropped silently.
+- If there is an intent, carry every open question from it forward, answered or still open. None is dropped silently.
 - Name the area of concern behind each policy, and where two policies contradict. Do not change the intent; if it looks wrong, flag it.
 
 ## 4. Review
