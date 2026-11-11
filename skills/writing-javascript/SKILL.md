@@ -12,7 +12,7 @@ Follow the codebase's existing pattern unless it conflicts with these rules or b
 
 ## Planning
 
-Plan with the `sdlc-plan` skill. This skill plans backend code. Keep the plan short and simple: a few bullets per item, no prose. Prioritize:
+Plan with the `planning` skill. This skill plans backend code. Keep the plan short and simple: a few bullets per item, no prose. Prioritize:
 
 - Domain rules (business rules): each rule, where it is enforced, and the cases it rejects.
 - DB migrations: schema changes, their order, and how to roll back.
