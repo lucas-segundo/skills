@@ -1,6 +1,6 @@
 # Plan template
 
-The plan is a header, then one section per step **in the order the work is done**. Each step carries its own files, change, risks and proof, so an agent can execute one step before starting the next. Errors between steps are expected; the final check verifies everything at the end. Only what spans several steps goes after them.
+The plan is a header, then one section per step **in the order the work is done**. Each step carries its own change, risks and proof, so an agent can execute one step before starting the next. Errors between steps are expected; the final check verifies everything at the end. Only what spans several steps goes after them.
 
 ```md
 # Plan: <title>
@@ -16,10 +16,6 @@ Order: <where the order comes from: "AGENTS.md: <quoted rule>", or "default: <sh
 ## Step 1: <short name>
 Requirements: <R ids this step serves>
 Depends on: <earlier steps, or "none">
-
-Files:
-- <path> (new)
-- <path>
 
 Change:
 <what to do, concrete enough to execute; a snippet when the step is key or risky>
@@ -57,10 +53,6 @@ Order: AGENTS.md: "API changes land before the UI that uses them"
 Requirements: R1, R2
 Depends on: none
 
-Files:
-- claims-api/routes/status.py (new)
-- claims-api/tests/test_status.py (new)
-
 Change:
 GET /claims/{id}/status behind the existing auth decorator, cached 30 s.
 
@@ -79,10 +71,6 @@ Proof:
 Requirements: R1, R3
 Depends on: Step 1
 
-Files:
-- portal/src/claims/StatusPanel.tsx (new)
-- portal/src/claims/StatusPanel.test.tsx (new)
-
 Change:
 Panel fetches the step 1 endpoint and renders state, date and next action.
 
@@ -95,9 +83,6 @@ Proof:
 ## Step 3: Portal nav
 Requirements: R1
 Depends on: Step 2
-
-Files:
-- portal/src/nav/routes.tsx
 
 Change:
 Add "Claim status" to the claims menu, linking to the panel.

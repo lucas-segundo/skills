@@ -1,18 +1,18 @@
 ---
 name: planning
-description: Turns a task, ticket or bug into plan.md, an implementation plan organized by order of work (each step with its own files, risks and proof) for other agents to execute; then optionally implements it. Use when the user says "write a plan" or "plan the implementation".
+description: Turns a task, ticket or bug into plan.md, an implementation plan organized by order of work (each step with its own change, risks and proof) for other agents to execute; then optionally implements it. Use when the user says "write a plan" or "plan the implementation".
 ---
 
 # Planning implementation
 
-Write a plan another agent, with no access to this conversation, can execute step by step. Organize it **by order of work**: each step holds its own files, change, risks and proof; no top-level Files, Risks or Proof sections.
+Write a plan another agent, with no access to this conversation, can execute step by step. Organize it **by order of work**: each step holds its own change, risks and proof; no top-level Risks or Proof sections.
 
 Call `EnterPlanMode` first (skip if already in it). Keep the draft in the plan mode file or the scratchpad until approval. Ask every question with **AskUserQuestion**, batched, recommendation first, and wait for answers instead of assuming.
 
 ## 1. Goal and code
 
 - Pin down goal and scope from the task, ticket or link. Number the goals `R1`, `R2`...
-- Find the files the change touches; verify paths, mark new ones `(new)`, and note how they depend on each other.
+- Find the code the change touches and note how its parts depend on each other.
 
 ## 2. Order of work
 
@@ -37,7 +37,7 @@ Ask what the code cannot tell you: approach where several fit, rollout, test dep
 
 Follow [plan-template.md](plan-template.md): header, `## Goals`, one `## Step N` per step in order, `## Across steps`.
 
-- Every step has Requirements, Depends on, Files, Change, Risks, Proof; write "None" rather than drop one. A file changed in several steps appears in each.
+- Every step has Requirements, Depends on, Change, Risks, Proof; write "None" rather than drop one.
 - Every goal maps to at least one step and one proof, citing its id; ask about any that do not.
 - Snippets on key and risky steps.
 - Proof names the tests the step adds or changes (file, what they assert); for a bug fix, step 1 writes the failing test.
@@ -56,7 +56,7 @@ Give the draft's full absolute path in one line (never paste the plan), then ask
 On approval, call `ExitPlanMode` (if in plan mode) and save to `docs/changes/<YYYY-MM-DD>-<slug>/plan.md` (slug 2–5 kebab-case words) unless the user names a path; if the folder exists, ask to update or pick a new slug. Do not commit; say committing keeps the audit trail.
 
 - **Save only:** stop.
-- **Save and implement:** load the plan's writing skills, then implement **one step at a time**, in order, touching only that step's listed files unless you say why.
+- **Save and implement:** load the plan's writing skills, then implement **one step at a time**, in order, touching only what that step's change needs unless you say why.
   - After each step, stop. Name the step and the files it changed (one line, no diff), then ask "Step N done. Review the changes, then:" with "Approve, start step N+1 (Recommended)", "Revise this step", "Stop here". Never start the next step before an explicit approval. On "Revise", ask what to change, apply it, and ask again.
   - Do not run typecheck, lint or tests between steps; ignore errors from dependents not yet updated.
   - After the last step is approved, run the final check once and fix every failure (fix the code, never the test).
