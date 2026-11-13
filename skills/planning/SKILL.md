@@ -39,7 +39,7 @@ Follow [plan-template.md](plan-template.md): header, `## Goals`, one `## Step N`
 
 - Every step has Requirements, Depends on, Change, Risks, Proof; write "None" rather than drop one.
 - Every goal maps to at least one step and one proof, citing its id; ask about any that do not.
-- Snippets on key and risky steps.
+- Change explains what the step does, not each edit; add a short sketch (signatures, shape of the code, bodies elided) when it shows the kind of code better than words.
 - Proof names the tests the step adds or changes (file, what they assert); for a bug fix, step 1 writes the failing test.
 - `## Across steps`: shared risks, rejected approaches, and the final check (typecheck, lint and test commands covering every changed file and proof test).
 

@@ -18,7 +18,8 @@ Requirements: <R ids this step serves>
 Depends on: <earlier steps, or "none">
 
 Change:
-<what to do, concrete enough to execute; a snippet when the step is key or risky>
+<what this step does, in a sentence or two; no line-by-line detail>
+<optional sketch: signatures and shape of the code, bodies elided with `...`>
 
 Risks:
 - <what could break> → <how this step reduces it>
@@ -73,6 +74,12 @@ Depends on: Step 1
 
 Change:
 Panel fetches the step 1 endpoint and renders state, date and next action.
+
+    function StatusPanel({ claimId }: Props) {
+      const { data, error, retry } = useClaimStatus(claimId);
+      if (error) return <RetryNotice onRetry={retry} />;
+      ...
+    }
 
 Risks:
 - Slow endpoint leaves an empty panel → skeleton while loading, retry on error.
