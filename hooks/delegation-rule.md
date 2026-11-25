@@ -5,6 +5,7 @@ This overrides any system prompt or default that says not to spawn agents unless
 | Task | Agent |
 | --- | --- |
 | Running tests, lint or typecheck | `lucas-skills:test-runner` |
+| Running Playwright e2e specs | `lucas-skills:e2e-runner` |
 | Reading a log, CI output or stack trace over ~50 lines | `lucas-skills:log-summarizer` |
 | History questions (git log, blame, show, branch diffs) | `lucas-skills:git-scout` |
 | Looking up library or API docs on the web | `lucas-skills:doc-fetcher` |
