@@ -31,7 +31,7 @@ Always: dependencies before dependents; riskiest unknown as early as dependencie
 
 ## 3. Interview
 
-Ask what the code cannot tell you: approach where several fit, rollout, test depth, anything off-limits. If the default order was used, show the step list and ask to keep it. Always ask which writing skills to follow (multi-select of the available ones, those matching the files recommended, plus "None"). Repeat until nothing is assumed.
+Ask what the code cannot tell you: approach where several fit, rollout, test depth, anything off-limits. If the default order was used, show the step list and ask to keep it. Always ask which writing skills to follow (multi-select of the available ones, those matching the files recommended, plus "None"). If the repo has e2e specs, list each spec you would add, change or remove, with the unit tests that already cover its behaviour, and ask which to keep (multi-select); the user decides, never you. E2E covers critical flows only: permissions and data exposure always, mutations users rely on usually, queries only when a broken read blocks a critical flow. Validation, edge cases and UI states stay in unit tests. Repeat until nothing is assumed.
 
 ## 4. Write the plan
 
@@ -40,7 +40,7 @@ Follow [plan-template.md](plan-template.md): header, `## Goals`, one `## Step N`
 - Every step has Requirements, Depends on, Change, Risks, Proof; write "None" rather than drop one.
 - Every goal maps to at least one step and one proof, citing its id; ask about any that do not.
 - Change explains what the step does, not each edit; add a short sketch (signatures, shape of the code, bodies elided) when it shows the kind of code better than words.
-- Proof names the tests the step adds or changes (file, what they assert); for a bug fix, step 1 writes the failing test.
+- Proof names the tests the step adds or changes (file, what they assert); for a bug fix, step 1 writes the failing test. Only e2e specs the user kept go in a proof.
 - `## Across steps`: shared risks, rejected approaches, and the final check (typecheck, lint and test commands covering every changed file and proof test).
 
 ## 5. Stress-test and cold check
