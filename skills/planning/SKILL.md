@@ -56,7 +56,6 @@ On approval, call `ExitPlanMode` (if in plan mode) and save to `docs/changes/<YY
 
 - **Save only:** stop.
 - **Save and implement:** load the plan's writing skills, then implement **one step at a time**, in order, touching only what that step's change needs unless you say why.
-  - After each step, stop. Name the step and the files it changed (one line, no diff), then ask "Step N done. Review the changes, then:" with "Approve, start step N+1 (Recommended)", "Revise this step", "Stop here". Never start the next step before an explicit approval. On "Revise", ask what to change, apply it, and ask again.
   - Do not run typecheck, lint or tests between steps; ignore errors from dependents not yet updated.
-  - After the last step is approved, run the final check once and fix every failure (fix the code, never the test).
+  - After the last step, run the final check once and fix every failure (fix the code, never the test).
   - Update `plan.md` when the implementation departs from it. Leave changes uncommitted unless asked.
