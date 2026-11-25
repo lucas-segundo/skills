@@ -108,6 +108,24 @@ const listOrders = async (filters) => {
   await this.createGuestListsPort.execute({ guestLists });
   ```
 
+- `Promise.all` only for calls whose results are all used. When one result can settle the answer on its own, make that call first and return early, so the others run only when needed.
+
+  ```js
+  // bad: reads the request even for a member
+  const [membership, request] = await Promise.all([
+    membershipQueryPort.findOne({ filter: { userId, tenantId } }),
+    joinRequestQueryPort.findOne({ filter: { userId, tenantId } }),
+  ]);
+  if (membership) return { status: 'member' };
+  if (request) return { status: 'requested' };
+  // good
+  const membership = await membershipQueryPort.findOne({ filter: { userId, tenantId } });
+  if (membership) return { status: 'member' };
+
+  const request = await joinRequestQueryPort.findOne({ filter: { userId, tenantId } });
+  if (request) return { status: 'requested' };
+  ```
+
 - No unbounded `Promise.all` over tasks that each hold a limited resource (pool connection, tunnel, socket, rate-limited API): 10 queries on a 10-connection pool leave none for anyone else. Run them sequentially or with a concurrency cap.
 
 ## Errors
