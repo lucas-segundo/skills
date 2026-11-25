@@ -9,10 +9,9 @@ Write a plan another agent, with no access to this conversation, can execute ste
 
 Call `EnterPlanMode` first (skip if already in it). Keep the draft in the plan mode file or the scratchpad until approval. Ask every question with **AskUserQuestion**, batched, recommendation first, and wait for answers instead of assuming.
 
-## 1. Goal and code
+## 1. Goal
 
 - Pin down goal and scope from the task, ticket or link. Number the goals `R1`, `R2`...
-- Find the code the change touches and note how its parts depend on each other.
 
 ## 2. Order of work
 
